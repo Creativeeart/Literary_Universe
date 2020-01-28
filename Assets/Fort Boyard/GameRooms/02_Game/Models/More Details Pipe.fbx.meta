@@ -1,0 +1,164 @@
+fileFormatVersion: 2
+guid: e79b76cbcdf34354b9a9dd168ea63263
+timeCreated: 1567483144
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Cylinder
+    100002: Cylinder_1
+    100004: //RootNode
+    100006: Sphere
+    100008: Sweep
+    100010: Sweep_1
+    100012: Sweep_10
+    100014: Sweep_2
+    100016: Sweep_3
+    100018: Sweep_4
+    100020: Sweep_5
+    100022: Sweep_6
+    100024: Sweep_7
+    100026: Sweep_8
+    100028: Sweep_9
+    100030: Ventil
+    100032: Sweep_7_1
+    100034: Sweep_7_2
+    400000: Cylinder
+    400002: Cylinder_1
+    400004: //RootNode
+    400006: Sphere
+    400008: Sweep
+    400010: Sweep_1
+    400012: Sweep_10
+    400014: Sweep_2
+    400016: Sweep_3
+    400018: Sweep_4
+    400020: Sweep_5
+    400022: Sweep_6
+    400024: Sweep_7
+    400026: Sweep_8
+    400028: Sweep_9
+    400030: Ventil
+    400032: Sweep_7_1
+    400034: Sweep_7_2
+    2300000: Cylinder
+    2300002: Cylinder_1
+    2300004: Sphere
+    2300006: Sweep
+    2300008: Sweep_1
+    2300010: Sweep_10
+    2300012: Sweep_2
+    2300014: Sweep_3
+    2300016: Sweep_4
+    2300018: Sweep_5
+    2300020: Sweep_6
+    2300022: Sweep_7
+    2300024: Sweep_8
+    2300026: Sweep_9
+    2300028: Ventil
+    2300030: Sweep_7_1
+    2300032: Sweep_7_2
+    3300000: Cylinder
+    3300002: Cylinder_1
+    3300004: Sphere
+    3300006: Sweep
+    3300008: Sweep_1
+    3300010: Sweep_10
+    3300012: Sweep_2
+    3300014: Sweep_3
+    3300016: Sweep_4
+    3300018: Sweep_5
+    3300020: Sweep_6
+    3300022: Sweep_7
+    3300024: Sweep_8
+    3300026: Sweep_9
+    3300028: Ventil
+    3300030: Sweep_7_1
+    3300032: Sweep_7_2
+    4300000: Sweep
+    4300002: Sweep_1
+    4300004: Sweep_2
+    4300006: Sweep_3
+    4300008: Sphere
+    4300010: Sweep_4
+    4300012: Sweep_5
+    4300014: Sweep_6
+    4300016: Sweep_7
+    4300018: Sweep_8
+    4300020: Sweep_9
+    4300022: Sweep_10
+    4300024: Cylinder
+    4300026: Ventil
+    4300028: Cylinder_1
+    4300030: Sweep_7_2
+    4300032: Sweep_7_1
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 1
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 53
+    normalImportMode: 1
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

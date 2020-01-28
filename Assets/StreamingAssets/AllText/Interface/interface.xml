@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Interface>
+  <Bibliographia_TextMeshPro_Interface>БИБЛИОГРАФИЯ</Bibliographia_TextMeshPro_Interface>
+  <Exit_TextMeshPro_Interface>Выйти из программы</Exit_TextMeshPro_Interface>
+  <Razrabotchiki_TextMeshPro_Interface>Разработчики</Razrabotchiki_TextMeshPro_Interface>
+  <status_TextMeshPro_Interface>Пожалуйста подождите. Идет загрузка...</status_TextMeshPro_Interface>
+  <titile_TextMeshPro_podskazki_Interface>ПОДСКАЗКИ</titile_TextMeshPro_podskazki_Interface>
+  <Title_TextMeshPro_bibliographia_Interface>Библиография</Title_TextMeshPro_bibliographia_Interface>
+  <Title_TextMeshPro_pisateli_Interface>Писатели</Title_TextMeshPro_pisateli_Interface>
+  <Title_TextMeshPro_razrabotchiki_Interface>Разработчики</Title_TextMeshPro_razrabotchiki_Interface>
+  <Title_TextMeshPro_techslujba_Interface>Техническая служба</Title_TextMeshPro_techslujba_Interface>
+  <titleMain_TextMeshPro_Interface>Литературная
+вселенная</titleMain_TextMeshPro_Interface>
+  <tooltip>
+  </tooltip>
+  <TS_TextMeshPro_Interface>Техническая служба</TS_TextMeshPro_Interface>
+  <Vse_pisateli_TextMeshPro_Interface>ВСЕ Писатели
+</Vse_pisateli_TextMeshPro_Interface>
+  <Warning_TextMeshPro_Interface>Cтраница на стадии разработки...</Warning_TextMeshPro_Interface>
+  <tip1_textMeshPro_Interface>С помощью &lt;color=#ff8000&gt;&lt;b&gt;[левой кнопки мыши]&lt;/b&gt;&lt;/color&gt; кликните на звезду  для фокусировки на писателе</tip1_textMeshPro_Interface>
+  <tip2_textMeshPro_Interface>С помощью &lt;color=#ff8000&gt;&lt;b&gt;[левой кнопки мыши]&lt;/b&gt;&lt;/color&gt; кликните на портрет  что бы открыть сцену с этим писателем</tip2_textMeshPro_Interface>
+  <tip3_textMeshPro_Interface>Удерживайте &lt;color=#ff8000&gt;&lt;b&gt;[правую кнопку мыши]&lt;/b&gt;&lt;/color&gt; что бы вращать камеру</tip3_textMeshPro_Interface>
+  <TechSlujba_Interface_TextMeshPro_Interface>ИНТЕРФЕЙС РЕСУРСА</TechSlujba_Interface_TextMeshPro_Interface>
+  <TechSlujba_MainPage_TextMeshPro_Interface>ГЛАВНАЯ СТРАНИЦА</TechSlujba_MainPage_TextMeshPro_Interface>
+  <TechSlujba_PageAuthors_TextMeshPro_Interface>СТРАНИЦА ПИСАТЕЛЕЙ</TechSlujba_PageAuthors_TextMeshPro_Interface>
+  <InterfeisResursa_TextMeshPro_Interface>ИНТЕРФЕЙС РЕСУРСА</InterfeisResursa_TextMeshPro_Interface>
+  <GlavnayaStranica_TextMeshPro_Interface>ГЛАВНАЯ СТРАНИЦА</GlavnayaStranica_TextMeshPro_Interface>
+  <StranicaPisatelei_TextMeshPro_Interface>СТРАНИЦА ПИСАТЕЛЕЙ</StranicaPisatelei_TextMeshPro_Interface>
+</Interface>

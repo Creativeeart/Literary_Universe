@@ -1,0 +1,38 @@
+<Archives>
+  <User fio="Шакиров Ринат Миндиханович">
+    <Age>25</Age>
+    <Activity>Программист</Activity>
+    <Favorite_book>Гарри Поттер</Favorite_book>
+    <About>Какой текст о себе</About>
+  </User>
+  <User fio="Шакиров Руслан Миндиханович">
+    <Age>28</Age>
+    <Activity>Механик</Activity>
+    <Favorite_book>Властелин Колец</Favorite_book>
+    <About>Автомех</About>
+  </User>
+  <User fio="Шакиров Ришат Миндиханович">
+    <Age>21</Age>
+    <Activity>Строитель</Activity>
+    <Favorite_book>Форест</Favorite_book>
+    <About>Строитель-техник</About>
+  </User>
+  <User fio="Пупкин Иван Иванович">
+    <Age>43</Age>
+    <Activity>
+    </Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Василий Пупкин ">
+    <Age>56</Age>
+    <Activity>
+    </Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+</Archives>

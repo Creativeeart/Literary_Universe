@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Target
+  - necessary
+  - unnecessary
+  - DeadZone
+  - GameItems
+  - spawnPoint
+  - spawnPoint_bad
+  - spawnPoint_good
+  - Cannon
+  - VideoSlider
+  - blue_star
+  - PauseGameScript
+  - terminals
+  - Tip
+  - text
+  - textMeshPro
+  - SkipText
+  - Toggle Bg
+  - Handle
+  - DDOL
+  - FileSave
+  - CoinHit
+  - Arrow
+  - Crate
+  - baseBarrel
+  - States
+  - SceneName
+  - UI
+  - CustomStar
+  - Chest_key
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0

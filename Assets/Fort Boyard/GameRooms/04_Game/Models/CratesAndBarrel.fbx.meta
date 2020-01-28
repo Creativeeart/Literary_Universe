@@ -1,0 +1,216 @@
+fileFormatVersion: 2
+guid: 5de69e58d03520f44b170b62810a2d1f
+timeCreated: 1569321233
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Barrel2
+    100002: Base
+    100004: Crate_1_1
+    100006: Crate_1_10
+    100008: Crate_1_11
+    100010: Crate_1_13
+    100012: Crate_1_14
+    100014: Crate_1_15
+    100016: Crate_1_16
+    100018: Crate_1_17
+    100020: Crate_1_18
+    100022: Crate_1_19
+    100024: Crate_1_2
+    100026: Crate_1_20
+    100028: Crate_1_21
+    100030: Crate_1_22
+    100032: Crate_1_23
+    100034: Crate_1_24
+    100036: Crate_1_2_1
+    100038: Crate_1_5
+    100040: Crate_1_6
+    100042: Crate_1_7
+    100044: Crate_1_8
+    100046: Crate_1_9
+    100048: Crates
+    100050: //RootNode
+    100052: Barrel
+    100054: Base_2
+    100056: Crate__0_
+    400000: Barrel2
+    400002: Base
+    400004: Crate_1_1
+    400006: Crate_1_10
+    400008: Crate_1_11
+    400010: Crate_1_13
+    400012: Crate_1_14
+    400014: Crate_1_15
+    400016: Crate_1_16
+    400018: Crate_1_17
+    400020: Crate_1_18
+    400022: Crate_1_19
+    400024: Crate_1_2
+    400026: Crate_1_20
+    400028: Crate_1_21
+    400030: Crate_1_22
+    400032: Crate_1_23
+    400034: Crate_1_24
+    400036: Crate_1_2_1
+    400038: Crate_1_5
+    400040: Crate_1_6
+    400042: Crate_1_7
+    400044: Crate_1_8
+    400046: Crate_1_9
+    400048: Crates
+    400050: //RootNode
+    400052: Barrel
+    400054: Base_2
+    400056: Crate__0_
+    2300000: Barrel2
+    2300002: Base
+    2300004: Crate_1_1
+    2300006: Crate_1_10
+    2300008: Crate_1_11
+    2300010: Crate_1_13
+    2300012: Crate_1_14
+    2300014: Crate_1_15
+    2300016: Crate_1_16
+    2300018: Crate_1_17
+    2300020: Crate_1_18
+    2300022: Crate_1_19
+    2300024: Crate_1_2
+    2300026: Crate_1_20
+    2300028: Crate_1_21
+    2300030: Crate_1_22
+    2300032: Crate_1_23
+    2300034: Crate_1_24
+    2300036: Crate_1_2_1
+    2300038: Crate_1_5
+    2300040: Crate_1_6
+    2300042: Crate_1_7
+    2300044: Crate_1_8
+    2300046: Crate_1_9
+    2300048: Barrel
+    2300050: Base_2
+    2300052: Crate__0_
+    3300000: Barrel2
+    3300002: Base
+    3300004: Crate_1_1
+    3300006: Crate_1_10
+    3300008: Crate_1_11
+    3300010: Crate_1_13
+    3300012: Crate_1_14
+    3300014: Crate_1_15
+    3300016: Crate_1_16
+    3300018: Crate_1_17
+    3300020: Crate_1_18
+    3300022: Crate_1_19
+    3300024: Crate_1_2
+    3300026: Crate_1_20
+    3300028: Crate_1_21
+    3300030: Crate_1_22
+    3300032: Crate_1_23
+    3300034: Crate_1_24
+    3300036: Crate_1_2_1
+    3300038: Crate_1_5
+    3300040: Crate_1_6
+    3300042: Crate_1_7
+    3300044: Crate_1_8
+    3300046: Crate_1_9
+    3300048: Barrel
+    3300050: Base_2
+    3300052: Crate__0_
+    4300000: Base
+    4300002: Barrel2
+    4300004: Crate_1_1
+    4300006: Crate_1_2
+    4300008: Crate_1_2_1
+    4300010: Crate_1_5
+    4300012: Crate_1_6
+    4300014: Crate_1_7
+    4300016: Crate_1_8
+    4300018: Crate_1_9
+    4300020: Crate_1_10
+    4300022: Crate_1_11
+    4300024: Crate_1_13
+    4300026: Crate_1_14
+    4300028: Crate_1_15
+    4300030: Crate_1_16
+    4300032: Crate_1_17
+    4300034: Crate_1_18
+    4300036: Crate_1_19
+    4300038: Crate_1_20
+    4300040: Crate_1_21
+    4300042: Crate_1_22
+    4300044: Crate_1_23
+    4300046: Crate_1_24
+    4300048: Barrel
+    4300050: Crate__0_
+    4300052: Base_2
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 15
+    normalImportMode: 1
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

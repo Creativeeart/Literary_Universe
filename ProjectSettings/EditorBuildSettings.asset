@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Loading Scene.unity
+    guid: a9f80fa9646532149b448fbe1ef1e2e5
+  - enabled: 1
+    path: Assets/Scenes/Main_Scene.unity
+    guid: 127b514752306ff4099b126f77ced219
+  - enabled: 1
+    path: Assets/Scenes/Jule_Verne_Scene.unity
+    guid: 7347a43fd8db42641ac9cd2bfea69d82
+  - enabled: 1
+    path: Assets/Scenes/Jule_Verne_Planet.unity
+    guid: da571ac203407194195c8bb4057c2018
+  - enabled: 1
+    path: Assets/Scenes/Jule_Verne_Prophecy.unity
+    guid: 1de6e169d23268e4b9ba73bbce4b76f5
+  - enabled: 1
+    path: Assets/Scenes/Jule_Verne_MiniGameInShip.unity
+    guid: 7a145f47d12bf914bb00e59f8874ded4
+  - enabled: 1
+    path: Assets/Scenes/Vostokov_Scene.unity
+    guid: 0c8c56f51e7dc564b9fc3a8e58f8b8c3
+  - enabled: 1
+    path: Assets/Scenes/Bylechev_Scene.unity
+    guid: 3bf72cc98f8dbb44b9c11a66dd63ebdd
+  - enabled: 1
+    path: Assets/Scenes/FortBoyard.unity
+    guid: f62a23a434542c344ae47bdac6cb321b
+  - enabled: 1
+    path: Assets/Scenes/Scene_Create_Star.unity
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: Assets/Not Used Resourses/TestScene_1.unity
+    guid: a4242f23448e4e946b8a48b1314401d6
+  - enabled: 0
+    path: Assets/TestIsp#1.unity
+    guid: 8959e152bfe62f64e9304425788c683f
