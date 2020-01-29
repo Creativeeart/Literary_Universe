@@ -14,7 +14,7 @@ public class RandomSpawnStars : MonoBehaviour {
 
     Vector3 center, size;
     float radiusCircle;
-    float time = 0;
+    //float time = 0;
 
     void Start()
     {
@@ -24,7 +24,7 @@ public class RandomSpawnStars : MonoBehaviour {
         for (int i = 0; i < countStar; i++)
         {
             Vector3 posRotation = RandomCircle(center, radiusCircle);
-            GameObject ins = Instantiate(prefabCoin, posRotation, Quaternion.identity);
+            Instantiate(prefabCoin, posRotation, Quaternion.identity);
             //GameObject ins = Instantiate(prefabCoin, spawnPoints[i], Quaternion.identity);
         }
     }

@@ -11,7 +11,7 @@ public class Test : MonoBehaviour {
     public GameObject bulletPrefab;
 
     private GameObject bullet;
-    private float distance = 50f;
+    //private float distance = 50f;
     private Vector3 mousePos;
     private bool canShoot = true;
     private Vector3 aim;

@@ -22,7 +22,7 @@ namespace cakeslice
         public GameObject[] crates;
         public int countCrackCrates = 4;
         int[] rands;
-        float timeToStorm = 10f;
+        //float timeToStorm = 10f;
         public GameObject tipsScreenRotation;
         void Start()
         {

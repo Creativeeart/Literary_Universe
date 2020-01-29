@@ -18,7 +18,7 @@ using cakeslice;
         public string donationName;
         int[] records;
         int statusRegistration = 0;  //0 = ошибка регистрации; 1 = успешная регистрация; 2 = имя персонажа занято;        3 = поля не могут быть пустыми;
-        string text;
+        //string text;
         [HideInInspector]
         public int maxValue;
         public static Highscores_FortBoyard Instance { get; private set; }
@@ -122,7 +122,7 @@ using cakeslice;
             {
                 Debug.Log("Сервер ответил: " + www.text);
                 //statusRegistration = int.Parse(www.text);
-                text = www.text;
+                //text = www.text;
                 switch (statusRegistration)
                 {
                     case 0:

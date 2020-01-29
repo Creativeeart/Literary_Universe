@@ -20,7 +20,7 @@ public class TreasureZoneController : MonoBehaviour {
     public int Coins { get; set; }
     Camera targetCamera;
     RandomNumberCoins randomNumberCoins;
-    float rand;
+    //float rand;
     int j = 0;
     Vector3 center, size;
 
@@ -51,7 +51,7 @@ public class TreasureZoneController : MonoBehaviour {
             Vector3 posCube = center + new Vector3(Random.Range(-size.x / 2, size.x / 2), Random.Range(-size.y / 2, size.y / 2), Random.Range(-size.z / 2, size.z / 2));
             GameObject ins = Instantiate(prefabCoin, posCube, new Quaternion(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360), 1));
             randomNumberCoins = ins.transform.GetComponent<RandomNumberCoins>();
-            rand = Random.Range(0.1f, 3.0f);
+            //rand = Random.Range(0.1f, 3.0f);//
             Destroy(ins, destroyTime);
             //yield return new WaitForSeconds(rand);
             CollectCoins(ins, coinAnimatedPrefab, null, coinIcon);

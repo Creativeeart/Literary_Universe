@@ -40,7 +40,6 @@ public class Chest : MonoBehaviour {
                     allMoneyTMPro_shadow.text = allMoneyTMPro.text;
                 }
             }
-            Vector3 inputMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if (Input.GetMouseButtonDown(0))
             {
                 RaycastHit hit;

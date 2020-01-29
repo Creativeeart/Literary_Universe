@@ -12,7 +12,7 @@ namespace cakeslice
         readonly float targetAngle = 90f; // Угол на который надо повернуться 
 
         public int fakeAngles = 0;
-        readonly float[] angles = { 270, 90, 180 };
+        //readonly float[] angles = { 270, 90, 180 };
 
         void OnMouseDown()
         {

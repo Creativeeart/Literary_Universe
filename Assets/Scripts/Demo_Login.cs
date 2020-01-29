@@ -10,7 +10,7 @@ public class Demo_Login : MonoBehaviour {
     public InputField usernameIF;
     public InputField passIF;
 
-    int status = 0;
+    //int status = 0;
     readonly string url = "http://literaryuniverse.unitycoding.ru"; //Переменная для хранения адреса
     string username = ""; //Переменная для хранения имени
     string pswd = ""; //Переменная для хранения пароля
@@ -82,7 +82,7 @@ public class Demo_Login : MonoBehaviour {
         else
         {
             Debug.Log("Сервер ответил: " + Query.text);
-            status = int.Parse(Query.text);
+            //status = int.Parse(Query.text);
         }
         Query.Dispose();
     }

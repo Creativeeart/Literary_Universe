@@ -6,7 +6,7 @@ namespace cakeslice
 {
     public class AlphabetZoneController : MonoBehaviour
     {
-        public GameObject UI_AlphabetZone;
+        public GameObject UI_AlphabetZone;//
         public TextMeshProUGUI tips;
         public GameObject treasureCoinFall, treasureCoinSpawn;
         public float waitForMoneyFalling = 0f;

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: e3d849a71cf1896458f0932f079b66a3
-timeCreated: 1578904924
+timeCreated: 1580320500
 licenseType: Free
 SubstanceImporter:
   serializedVersion: 5
@@ -44,7 +44,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: waveStyle
       value:
-        scalar[0]: 4
+        scalar[0]: 1
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
