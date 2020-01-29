@@ -11,16 +11,21 @@ public class TimerGame : MonoBehaviour {
 	public float endTime; 
 	public bool reverse  = false;
 	public bool warningTime = true;
-
 	public bool EndTime = false;
 	public bool RunTime = false;
 	public float oldTime;
 	public Animation punchText;
-	private TimerEndFunction _timerEndFunction;
 
+    //Для обращения из другого скрипта
+    public static TimerGame Instance { get; private set; }
 
-	void Start(){
-		_timerEndFunction = gameObject.GetComponent<TimerEndFunction>();
+    public void Awake()
+    {
+        Instance = this;
+    }
+    //Для обращения из другого скрипта
+
+    void Start(){
 		oldTime = seconds;
 	}
 
@@ -30,7 +35,6 @@ public class TimerGame : MonoBehaviour {
 				endTime = 0;
 				if (seconds <= endTime) {
 					seconds = 0;
-                    if (_timerEndFunction != null) _timerEndFunction.FunctionEndTime ();
 				} else {
 					seconds -= Time.deltaTime;
 				}
@@ -38,7 +42,6 @@ public class TimerGame : MonoBehaviour {
 			else {
 				if (seconds >= endTime){
 					seconds = endTime;
-					_timerEndFunction.FunctionEndTime ();
 				} else {
 					seconds += Time.deltaTime;
 				}

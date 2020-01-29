@@ -7,13 +7,8 @@ namespace cakeslice
 {
     public class GateZoneController : MonoBehaviour
     {
-        public bool isGateZone = false;
+        public GameObject UI_GateZone;
         public GameObject arrow3DKeysHolder, arrow3DTipsMechanism;
-        public FortBoyardGameController fortBoyardGameController;
-        public GameObject AlphabetZoneManager;
-        public CameraDoorsController cameraDoorsController;
-        public GameObject gateZoneCam;
-        public AlertUI alertUI;
 
         [Space]
         public Animator greenLampAnimator;
@@ -68,54 +63,66 @@ namespace cakeslice
 
         int counter = 0;
         int counter2 = 0;
+        public static GateZoneController Instance { get; private set; }
 
-        void Start()
+        public void Awake()
         {
-            isGateZone = true;
-            CheckKeysAndTips();
-            OnEnableRedLamp();
-            for (int i = 0; i < fortBoyardGameController.tips.Length; i++) if (fortBoyardGameController.tips[i].activeSelf) countAddTips++;
-            for (int i = 0; i < fortBoyardGameController.currentTips; i++) tips3DIcons[i].SetActive(true);
+            Instance = this;
+        }
 
-            for (int i = 0; i < fortBoyardGameController.keys.Length; i++)
+        public void GateZoneEntered()
+        {
+            if (FortBoyardGameController.Instance.IsGateZone)
             {
-                if (i >= 3) break;
-                if (fortBoyardGameController.keys[i].activeSelf) countAddKeys++;
-            }
-            for (int i = 0; i < fortBoyardGameController.currentKeys; i++)
-            {
-                if (i >= 3) break;
-                keys3DIcons[i].SetActive(true);
-                activeKeyCount++;
+                UI_GateZone.SetActive(true);
+                CheckKeysAndTips();
+                OnEnableRedLamp();
+                for (int i = 0; i < FortBoyardGameController.Instance.tips.Length; i++) if (FortBoyardGameController.Instance.tips[i].activeSelf) countAddTips++;
+                for (int i = 0; i < FortBoyardGameController.Instance.CurrentTips; i++) tips3DIcons[i].SetActive(true);
+
+                for (int i = 0; i < FortBoyardGameController.Instance.keys.Length; i++)
+                {
+                    if (i >= 3) break;
+                    if (FortBoyardGameController.Instance.keys[i].activeSelf) countAddKeys++;
+                }
+                for (int i = 0; i < FortBoyardGameController.Instance.CurrentKeys; i++)
+                {
+                    if (i >= 3) break;
+                    keys3DIcons[i].SetActive(true);
+                    activeKeyCount++;
+                }
             }
         }
 
         void Update()
         {
-            if (timeRotationGears <= 0)
+            if (FortBoyardGameController.Instance.IsGateZone)
             {
-                runTime = false;
-                timeRotationGears = 5.0f;
-            }
-            if (runTime)
-            {
-                timeRotationGears = timeRotationGears - Time.deltaTime;
-                if (isOpenGate)
+                if (timeRotationGears <= 0)
                 {
-                    for (int i = 0; i < gearsNormal.Length; i++) gearsNormal[i].transform.Rotate(new Vector3(0, 0, Time.deltaTime * speedGear));
-                    for (int i = 0; i < gearsReverse.Length; i++) gearsReverse[i].transform.Rotate(new Vector3(0, 0, -Time.deltaTime * speedGear));
+                    runTime = false;
+                    timeRotationGears = 5.0f;
                 }
-                if (isOpenGate == false)
+                if (runTime)
                 {
-                    for (int i = 0; i < gearsNormal.Length; i++) gearsNormal[i].transform.Rotate(new Vector3(0, 0, -Time.deltaTime * speedGear));
-                    for (int i = 0; i < gearsReverse.Length; i++) gearsReverse[i].transform.Rotate(new Vector3(0, 0, Time.deltaTime * speedGear));
+                    timeRotationGears = timeRotationGears - Time.deltaTime;
+                    if (isOpenGate)
+                    {
+                        for (int i = 0; i < gearsNormal.Length; i++) gearsNormal[i].transform.Rotate(new Vector3(0, 0, Time.deltaTime * speedGear));
+                        for (int i = 0; i < gearsReverse.Length; i++) gearsReverse[i].transform.Rotate(new Vector3(0, 0, -Time.deltaTime * speedGear));
+                    }
+                    if (isOpenGate == false)
+                    {
+                        for (int i = 0; i < gearsNormal.Length; i++) gearsNormal[i].transform.Rotate(new Vector3(0, 0, -Time.deltaTime * speedGear));
+                        for (int i = 0; i < gearsReverse.Length; i++) gearsReverse[i].transform.Rotate(new Vector3(0, 0, Time.deltaTime * speedGear));
+                    }
                 }
             }
         }
 
         public void AddKeys()
         {
-            fortBoyardGameController.currentKeys = fortBoyardGameController.currentKeys + 1;
+            FortBoyardGameController.Instance.CurrentKeys += 1;
             TimeReducing(10);
             countAddKeys++;
             for (int i = 0; i < countAddKeys; i++) keys3DIcons[i].SetActive(true);
@@ -124,36 +131,37 @@ namespace cakeslice
 
         public void AddTips()
         {
-            if (fortBoyardGameController.currentTips < fortBoyardGameController.totalTips)
+            if (FortBoyardGameController.Instance.CurrentTips < FortBoyardGameController.Instance.totalTips)
             {
-                fortBoyardGameController.currentTips = fortBoyardGameController.currentTips + 1;
+                FortBoyardGameController.Instance.CurrentTips += 1;
                 TimeReducing(10);
                 countAddTips++;
                 for (int i = 0; i < countAddTips; i++) tips3DIcons[i].SetActive(true);
             }
-            if (fortBoyardGameController.currentTips == 5) addExtraTipButton.GetComponent<Button>().interactable = false;
+            if (FortBoyardGameController.Instance.CurrentTips == 5) addExtraTipButton.GetComponent<Button>().interactable = false;
         }
 
         public void TimeReducing(float countTime)
         {
-            fortBoyardGameController.timeReducing.GetComponent<TextMeshProUGUI>().text = "- " + countTime;
-            var go = Instantiate(fortBoyardGameController.timeReducing, fortBoyardGameController.timeReducingParent);
+            FortBoyardGameController.Instance.timeReducing.GetComponent<TextMeshProUGUI>().text = "- " + countTime;
+            var go = Instantiate(FortBoyardGameController.Instance.timeReducing, FortBoyardGameController.Instance.timeReducingParent);
             Destroy(go, 1);
-            fortBoyardGameController.totalTime = fortBoyardGameController.totalTime - countTime;
-            fortBoyardGameController._timerGame.seconds = fortBoyardGameController._timerGame.seconds - countTime;
-            fortBoyardGameController.ReloadTimer();
+            FortBoyardGameController.Instance.totalTime -= countTime;
+            //FortBoyardGameController.Instance.totalTime = FortBoyardGameController.Instance.totalTime - countTime;
+            TimerGame.Instance.seconds -= countTime;
+            FortBoyardGameController.Instance.ReloadTimer();
         }
 
         public void CheckKeysAndTips()
         {
             for (int i = 0; i <= 2; i++)
             {
-                if (fortBoyardGameController.keys[i].activeSelf) buttonAddKeys[i].SetActive(false);
+                if (FortBoyardGameController.Instance.keys[i].activeSelf) buttonAddKeys[i].SetActive(false);
                 else buttonAddKeys[i].SetActive(true);
             }
             for (int i = 0; i <= 2; i++)
             {
-                if (fortBoyardGameController.tips[i].activeSelf) buttonAddTips[i].SetActive(false);
+                if (FortBoyardGameController.Instance.tips[i].activeSelf) buttonAddTips[i].SetActive(false);
                 else buttonAddTips[i].SetActive(true);
             }
             for (int i = 0; i < buttonAddKeys.Length; i++)
@@ -174,10 +182,10 @@ namespace cakeslice
 
         public void CountingKeys()
         {
-            if (fortBoyardGameController.currentKeys < needKeys)
+            if (FortBoyardGameController.Instance.CurrentKeys < needKeys)
             {
-                int how = needKeys - fortBoyardGameController.currentKeys;
-                alertUI.ShowWarningModalWindow("Доступ запрещен. Вам не хватает ключей: (" + how + ")");
+                int how = needKeys - FortBoyardGameController.Instance.CurrentKeys;
+                AlertUI.Instance.ShowWarningModalWindow("Доступ запрещен. Вам не хватает ключей: (" + how + ")");
             }
             else
             {
@@ -193,7 +201,7 @@ namespace cakeslice
         public void EnableDisable3DIconTips()
         {
             countAddTips--;
-            int result = fortBoyardGameController.currentTips - countOpenedTips;
+            int result = FortBoyardGameController.Instance.CurrentTips - countOpenedTips;
             for (int i = 0; i < tips3DIcons.Length; i++) tips3DIcons[i].SetActive(false);
             for (int i = 0; i < result; i++) tips3DIcons[i].SetActive(true);
         }
@@ -206,23 +214,26 @@ namespace cakeslice
             for (int i = 0; i < result; i++) keys3DIcons[i].SetActive(true);
         }
 
-        public void GoToNextZone()
+
+        public void GoToAlphabetZone()
         {
-            gateZoneCam.SetActive(false);
-            AlphabetZoneManager.SetActive(false);
-            cameraDoorsController.GoToAlphabet();
-            fortBoyardGameController.mainUconsUI.SetActive(false);
-            FortBoyardGameController.Instance.alphabetZone = true;
-            FortBoyardGameController.Instance.treasureZone = false;
-            FortBoyardGameController.Instance.gameRooms = false;
-    }
+            FortBoyardGameController.Instance.IsGateZone = false;
+            FortBoyardGameController.Instance.IsAlphabetZone = true;
+            FortBoyardGameController.Instance.IsTreasureZone = false;
+            FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
+
+            FortBoyardGameController.Instance.mainUconsUI.SetActive(false);
+            FortBoyardGameController.Instance.GameRooms = false;
+            UI_GateZone.SetActive(false);
+            StartCoroutine(FortBoyardGameController.Instance.GoToAlphabetZone());
+        }
 
         public void OpenTip()
         {
             if (tipsText.text == "Подсказки скрыты") tipsText.text = string.Empty;
-            if (fortBoyardGameController.currentTips <= fortBoyardGameController.totalTips)
+            if (FortBoyardGameController.Instance.CurrentTips <= FortBoyardGameController.Instance.totalTips)
             {
-                if (counter < fortBoyardGameController.currentTips)
+                if (counter < FortBoyardGameController.Instance.CurrentTips)
                 {
                     tipsText.text = tipsText.text + allTipsList[counter] + "\n";
                     counter++;
@@ -236,9 +247,9 @@ namespace cakeslice
 
         public void OpenKey()
         {
-            if (fortBoyardGameController.currentKeys <= fortBoyardGameController.totalKeys)
+            if (FortBoyardGameController.Instance.CurrentKeys <= FortBoyardGameController.Instance.totalKeys)
             {
-                if (counter2 < fortBoyardGameController.currentKeys)
+                if (counter2 < FortBoyardGameController.Instance.CurrentKeys)
                 {
                     counter2++;
                     countOpenedKeys++;
@@ -275,7 +286,7 @@ namespace cakeslice
         IEnumerator MaterialSwitching()
         {
             int i = 0;
-            while (i < fortBoyardGameController.currentKeys)
+            while (i < FortBoyardGameController.Instance.CurrentKeys)
             {
                 keyHolders[i].GetComponent<MeshRenderer>().material = emissionMaterialForKeyHolders;
                 keyHolders[i].transform.GetChild(0).gameObject.SetActive(true);

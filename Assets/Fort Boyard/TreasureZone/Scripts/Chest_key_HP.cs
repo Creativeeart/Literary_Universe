@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 public class Chest_key_HP : MonoBehaviour {
-    public ResourcesManager resourcesManager;
     public GameObject one;
     public GameObject two;
     public Chest chest;
@@ -42,7 +41,8 @@ public class Chest_key_HP : MonoBehaviour {
                     chest.roofChest.enabled = true;
                     if (chest.roofChest.enabled)
                     {
-                        StartCoroutine(resourcesManager.Spawn());
+                        TimerGame.Instance.RunTime = false;
+                        StartCoroutine(TreasureZoneController.Instance.Spawn());
                     }
                 }
             }

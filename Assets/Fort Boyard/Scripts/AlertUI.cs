@@ -9,7 +9,12 @@ public class AlertUI : MonoBehaviour
     public GameObject warningModalWindow;
     public TextMeshProUGUI warningText;
     public bool isAlertUIActive = false;
+    public static AlertUI Instance { get; private set; }
 
+    public void Awake()
+    {
+        Instance = this;
+    }
     public void ShowWarningModalWindow(string warningTextCustom)
     {
         warningModalWindow.SetActive(true);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG;
 using DG.Tweening;
+using cakeslice;
 public class FB_CamMovingController : MonoBehaviour {
     [Header("This place to moving camera from the scene")]
     public Transform cameraToMovingFromScene; //Камера которая будет двигаться в сцен
@@ -67,6 +68,13 @@ public class FB_CamMovingController : MonoBehaviour {
     public float zoomMax = 120; // Макс. увеличение
     public float zoomMin = 40; // Мин. увеличение
     private float X;
+
+    public static FB_CamMovingController Instance { get; private set; }
+
+    public void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -190,6 +198,10 @@ public class FB_CamMovingController : MonoBehaviour {
             case "Point_GateZone_B":
                 DisableChecks();
                 isMovingToGateZoneB = true;
+                //FortBoyardGameController.Instance.IsGateZone = true;
+                //FortBoyardGameController.Instance.IsAlphabetZone = false;
+                //FortBoyardGameController.Instance.IsTreasureZone = false;
+                //FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
                 break;
             case "Point_AlphabetZone_A":
                 DisableChecks();
@@ -198,10 +210,18 @@ public class FB_CamMovingController : MonoBehaviour {
             case "Point_AlphabetZone_B":
                 DisableChecks();
                 isMovingToAlphabetZoneB = true;
+                //FortBoyardGameController.Instance.IsGateZone = false;
+                //FortBoyardGameController.Instance.IsAlphabetZone = true;
+                //FortBoyardGameController.Instance.IsTreasureZone = false;
+                //FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
                 break;
             case "Point_Treasure_Zone":
                 DisableChecks();
                 isMovingToTreasureZone = true;
+                //FortBoyardGameController.Instance.IsGateZone = false;
+                //FortBoyardGameController.Instance.IsAlphabetZone = false;
+                //FortBoyardGameController.Instance.IsTreasureZone = true;
+                //FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
                 break;
             case "Point_Treasure_Calculate_Zone_A":
                 DisableChecks();
@@ -210,9 +230,18 @@ public class FB_CamMovingController : MonoBehaviour {
             case "Point_Treasure_Calculate_Zone_B":
                 DisableChecks();
                 isMovingToTreasureCalculateZoneB = true;
+                //FortBoyardGameController.Instance.IsGateZone = false;
+                //FortBoyardGameController.Instance.IsAlphabetZone = false;
+                //FortBoyardGameController.Instance.IsTreasureZone = false;
+                //FortBoyardGameController.Instance.IsTreasureCalculateZone = true;
                 break;
         }
         cameraToMovingFromScene.DOMove(point.transform.position, speedDurationMovingCamera).Play();
         cameraToMovingFromScene.DORotate(point.transform.eulerAngles, speedDurationMovingCamera).Play();
     }
+    //IEnumerator AfterStopMovingCamera(bool thisZone)
+    //{
+    //    yield return new WaitForSeconds(speedDurationMovingCamera);
+    //    thisZone = true;
+    //}
 }

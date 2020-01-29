@@ -16,7 +16,7 @@ namespace cakeslice
             _game_01.key.transform.localPosition = Vector3.zero;
             _game_01.key.transform.localRotation = Quaternion.Euler(Vector3.zero);
             _game_01.DownShip();
-            _game_01._fortBoyardGameController._timerGame.RunTime = false;
+            TimerGame.Instance.RunTime = false;
         }
         
     }

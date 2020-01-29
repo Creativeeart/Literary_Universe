@@ -9,7 +9,6 @@ namespace cakeslice
     {
         public Button nextZoneBTN;
         public AlertUI alertUI;
-        public GateZoneController gateZoneController;
         public Outline _outLine;
 
         public Image readyImage;
@@ -22,15 +21,15 @@ namespace cakeslice
         
         void OnMouseDown()
         {
-            if (gateZoneController.greenLamp.activeSelf)
+            if (GateZoneController.Instance.greenLamp.activeSelf)
             {
-                if (gateZoneController.countAddTips != 0)
+                if (GateZoneController.Instance.countAddTips != 0)
                 {
                     if (isClicked)
                     {
                         StartCoroutine("FiilImage");
-                        gateZoneController.fortBoyardGameController._timerGame.RunTime = true;
-                        gateZoneController.arrow3DTipsMechanism.SetActive(false);
+                        TimerGame.Instance.RunTime = true;
+                        GateZoneController.Instance.arrow3DTipsMechanism.SetActive(false);
                     }
                 }
                 else alertUI.ShowWarningModalWindow("Доступ запрещен. У вас нет подсказок. \nДополнительные подсказки вы можете взять на панели, в нижней части экрана");
@@ -57,7 +56,7 @@ namespace cakeslice
                 isClicked = false;
                 if (readyImage.fillAmount >= 1)
                 {
-                    gateZoneController.OpenTip();
+                    GateZoneController.Instance.OpenTip();
                     readyImage.fillAmount = 0;
                     _outLine.enabled = true;
                     isClicked = true;

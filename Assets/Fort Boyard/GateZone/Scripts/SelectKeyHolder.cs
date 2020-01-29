@@ -5,11 +5,9 @@ namespace cakeslice
 {
     public class SelectKeyHolder : MonoBehaviour
     {
-        public GateZoneController gateZoneController;
         public Outline _outLine;
         public bool selectObject = false;
         public Material emissionMaterialForKeyHolders;
-        public AlertUI alertUI;
         void Start()
         {
             _outLine = gameObject.GetComponent<Outline>();
@@ -21,27 +19,27 @@ namespace cakeslice
         {
             if (!selectObject)
             {
-                if (gateZoneController.fortBoyardGameController.currentKeys > 0)
+                if (FortBoyardGameController.Instance.CurrentKeys > 0)
                 {
-                    if (gateZoneController.countAddKeys != 0)
+                    if (GateZoneController.Instance.countAddKeys != 0)
                     {
                         selectObject = true;
                         _outLine.enabled = false;
                         GetComponent<MeshRenderer>().material = emissionMaterialForKeyHolders;
                         transform.GetChild(0).gameObject.SetActive(true);
-                        gateZoneController.OpenKey();
-                        gateZoneController.insertKeysInHolder++;
-                        gateZoneController.arrow3DKeysHolder.transform.localPosition = new Vector3(gateZoneController.arrow3DKeysHolder.transform.localPosition.x, gateZoneController.arrow3DKeysHolder.transform.localPosition.y - 0.17f, gateZoneController.arrow3DKeysHolder.transform.localPosition.z);
-                        if (gateZoneController.insertKeysInHolder == 3)
+                        GateZoneController.Instance.OpenKey();
+                        GateZoneController.Instance.insertKeysInHolder++;
+                        GateZoneController.Instance.arrow3DKeysHolder.transform.localPosition = new Vector3(GateZoneController.Instance.arrow3DKeysHolder.transform.localPosition.x, GateZoneController.Instance.arrow3DKeysHolder.transform.localPosition.y - 0.17f, GateZoneController.Instance.arrow3DKeysHolder.transform.localPosition.z);
+                        if (GateZoneController.Instance.insertKeysInHolder == 3)
                         {
-                            gateZoneController.OpenGateAndEnableOpenTipsMechanism();
-                            gateZoneController.arrow3DKeysHolder.SetActive(false);
-                            gateZoneController.arrow3DTipsMechanism.SetActive(true);
+                            GateZoneController.Instance.OpenGateAndEnableOpenTipsMechanism();
+                            GateZoneController.Instance.arrow3DKeysHolder.SetActive(false);
+                            GateZoneController.Instance.arrow3DTipsMechanism.SetActive(true);
                         }
                     }
-                    else alertUI.ShowWarningModalWindow("Доступ запрещен. У вас нет ключей. \nДополнительные ключи вы можете взять на панели, в нижней части экрана");
+                    else AlertUI.Instance.ShowWarningModalWindow("Доступ запрещен. У вас нет ключей. \nДополнительные ключи вы можете взять на панели, в нижней части экрана");
                 }
-                else alertUI.ShowWarningModalWindow("Доступ запрещен. У вас нет ключей. \nДополнительные ключи вы можете взять на панели, в нижней части экрана");
+                else AlertUI.Instance.ShowWarningModalWindow("Доступ запрещен. У вас нет ключей. \nДополнительные ключи вы можете взять на панели, в нижней части экрана");
                 
             }
         }

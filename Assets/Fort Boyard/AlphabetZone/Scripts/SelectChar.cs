@@ -8,7 +8,6 @@ namespace cakeslice
     {
         public Outline _outLine;
         public bool selectObject = false;
-        public CorrectWord _correctWord;
         void Start()
         {
             _outLine = gameObject.GetComponent<Outline>();
@@ -18,43 +17,43 @@ namespace cakeslice
 
         void OnMouseDown()
         {
-            if (!_correctWord.alertUI.isAlertUIActive)
+            if (!AlertUI.Instance.isAlertUIActive)
             {
-                if (_correctWord.curentChar != _correctWord.maxChar)
+                if (AlphabetZoneController.Instance.curentChar != AlphabetZoneController.Instance.maxChar)
                 {
                     _outLine.enabled = true;
 
                     if (!selectObject)
                     {
                         selectObject = true;
-                        _correctWord.word.text = _correctWord.word.text + gameObject.name;
-                        _correctWord.curentChar += 1;
-                        _correctWord.inputWord = _correctWord.word.text;
+                        AlphabetZoneController.Instance.word.text = AlphabetZoneController.Instance.word.text + gameObject.name;
+                        AlphabetZoneController.Instance.curentChar += 1;
+                        AlphabetZoneController.Instance.inputWord = AlphabetZoneController.Instance.word.text;
 
-                        if (_correctWord.curentChar == _correctWord.maxChar)
+                        if (AlphabetZoneController.Instance.curentChar == AlphabetZoneController.Instance.maxChar)
                         {
-                            if (_correctWord.inputWord == _correctWord.correctWord)
+                            if (AlphabetZoneController.Instance.inputWord == AlphabetZoneController.Instance.correctWord)
                             {
                                 //Debug.Log("Слово ВЕРНОЕ");
-                                _correctWord.runTime = true;
-                                //_correctWord.alphabet_CamAnimator.SetBool("ViewLionHead", true);
-                                FortBoyardGameController.Instance.FB_CamMovingController.CameraMovingToPoint(FortBoyardGameController.Instance.FB_CamMovingController.pointToAlphabetZoneA);
-                                _correctWord.isWordCorrect = true;
+                                AlphabetZoneController.Instance.runTime = true;
+                                //AlphabetZoneController.Instance.alphabet_CamAnimator.SetBool("ViewLionHead", true);
+                                FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToAlphabetZoneA);
+                                AlphabetZoneController.Instance.isWordCorrect = true;
                             }
                             else
                             {
                                 //Debug.Log("Слово НЕВЕРНОЕ");
-                                _correctWord.runTime = true;
-                                //_correctWord.alphabet_CamAnimator.SetBool("ViewLionHead", true);
-                                FortBoyardGameController.Instance.FB_CamMovingController.CameraMovingToPoint(FortBoyardGameController.Instance.FB_CamMovingController.pointToAlphabetZoneA);
-                                _correctWord.isWordCorrect = false;
-                                _correctWord.ClearInput();
+                                AlphabetZoneController.Instance.runTime = true;
+                                //AlphabetZoneController.Instance.alphabet_CamAnimator.SetBool("ViewLionHead", true);
+                                FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToAlphabetZoneA);
+                                AlphabetZoneController.Instance.isWordCorrect = false;
+                                AlphabetZoneController.Instance.ClearInput();
                             }
                         }
                     }
                     else
                     {
-                        _correctWord.alertUI.ShowWarningModalWindow("Буквы нельзя выбрать дважды!");
+                        AlertUI.Instance.ShowWarningModalWindow("Буквы нельзя выбрать дважды!");
                     }
                 }
             }

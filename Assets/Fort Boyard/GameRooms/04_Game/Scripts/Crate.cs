@@ -138,7 +138,7 @@ namespace cakeslice
 
         void OnMouseDown()
         {
-            if (!_crateController._fortBoyardGameController.isRoomPause) {
+            if (!FortBoyardGameController.Instance.IsRoomPause) {
                 RaycastHit(true); //true = mouseDown = moving object
             }
         }

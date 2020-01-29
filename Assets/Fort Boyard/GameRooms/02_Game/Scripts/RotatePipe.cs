@@ -36,7 +36,7 @@ namespace cakeslice
 
         void OnMouseDown()
         {
-            if (!_gameRoom2_Controller._fortBoyardGameController.isRoomPause)
+            if (!FortBoyardGameController.Instance.IsRoomPause)
             {
                 fakeAngles = fakeAngles + -90;
                 if (fakeAngles < -270)
@@ -51,7 +51,7 @@ namespace cakeslice
 
         void OnMouseEnter()
         {
-            if (!_gameRoom2_Controller._fortBoyardGameController.isRoomPause)
+            if (!FortBoyardGameController.Instance.IsRoomPause)
             {
                 _outLine.enabled = true;
             }
@@ -59,7 +59,7 @@ namespace cakeslice
 
         void OnMouseExit()
         {
-            if (!_gameRoom2_Controller._fortBoyardGameController.isRoomPause)
+            if (!FortBoyardGameController.Instance.IsRoomPause)
             {
                 _outLine.enabled = false;
             }

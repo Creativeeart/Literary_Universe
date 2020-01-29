@@ -2,12 +2,9 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 using System.Linq;
-namespace cakeslice
-{
+using cakeslice;
     public class Highscores_FortBoyard : MonoBehaviour
     {
-        public FortBoyardGameController _fortBoyardGameController;
-        public TreasureCalculateZone _treasureCalculateZone;
         public GameObject loginFormUI, inputField;
         public TextMeshProUGUI[] highscoreFields, highscoreRecord, highscoreDonate;
         public TMP_InputField registrationRealnameUI;
@@ -24,18 +21,14 @@ namespace cakeslice
         string text;
         [HideInInspector]
         public int maxValue;
-        SupportScripts _supportScripts;
+        public static Highscores_FortBoyard Instance { get; private set; }
+
+        public void Awake()
+        {
+            Instance = this;
+        }
         void Start()
         {
-            if (GameObject.Find("SupportSripts"))
-            {
-                _supportScripts = GameObject.Find("SupportSripts").GetComponent<SupportScripts>();
-            }
-            else
-            {
-                Debug.Log("SupportSripts - не найден либо отключен!");
-                return;
-            }
             for (int i = 0; i < highscoreFields.Length; i++)
             {
                 highscoreFields[i].text = "-";
@@ -58,7 +51,7 @@ namespace cakeslice
 
         public void ContinueFromGuest()
         {
-            _supportScripts._authorization.CloseLoginAndRegistrationForm();
+            SupportScripts.Instance._authorization.CloseLoginAndRegistrationForm();
             //_fortBoyardGameController.StartGame();
             //username = _supportScripts._authorization.currentUser;
             username = "Guest" + Random.Range(0, 99999) + Random.Range(0, 99999);
@@ -67,14 +60,14 @@ namespace cakeslice
 
         public void LaunchGame()
         {
-            if (_supportScripts._authorization.currentUser == "Гость")
+            if (SupportScripts.Instance._authorization.currentUser == "Гость")
             {
-                _supportScripts._authorization.OpenGuestForm();
+            SupportScripts.Instance._authorization.OpenGuestForm();
             }
             else
             {
-                username = _supportScripts._authorization.currentUser;
-                _fortBoyardGameController.StartGame();
+                username = SupportScripts.Instance._authorization.currentUser;
+                FortBoyardGameController.Instance.StartGame();
             }
         }
 
@@ -83,26 +76,26 @@ namespace cakeslice
             if (inputField.GetComponent<TMP_InputField>().text != string.Empty)
             {
                 realname = inputField.GetComponent<TMP_InputField>().text;
-                _fortBoyardGameController.StartGame();
+                FortBoyardGameController.Instance.StartGame();
                 loginFormUI.SetActive(false);
-                _supportScripts._authorization.registrationRealName = realname;
-                _supportScripts._authorization.registrationUsername = username;
-                _supportScripts._authorization.registrationPassword = "guest";
-                //_supportScripts._authorization.currentUserUI.text = "Вы вошли как: <b><i><color=#FF8E00FF><u>" + _supportScripts._authorization.currentUser + "</u></color></i></b>";
-                _supportScripts._authorization.loginAndRegistrationButtons.SetActive(false);
-                _supportScripts._authorization.exitButtons.SetActive(true);
-                _supportScripts._authorization.SendRegistrationWithGuest();
+            SupportScripts.Instance._authorization.registrationRealName = realname;
+            SupportScripts.Instance._authorization.registrationUsername = username;
+            SupportScripts.Instance._authorization.registrationPassword = "guest";
+            //_supportScripts._authorization.currentUserUI.text = "Вы вошли как: <b><i><color=#FF8E00FF><u>" + _supportScripts._authorization.currentUser + "</u></color></i></b>";
+            SupportScripts.Instance._authorization.loginAndRegistrationButtons.SetActive(false);
+            SupportScripts.Instance._authorization.exitButtons.SetActive(true);
+            SupportScripts.Instance._authorization.SendRegistrationWithGuest();
                 //_supportScripts._authorization.CloseLoginAndRegistrationForm();
             }
         }
         public void UpdateDonationName()
         {
-            donationName = _treasureCalculateZone.donationName;
+            donationName = TreasureCalculateZoneController.Instance.DonationName;
         }
 
         public void UpdatedScoreName()
         {
-            AddNewHighscore(username, (int)_treasureCalculateZone.totalCalculateCoins, donationName);
+            AddNewHighscore(username, (int)TreasureCalculateZoneController.Instance.TotalCalculateCoins, donationName);
         }
 
         public void AddNewHighscore(string username, int score, string donationName)
@@ -237,7 +230,7 @@ namespace cakeslice
         //	yield return www;
         //}
     }
-}
+
 public struct Highscore_FortBoyard
 {
 	public string username;

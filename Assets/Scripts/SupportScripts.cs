@@ -32,9 +32,11 @@ namespace cakeslice
          
         public GameObject UIManager;
         public UI_Controller _UI_Controller;
+        public static SupportScripts Instance { get; private set; }
 
-        void Awake()
+        public void Awake()
         {
+            Instance = this;
             if (GameObject.Find("LoadingManager"))
             {
                 levelLoaderManager = GameObject.Find("LoadingManager").GetComponent<LevelLoaderManager>();

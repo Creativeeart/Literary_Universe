@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-
+using cakeslice;
 public class Chest : MonoBehaviour {
-    public cakeslice.FortBoyardGameController fortBoyardGameController;
     public CameraShakeHitHammer cameraShakeHitHammer;
     public GameObject hammer;
     public GameObject hitParticle;
@@ -19,10 +18,15 @@ public class Chest : MonoBehaviour {
     public Vector3 offsetHammer;
     public float timeToFallCoin = 0.01f;
     public int countKeyOpened = 0;
+    public static Chest Instance { get; private set; }
 
+    public void Awake()
+    {
+        Instance = this;
+    }
     void Update()
     {
-        if (cakeslice.FortBoyardGameController.Instance.treasureZone)
+        if (FortBoyardGameController.Instance.IsTreasureZone)
         {
             timeRemainig -= Time.deltaTime;
             timeToFallCoin -= Time.deltaTime;

@@ -6,95 +6,63 @@ namespace cakeslice
 {
     public class FortBoyardGameController : MonoBehaviour
     {
-        public FB_CamMovingController FB_CamMovingController;
+        [Header("Settings")]
         public bool isLockFPS = true;
-        public GameObject fpsGameObject;
+        public float totalTime = 120; //Сколько времени требуется для испытаний. По умолчанию: 120 / 60 = 2 мин.
+
+        [Header("Audio")]
         public AudioSource audioSourceDoors;
         public AudioClip closedDoor;
-        public GameObject[] disableObjects;
-        public CameraDoorsController _cameraDoorsController;
-        public EndTime _endTime;
-        //public bool camRotation = false;
-        //public GameObject mainCamera;
-        public GameObject fortBoyardGameObject;
-        //public float speedRotation;
-        //public Animator camAnimator;
-        public GameObject mainMenu, gameRulers, mainUconsUI, watchUI, timeReducing;
+
+        [Header("Main Camera")]
+        public GameObject mainCamera;
+
+        [Header("UI Elements")]
+        public GameObject canvasTreasureZone;
+        public GameObject fpsGameObject;
+        public GameObject mainMenu;
+        public GameObject gameRulers;
+        public GameObject mainUconsUI;
+        public GameObject watchUI;
         public Transform timeReducingParent;
-        public GameObject[] game_rooms;
-        public GameObject[] game_rules_in_rooms;
-        public TextMeshProUGUI totalTimeText;
-        //public Camera camDoor;
-        public TimerGame _timerGame;
-        public float totalTime;
-        public int totalKeys = 5;
-        public int totalTips;
-        public int currentKeys;
-        public int currentTips;
-        public GameObject[] keys;
-        public GameObject[] tips;
-
-        public GateZoneController gateZoneController;
-        //public GameObject gateCamWithUI;
-
-        //public GameObject door_2, door_7;
+        public GameObject timeReducing;
         public GameObject pauseGameModal;
         public GameObject exitGameModal;
-        public TextMeshProUGUI textExitModal;
-        public int currentNumberRoom = 0;
-        public bool isRoomPause = false;
+        public GameObject failModal;
         public GameObject failGameModalInRooms;
         public TextMeshProUGUI failGameText;
         public GameObject winGameModalInRooms;
+        public TextMeshProUGUI textExitModal;
+        public TextMeshProUGUI totalTimeText;
 
-        public static GameObject TextInfoToNextZone { set; get; }
+        [Header("Objects in scene")]
+        public GameObject fortBoyardGameObject;
+        public GameObject[] game_rooms;
+        public GameObject[] game_rules_in_rooms;
 
+        [Header("Other")]
+        public GameObject[] disableObjects;
 
+        [Header("Keys & Tips")]
+        public int totalKeys = 3; // Кол-во ключей.
+        public int totalTips = 3; // Кол-во подсказок.
+        public int CurrentKeys { get; set; }
+        public int CurrentTips { get; set; }
+        public GameObject[] keys;
+        public GameObject[] tips;
 
+        
+        public Animator AnimatorDoor { get; set; }
+        public GameObject TextInfoToNextZone { get; set; }
+        public bool IsRoomPause { get; set; }
 
-        //FortBoyardGameController.AnimatorDoor = doorAnimator; //Способ - 1; * - обращение через другой скрипт
+        public bool IsGateZone { get; set; }
+        public bool IsAlphabetZone { get; set; }
+        public bool IsTreasureZone { get; set; }
+        public bool IsTreasureCalculateZone { get; set; }
 
-        public static Animator AnimatorDoor; // Статик переменная; Способ - 1
-
-
-
-        //FortBoyardGameController.Instance.AnimatorDoorConstructor = doorAnimator; // Способ - 2; * - обращение через другой скрипт 
-
-        private Animator _AnimatorDoor; // Приватная переменная - используется через AnimatorDoorConstructor; Способ - 2
-        public Animator AnimatorDoorConstructor
-        {
-            get
-            {
-                return _AnimatorDoor;
-            }
-            set
-            {
-                _AnimatorDoor = value;
-            }
-        }
-
-
-        //FortBoyardGameController.Instance.AnimatorDoorConstructorAuto = doorAnimator; // Спосбо - 3; * - обращение через другой скрипт
-
-        public Animator AnimatorDoorConstructorAuto { get; set; } //АвтоКонструктор; Способ - 3
-
-
-
-
-
-
-
-
-
-
-
-
-        public GameObject canvasTreasureZone;
-        public TreasureCalculateZone _treasureCalculateZone;
-        public GameObject failModal;
-        public bool alphabetZone = false;
-        public bool treasureZone = false;
-        public bool gameRooms = false;
+        public bool GameRooms { get; set; }
+        public int CurrentNumberRoom { get; set; }
 
         public static FortBoyardGameController Instance { get; private set; }
 
@@ -103,26 +71,17 @@ namespace cakeslice
             Instance = this;
         }
 
-        private void Start()
+        void Start()
         {
             if (isLockFPS)
             {
                 Application.targetFrameRate = 65;
             }
-            totalTips = gateZoneController.allTipsList.Count;
-            _timerGame.seconds = totalTime;
+            totalTips = GateZoneController.Instance.allTipsList.Count;
+            TimerGame.Instance.seconds = totalTime;
             ReloadTimer();
         }
-        public void ClosePauseModal()
-        {
-            pauseGameModal.SetActive(false);
-            Time.timeScale = 1;
-        }
-        public void MainPauseWithEsc()
-        {
-            pauseGameModal.SetActive(true);
-            Time.timeScale = 0;
-        }
+
         private void Update()
         {
             EndTimes();
@@ -130,15 +89,15 @@ namespace cakeslice
             {
                 fpsGameObject.SetActive(!fpsGameObject.activeSelf);
             }
-            
+
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 MainPauseWithEsc();
             }
-            if (!gateZoneController.isGateZone)
+            if (!IsGateZone)
             {
-                for (int i = 0; i < currentKeys; i++) keys[i].SetActive(true);
-                for (int i = 0; i < currentTips; i++)
+                for (int i = 0; i < CurrentKeys; i++) keys[i].SetActive(true);
+                for (int i = 0; i < CurrentTips; i++)
                 {
                     if (i >= 3) break;
                     tips[i].SetActive(true);
@@ -153,41 +112,90 @@ namespace cakeslice
             //{
             //    camAnimator.applyRootMotion = false;
             //}
-            if (treasureZone)
+            if (IsTreasureZone)
             {
-                if (_timerGame.seconds <= 10.0f)
+                if (TimerGame.Instance.seconds <= 10.0f)
                 {
-                    gateZoneController.isOpenGate = false;
-                    gateZoneController.gateAnimation.SetBool("Closed", true);
+                    GateZoneController.Instance.isOpenGate = false;
+                    GateZoneController.Instance.gateAnimation.SetBool("Closed", true);
                     //gateCamWithUI.SetActive(true);
                 }
                 canvasTreasureZone.SetActive(true);
             }
         }
-
         void EndTimes()
         {
-            if (_timerGame.seconds <= _timerGame.endTime)
+            if (TimerGame.Instance.seconds <= TimerGame.Instance.endTime)
             {
-                _timerGame.RunTime = false;
-                if (treasureZone)
+                TimerGame.Instance.RunTime = false;
+                if (IsTreasureZone)
                 {
-                    _treasureCalculateZone.check = true;
+                    failModal.SetActive(true);
+                    IsTreasureZone = false;
                 }
-                if (gameRooms)
+                if (GameRooms)
                 {
                     LoseRoom();
                 }
-                if (alphabetZone)
+                if (IsAlphabetZone)
                 {
                     failModal.SetActive(true);
+                    IsAlphabetZone = false;
+                }
+                if (IsGateZone)
+                {
+                    failModal.SetActive(true);
+                    IsGateZone = false;
                 }
             }
         }
+        public IEnumerator GoToGateZone()
+        {
+            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToGateZoneA);
+            yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera);
+            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToGateZoneB);
+            GateZoneController.Instance.GateZoneEntered();
+        }
+
+        public IEnumerator GoToAlphabetZone()
+        {
+            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToAlphabetZoneA);
+            yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera);
+            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToAlphabetZoneB);
+            AlphabetZoneController.Instance.AlphabetZoneEntered();
+        }
+
+        public IEnumerator GoToTreasureZone()
+        {
+            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Zone);
+            yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera);
+            TreasureZoneController.Instance.TreasureZoneEntered();
+        }
+
+        public IEnumerator GoToTreasureCalculateZone()
+        {
+            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Calculate_Zone_A);
+            yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera);
+            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Calculate_Zone_B);
+            TreasureCalculateZoneController.Instance.TreasureCalculateZoneEntered();
+        }
+        public void ClosePauseModal()
+        {
+            pauseGameModal.SetActive(false);
+            Time.timeScale = 1;
+        }
+        public void MainPauseWithEsc()
+        {
+            pauseGameModal.SetActive(true);
+            Time.timeScale = 0;
+        }
+        
+
+        
 
         public void ExitModalShow(int numberRoom)
         {
-            currentNumberRoom = numberRoom;
+            CurrentNumberRoom = numberRoom;
             if (numberRoom == 0 || numberRoom == 1 || numberRoom == 2)
             {
                 textExitModal.text = "Выйти из комнаты?\n<size=30>При этом вы не получите <i><color=#FF8400FF>ключ</i></color>.</size>";
@@ -198,31 +206,31 @@ namespace cakeslice
             }
             if (numberRoom == 0 || numberRoom == 1 || numberRoom == 2 || numberRoom == 3)
             {
-                _timerGame.RunTime = false;
+                TimerGame.Instance.RunTime = false;
             }
             exitGameModal.SetActive(true);
             Time.timeScale = 0;
-            isRoomPause = true;
+            IsRoomPause = true;
         }
         public void ExitModalHide()
         {
             Time.timeScale = 1;
             exitGameModal.SetActive(false);
-            _timerGame.RunTime = true;
-            isRoomPause = false;
+            TimerGame.Instance.RunTime = true;
+            IsRoomPause = false;
         }
         public void Close_Game_Room()
         {
-            game_rooms[currentNumberRoom].SetActive(false);
+            game_rooms[CurrentNumberRoom].SetActive(false);
             //camDoor.enabled = true;
-            _timerGame.RunTime = false;
-            _timerGame.seconds = totalTime;
+            TimerGame.Instance.RunTime = false;
+            TimerGame.Instance.seconds = totalTime;
             mainUconsUI.SetActive(true);
             watchUI.SetActive(true);
             AnimatorDoor.SetBool("doorIsClosed", true);
             audioSourceDoors.PlayOneShot(closedDoor);
             TextInfoToNextZone.SetActive(true);
-            StartCoroutine(ReverseTime(4, currentNumberRoom));
+            StartCoroutine(ReverseTime(4, CurrentNumberRoom));
             ReloadTimer();
             for (int i = 0; i < disableObjects.Length; i++)
             {
@@ -231,8 +239,9 @@ namespace cakeslice
             }
             Time.timeScale = 1;
             exitGameModal.SetActive(false);
-            isRoomPause = false;
+            IsRoomPause = false;
             failGameModalInRooms.SetActive(false);
+            FB_CamMovingController.Instance.cameraToMovingFromScene.GetComponent<Camera>().enabled = true;
         }
 
         private IEnumerator ReverseTime(float time, int currentRoom)
@@ -247,25 +256,26 @@ namespace cakeslice
                     switch (numberRoom)
                     {
                         case 0:
-                            FB_CamMovingController.CameraMovingToPoint(FB_CamMovingController.pointToDoor2);
+                            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToDoor2);
                             break;
                         case 1:
-                            FB_CamMovingController.CameraMovingToPoint(FB_CamMovingController.pointToDoor3);
+                            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToDoor3);
                             break;
                         case 2:
-                            FB_CamMovingController.CameraMovingToPoint(FB_CamMovingController.pointToDoor4);
+                            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToDoor4);
                             break;
                         case 3:
-                            FB_CamMovingController.CameraMovingToPoint(FB_CamMovingController.pointToDoor5);
+                            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToDoor5);
                             break;
                         case 4:
-                            FB_CamMovingController.CameraMovingToPoint(FB_CamMovingController.pointToDoor6);
+                            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToDoor6);
                             break;
                         case 5:
-                            FB_CamMovingController.CameraMovingToPoint(FB_CamMovingController.pointToGateZoneA);
-                            yield return new WaitForSeconds(2);
-                            FB_CamMovingController.CameraMovingToPoint(FB_CamMovingController.pointToGateZoneB);
-                            _cameraDoorsController.GoToGateZone();
+                            Instance.IsGateZone = true;
+                            Instance.IsAlphabetZone = false;
+                            Instance.IsTreasureZone = false;
+                            Instance.IsTreasureCalculateZone = false;
+                            StartCoroutine(GoToGateZone());
                             break;
                     }
                     //else _cameraDoorsController.GoToCamToNextDoor("GoToDoorNumber_0" + numberRoom);
@@ -286,13 +296,13 @@ namespace cakeslice
             //camRotation = false;
             //camAnimator.SetBool("StartGame", true);
             mainMenu.SetActive(false);
-            FB_CamMovingController.CameraMovingToPoint(FB_CamMovingController.pointToBriefing);
+            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToBriefing);
             StartCoroutine(ShowRules());
         }
 
         private IEnumerator ShowRules()
         {
-            yield return new WaitForSeconds(FB_CamMovingController.speedDurationMovingCamera);
+            yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera);
             ShowGameRulers();
         }
 
@@ -305,7 +315,7 @@ namespace cakeslice
             gameRulers.SetActive(false);
             //mainCam.SetActive(false);
             //FB_CamMovingController.cameraToMovingFromScene.gameObject.SetActive(true);
-            FB_CamMovingController.CameraMovingToPoint(FB_CamMovingController.pointToDoor1);
+            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToDoor1);
             //doorsCam.SetActive(true);
             mainUconsUI.SetActive(true);
             watchUI.SetActive(true);
@@ -321,9 +331,9 @@ namespace cakeslice
         {
             if (typeRoom == "Keys")
             {
-                currentKeys = currentKeys + 1;
+                CurrentKeys = CurrentKeys + 1;
             }
-            else if (typeRoom == "Tips") currentTips = currentTips + 1;
+            else if (typeRoom == "Tips") CurrentTips = CurrentTips + 1;
             totalTime = totalTime + 10;
             winGameModalInRooms.SetActive(true);
         }
@@ -341,25 +351,25 @@ namespace cakeslice
         {
             failGameModalInRooms.SetActive(true);
             failGameText.text = "Время вышло!\nК сожалению вы не справились с испытанием";
-            _timerGame.RunTime = false;
-            isRoomPause = true;
+            TimerGame.Instance.RunTime = false;
+            IsRoomPause = true;
         }
         public void LoseRoom(string text)
         {
             failGameModalInRooms.SetActive(true);
             failGameText.text = text;
-            _timerGame.RunTime = false;
-            isRoomPause = true;
+            TimerGame.Instance.RunTime = false;
+            IsRoomPause = true;
         }
         public void RunTimer()
         {
-            _timerGame.RunTime = true;
-            _timerGame.seconds = totalTime;
+            TimerGame.Instance.RunTime = true;
+            TimerGame.Instance.seconds = totalTime;
         }
         public void StopTimer()
         {
-            _timerGame.RunTime = false;
-            _timerGame.seconds = totalTime;
+            TimerGame.Instance.RunTime = false;
+            TimerGame.Instance.seconds = totalTime;
         }
         public void ReloadTimer()
         {

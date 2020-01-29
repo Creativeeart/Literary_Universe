@@ -48,7 +48,7 @@ namespace cakeslice
 
         void Update()
         {
-            if (!_fortBoyardGameController.isRoomPause)
+            if (!FortBoyardGameController.Instance.IsRoomPause)
             {
                 if (!isWinner) {
                     mousePos = Input.mousePosition;
