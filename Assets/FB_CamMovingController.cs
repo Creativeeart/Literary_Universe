@@ -239,6 +239,104 @@ public class FB_CamMovingController : MonoBehaviour {
         cameraToMovingFromScene.DOMove(point.transform.position, speedDurationMovingCamera).Play();
         cameraToMovingFromScene.DORotate(point.transform.eulerAngles, speedDurationMovingCamera).Play();
     }
+    //public IEnumerator CameraMovingToPoint(Transform pointA, Transform pointB) //Движение камеры к точкам
+    //{
+    //    cameraToMovingFromScene.DOMove(pointA.transform.position, speedDurationMovingCamera).Play();
+    //    cameraToMovingFromScene.DORotate(pointA.transform.eulerAngles, speedDurationMovingCamera).Play();
+    //    string pointName = pointA.name;
+    //    yield return new WaitForSeconds(speedDurationMovingCamera);
+    //    cameraToMovingFromScene.DOMove(pointB.transform.position, speedDurationMovingCamera).Play();
+    //    cameraToMovingFromScene.DORotate(pointB.transform.eulerAngles, speedDurationMovingCamera).Play();
+    //    pointName = pointB.name;
+    //    switch (pointName)
+    //    {
+    //        case "Point_StartPosition_A":
+    //            DisableChecks();
+    //            isMovingToStartPositionA = true;
+    //            break;
+    //        case "Point_StartPosition_B":
+    //            DisableChecks();
+    //            isMovingToStartPositionB = true;
+    //            break;
+    //        case "Target_ForCamRotation":
+    //            DisableChecks();
+    //            isRotateOnTarget = true;
+    //            break;
+    //        case "Point_Briefing":
+    //            DisableChecks();
+    //            isMovingToBriefing = true;
+    //            break;
+    //        case "Point_Door1":
+    //            DisableChecks();
+    //            isMovingToDoor1 = true;
+    //            break;
+    //        case "Point_Door2":
+    //            DisableChecks();
+    //            isMovingToDoor2 = true;
+    //            break;
+    //        case "Point_Door3":
+    //            DisableChecks();
+    //            isMovingToDoor3 = true;
+    //            break;
+    //        case "Point_Door4":
+    //            DisableChecks();
+    //            isMovingToDoor4 = true;
+    //            break;
+    //        case "Point_Door5":
+    //            DisableChecks();
+    //            isMovingToDoor5 = true;
+    //            break;
+    //        case "Point_Door6":
+    //            DisableChecks();
+    //            isMovingToDoor6 = true;
+    //            break;
+    //        case "Point_GateZone_A":
+    //            DisableChecks();
+    //            isMovingToGateZoneA = true;
+    //            break;
+    //        case "Point_GateZone_B":
+    //            DisableChecks();
+    //            isMovingToGateZoneB = true;
+    //            //FortBoyardGameController.Instance.IsGateZone = true;
+    //            //FortBoyardGameController.Instance.IsAlphabetZone = false;
+    //            //FortBoyardGameController.Instance.IsTreasureZone = false;
+    //            //FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
+    //            break;
+    //        case "Point_AlphabetZone_A":
+    //            DisableChecks();
+    //            isMovingToAlphabetZoneA = true;
+    //            break;
+    //        case "Point_AlphabetZone_B":
+    //            DisableChecks();
+    //            isMovingToAlphabetZoneB = true;
+    //            //FortBoyardGameController.Instance.IsGateZone = false;
+    //            //FortBoyardGameController.Instance.IsAlphabetZone = true;
+    //            //FortBoyardGameController.Instance.IsTreasureZone = false;
+    //            //FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
+    //            break;
+    //        case "Point_Treasure_Zone":
+    //            DisableChecks();
+    //            isMovingToTreasureZone = true;
+    //            //FortBoyardGameController.Instance.IsGateZone = false;
+    //            //FortBoyardGameController.Instance.IsAlphabetZone = false;
+    //            //FortBoyardGameController.Instance.IsTreasureZone = true;
+    //            //FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
+    //            break;
+    //        case "Point_Treasure_Calculate_Zone_A":
+    //            DisableChecks();
+    //            isMovingToTreasureCalculateZoneA = true;
+    //            break;
+    //        case "Point_Treasure_Calculate_Zone_B":
+    //            DisableChecks();
+    //            isMovingToTreasureCalculateZoneB = true;
+    //            //FortBoyardGameController.Instance.IsGateZone = false;
+    //            //FortBoyardGameController.Instance.IsAlphabetZone = false;
+    //            //FortBoyardGameController.Instance.IsTreasureZone = false;
+    //            //FortBoyardGameController.Instance.IsTreasureCalculateZone = true;
+    //            break;
+    //    }
+        
+    //}
     //IEnumerator AfterStopMovingCamera(bool thisZone)
     //{
     //    yield return new WaitForSeconds(speedDurationMovingCamera);

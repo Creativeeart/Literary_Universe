@@ -225,7 +225,7 @@ namespace cakeslice
             FortBoyardGameController.Instance.mainUconsUI.SetActive(false);
             FortBoyardGameController.Instance.GameRooms = false;
             UI_GateZone.SetActive(false);
-            StartCoroutine(FortBoyardGameController.Instance.GoToAlphabetZone());
+            StartCoroutine(FortBoyardGameController.Instance.GoToAlphabetZone()); // Переход к зоне с алфавитом
         }
 
         public void OpenTip()

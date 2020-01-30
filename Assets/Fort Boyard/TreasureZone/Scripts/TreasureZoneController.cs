@@ -95,7 +95,7 @@ public class TreasureZoneController : MonoBehaviour {
                     FortBoyardGameController.Instance.IsTreasureCalculateZone = true;
                     FortBoyardGameController.Instance.watchUI.SetActive(false);
                     UI_TreasureZone.SetActive(false);
-                    StartCoroutine(FortBoyardGameController.Instance.GoToTreasureCalculateZone());
+                    StartCoroutine(FortBoyardGameController.Instance.GoToTreasureCalculateZone()); // Переход к зоне подсчета золота
                 }
             })
             .Play();

@@ -88,7 +88,7 @@ namespace cakeslice
                             FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
                         }
                         UI_AlphabetZone.SetActive(false);
-                        StartCoroutine(FortBoyardGameController.Instance.GoToTreasureZone());
+                        StartCoroutine(FortBoyardGameController.Instance.GoToTreasureZone()); // Переход к сокровищнице
                     }
                 }
             }

@@ -175,7 +175,7 @@ namespace cakeslice
         public IEnumerator GoToTreasureCalculateZone()
         {
             FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Calculate_Zone_A);
-            yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera);
+            yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera + TreasureCalculateZoneController.Instance.time);
             FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Calculate_Zone_B);
             TreasureCalculateZoneController.Instance.TreasureCalculateZoneEntered();
         }
@@ -189,9 +189,7 @@ namespace cakeslice
             pauseGameModal.SetActive(true);
             Time.timeScale = 0;
         }
-        
 
-        
 
         public void ExitModalShow(int numberRoom)
         {
@@ -275,7 +273,7 @@ namespace cakeslice
                             Instance.IsAlphabetZone = false;
                             Instance.IsTreasureZone = false;
                             Instance.IsTreasureCalculateZone = false;
-                            StartCoroutine(GoToGateZone());
+                            StartCoroutine(GoToGateZone()); // Переход к зоне с воротами
                             break;
                     }
                     //else _cameraDoorsController.GoToCamToNextDoor("GoToDoorNumber_0" + numberRoom);
@@ -310,6 +308,7 @@ namespace cakeslice
         {
             gameRulers.SetActive(true);
         }
+
         public void GoalGamesClose()
         {
             gameRulers.SetActive(false);

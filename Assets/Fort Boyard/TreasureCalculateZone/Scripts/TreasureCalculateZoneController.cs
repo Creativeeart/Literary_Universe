@@ -7,6 +7,8 @@ namespace cakeslice
 {
     public class TreasureCalculateZoneController : MonoBehaviour
     {
+        public TextMeshProUGUI CapacityGoldText;
+        public TextMeshProUGUI CapacityGoldTextShadow;
         public TextMeshProUGUI finishUI_nameText;
         public TextMeshProUGUI finishUI_resultMoneyText;
         public TextMeshProUGUI finishUI_positionLeaderboardText;
@@ -39,7 +41,7 @@ namespace cakeslice
 
         public void TreasureCalculateZoneEntered()
         {
-            Instance.CalculateGold();
+            CalculateGold();
         }
 
         void Update()
@@ -88,16 +90,28 @@ namespace cakeslice
             //treasureCalculateZoneCamera.GetComponent<Animator>().enabled = true;
             StartCoroutine("NumberAnimate");
         }
+
         IEnumerator NumberAnimate()
         {
-            yield return new WaitForSeconds(2f);
             float startTime = Time.realtimeSinceStartup;
             float fraction = 0f;
 
             while (fraction < 1f)
             {
                 fraction = Mathf.Clamp01((Time.realtimeSinceStartup - startTime) / time);
-                float result = Mathf.Lerp(0, TotalCalculateCoins, fraction);
+                float result = Mathf.Lerp(0, Chest.Instance.coinsBoyard, fraction);
+                CapacityGoldText.text = result.ToString();
+                CapacityGoldTextShadow.text = result.ToString();
+                yield return null;
+            }
+            yield return new WaitForSeconds(4f);
+            float startTime2 = Time.realtimeSinceStartup;
+            float fraction2 = 0f;
+
+            while (fraction2 < 1f)
+            {
+                fraction2 = Mathf.Clamp01((Time.realtimeSinceStartup - startTime2) / time);
+                float result = Mathf.Lerp(0, TotalCalculateCoins, fraction2);
                 totalGoldsTextMeshPro.text = "$ " + result.ToString();
                 yield return null;
             }
