@@ -90,8 +90,7 @@ namespace cakeslice
             //treasureCalculateZoneCamera.GetComponent<Animator>().enabled = true;
             StartCoroutine("NumberAnimate");
         }
-
-        IEnumerator NumberAnimate()
+        public IEnumerator CapacityAnimateNumber()
         {
             float startTime = Time.realtimeSinceStartup;
             float fraction = 0f;
@@ -100,18 +99,27 @@ namespace cakeslice
             {
                 fraction = Mathf.Clamp01((Time.realtimeSinceStartup - startTime) / time);
                 float result = Mathf.Lerp(0, Chest.Instance.coinsBoyard, fraction);
+                result = (int)result;
                 CapacityGoldText.text = result.ToString();
                 CapacityGoldTextShadow.text = result.ToString();
                 yield return null;
             }
-            yield return new WaitForSeconds(4f);
-            float startTime2 = Time.realtimeSinceStartup;
-            float fraction2 = 0f;
+            CapacityGoldText.text = Chest.Instance.coinsBoyard.ToString();
+            CapacityGoldTextShadow.text = Chest.Instance.coinsBoyard.ToString();
+            yield return new WaitForSeconds(2);
+            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Calculate_Zone_B);
+            TreasureCalculateZoneEntered();
+        }
+        IEnumerator NumberAnimate()
+        {
+            yield return new WaitForSeconds(3);
+            float startTime = Time.realtimeSinceStartup;
+            float fraction = 0f;
 
-            while (fraction2 < 1f)
+            while (fraction < 1f)
             {
-                fraction2 = Mathf.Clamp01((Time.realtimeSinceStartup - startTime2) / time);
-                float result = Mathf.Lerp(0, TotalCalculateCoins, fraction2);
+                fraction = Mathf.Clamp01((Time.realtimeSinceStartup - startTime) / time);
+                float result = Mathf.Lerp(0, TotalCalculateCoins, fraction);
                 totalGoldsTextMeshPro.text = "$ " + result.ToString();
                 yield return null;
             }

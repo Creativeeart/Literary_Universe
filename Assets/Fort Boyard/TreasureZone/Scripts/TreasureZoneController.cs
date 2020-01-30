@@ -32,9 +32,11 @@ public class TreasureZoneController : MonoBehaviour {
 
     public void TreasureZoneEntered()
     {
+        
         if (FortBoyardGameController.Instance.IsTreasureZone)
         {
             UI_TreasureZone.SetActive(true);
+            
             targetCamera = Camera.main;
             center = transform.position;
             size = transform.localScale;
@@ -87,20 +89,30 @@ public class TreasureZoneController : MonoBehaviour {
                 coinCounterTMPro.text = Coins.ToString();
                 if (j == countSpawnCoins)
                 {
-                    Coins = Chest.Instance.coinsBoyard;
-                    coinCounterTMPro.text = Coins.ToString();
-                    FortBoyardGameController.Instance.IsGateZone = false;
-                    FortBoyardGameController.Instance.IsAlphabetZone = false;
-                    FortBoyardGameController.Instance.IsTreasureZone = false;
-                    FortBoyardGameController.Instance.IsTreasureCalculateZone = true;
-                    FortBoyardGameController.Instance.watchUI.SetActive(false);
-                    UI_TreasureZone.SetActive(false);
-                    StartCoroutine(FortBoyardGameController.Instance.GoToTreasureCalculateZone()); // Переход к зоне подсчета золота
+                    StartCoroutine(WaitingEndCollectMoney());
                 }
+                
+                
             })
             .Play();
     }
-
+    IEnumerator WaitingEndCollectMoney()
+    {
+        Coins = Chest.Instance.coinsBoyard;
+        coinCounterTMPro.text = Coins.ToString();
+        yield return new WaitForSeconds(2);
+        if (Coins == Chest.Instance.coinsBoyard)
+        {
+            
+            FortBoyardGameController.Instance.IsGateZone = false;
+            FortBoyardGameController.Instance.IsAlphabetZone = false;
+            FortBoyardGameController.Instance.IsTreasureZone = false;
+            FortBoyardGameController.Instance.IsTreasureCalculateZone = true;
+            FortBoyardGameController.Instance.watchUI.SetActive(false);
+            UI_TreasureZone.SetActive(false);
+            StartCoroutine(FortBoyardGameController.Instance.GoToTreasureCalculateZone()); // Переход к зоне подсчета золота
+        }
+    }
     void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 0, 0, 0.4f);

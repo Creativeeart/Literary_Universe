@@ -169,15 +169,20 @@ namespace cakeslice
         {
             FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Zone);
             yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera);
+            IsGateZone = false;
+            IsAlphabetZone = false;
+            IsTreasureZone = true;
+            IsTreasureCalculateZone = false;
             TreasureZoneController.Instance.TreasureZoneEntered();
         }
 
         public IEnumerator GoToTreasureCalculateZone()
         {
             FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Calculate_Zone_A);
-            yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera + TreasureCalculateZoneController.Instance.time);
-            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Calculate_Zone_B);
-            TreasureCalculateZoneController.Instance.TreasureCalculateZoneEntered();
+            yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera);
+            StartCoroutine(TreasureCalculateZoneController.Instance.CapacityAnimateNumber());
+            //FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Calculate_Zone_B);
+            //TreasureCalculateZoneController.Instance.TreasureCalculateZoneEntered();
         }
         public void ClosePauseModal()
         {
@@ -228,7 +233,7 @@ namespace cakeslice
             AnimatorDoor.SetBool("doorIsClosed", true);
             audioSourceDoors.PlayOneShot(closedDoor);
             TextInfoToNextZone.SetActive(true);
-            StartCoroutine(ReverseTime(4, CurrentNumberRoom));
+            StartCoroutine(ReverseTime(1, CurrentNumberRoom));
             ReloadTimer();
             for (int i = 0; i < disableObjects.Length; i++)
             {

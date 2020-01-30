@@ -77,19 +77,10 @@ namespace cakeslice
                 if (runFakeSekonds) waitForMoneyFalling += Time.deltaTime;
                 if ((waitForMoneyFalling >= 3) && (runFakeSekonds == true))
                 {
-                    if ((waitForMoneyFalling >= 4) && (runFakeSekonds == true))
-                    {
-                        if ((waitForMoneyFalling >= 6) && (runFakeSekonds == true))
-                        {
-                            runFakeSekonds = false;
-                            FortBoyardGameController.Instance.IsGateZone = false;
-                            FortBoyardGameController.Instance.IsAlphabetZone = false;
-                            FortBoyardGameController.Instance.IsTreasureZone = true;
-                            FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
-                        }
-                        UI_AlphabetZone.SetActive(false);
-                        StartCoroutine(FortBoyardGameController.Instance.GoToTreasureZone()); // Переход к сокровищнице
-                    }
+                    
+                    UI_AlphabetZone.SetActive(false);
+                    StartCoroutine(FortBoyardGameController.Instance.GoToTreasureZone()); // Переход к сокровищнице
+                    runFakeSekonds = false;
                 }
             }
         }

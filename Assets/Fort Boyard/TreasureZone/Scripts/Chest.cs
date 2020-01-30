@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
 using TMPro;
 using UnityEngine.UI;
 using cakeslice;
@@ -18,26 +20,43 @@ public class Chest : MonoBehaviour {
     public Vector3 offsetHammer;
     public float timeToFallCoin = 0.01f;
     public int countKeyOpened = 0;
+    bool isReset = false;
     public static Chest Instance { get; private set; }
 
     public void Awake()
     {
         Instance = this;
     }
+    IEnumerator CoinsFall()
+    {
+        yield return new WaitForSeconds(2);
+    }
     void Update()
     {
         if (FortBoyardGameController.Instance.IsTreasureZone)
         {
-            timeRemainig -= Time.deltaTime;
-            timeToFallCoin -= Time.deltaTime;
+            if (!isReset)
+            {
+                float summ = coinsBoyard * (FortBoyardGameController.Instance.totalTime / 100); //Подсчет монет в сундуке в зависимости от времени
+                coinsBoyard = (int)summ;
+                isReset = true;
+            }
             if (countKeyOpened != 5)
             {
-                if (timeToFallCoin <= 0)
+                timeRemainig -= Time.deltaTime;
+                timeToFallCoin -= Time.deltaTime;
+                if (coinsBoyard > 0) {
+                    if (timeToFallCoin <= 0)
+                    {
+                        coinsBoyard -= coinsFall;
+                        timeToFallCoin = 0.01f;
+                        allMoneyTMPro.text = "$ " + coinsBoyard.ToString();
+                        allMoneyTMPro_shadow.text = allMoneyTMPro.text;
+                    }
+                }
+                else
                 {
-                    coinsBoyard -= coinsFall;
-                    timeToFallCoin = 0.01f;
-                    allMoneyTMPro.text = "$ " + coinsBoyard.ToString();
-                    allMoneyTMPro_shadow.text = allMoneyTMPro.text;
+                    coinsBoyard = 0;
                 }
             }
             if (Input.GetMouseButtonDown(0))
