@@ -103,14 +103,9 @@ public class TreasureZoneController : MonoBehaviour {
         yield return new WaitForSeconds(2);
         if (Coins == Chest.Instance.coinsBoyard)
         {
-            
-            FortBoyardGameController.Instance.IsGateZone = false;
-            FortBoyardGameController.Instance.IsAlphabetZone = false;
-            FortBoyardGameController.Instance.IsTreasureZone = false;
-            FortBoyardGameController.Instance.IsTreasureCalculateZone = true;
             FortBoyardGameController.Instance.watchUI.SetActive(false);
             UI_TreasureZone.SetActive(false);
-            StartCoroutine(FortBoyardGameController.Instance.GoToTreasureCalculateZone()); // Переход к зоне подсчета золота
+            StartCoroutine(FB_CamMovingController.Instance.GoToTreasureCalculateZone()); // Переход к зоне подсчета золота
         }
     }
     void OnDrawGizmosSelected()

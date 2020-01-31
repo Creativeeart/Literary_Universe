@@ -204,7 +204,7 @@ using cakeslice;
                 if (i < highscoreList.Length)
                 {
                     highscoreFields[i].text = highscoreList[i].username;
-                    highscoreRecord[i].text = "$ " + highscoreList[i].score.ToString();
+                    highscoreRecord[i].text = highscoreList[i].score.ToString("C0");
                     highscoreDonate[i].text = highscoreList[i].donate;
                     records[i] = highscoreList[i].score;
                     maxValue = records.Max();

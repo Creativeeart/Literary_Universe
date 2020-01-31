@@ -60,6 +60,10 @@ public class FB_CamMovingController : MonoBehaviour {
 
     [Header("Main Settings")]
     public float speedDurationMovingCamera = 2; //Скорость движения камеры от точки к точке
+    public float durationShake = 0.1f;
+    public float strengthShake = 0.5f;
+    public int vibratoShake = 5;
+    public float randomnesShake = 2f;
 
     [Header("Rotation Camera Settings")]
     public Vector3 offset; //Сдвиг камеры от цели
@@ -87,28 +91,21 @@ public class FB_CamMovingController : MonoBehaviour {
         {
             CameraRotation();
         }
+        //if (Input.GetKeyDown(KeyCode.S))
+        //{
+        //    CameraShake();
+        //}
     }
 
-    void MoveToStartPositionB() //Переход к позиции StartPositionB и начало вращения камеры вокруг цели
+    void MoveToStartPositionB() //Переход к позиции из позиции StartPositionA в StartPositionB и начало вращения камеры вокруг цели
     {
-        isMovingToStartPositionB = true;
-        if (isMovingToStartPositionB)
-        {
-            cameraToMovingFromScene.DOMove(pointToStartPositionB.transform.position, speedDurationMovingCamera)
-                .OnComplete(() =>
-                {
-                    isMovingToStartPositionB = false;
-                    isRotateOnTarget = true;
-                })
-                .Play();
-            cameraToMovingFromScene.DORotate(pointToStartPositionB.transform.eulerAngles, speedDurationMovingCamera)
-                .OnComplete(() =>
-                {
-                    isMovingToStartPositionB = false;
-                    isRotateOnTarget = true;
-                })
-                .Play();
-        }
+        cameraToMovingFromScene.DOMove(pointToStartPositionB.transform.position, speedDurationMovingCamera)
+            .OnComplete(() =>
+            {
+                isRotateOnTarget = true;
+            })
+            .Play();
+        cameraToMovingFromScene.DORotate(pointToStartPositionB.transform.eulerAngles, speedDurationMovingCamera).Play();
     }
 
     void CameraRotation() //Вращение камеры вокруг "цели"
@@ -198,10 +195,6 @@ public class FB_CamMovingController : MonoBehaviour {
             case "Point_GateZone_B":
                 DisableChecks();
                 isMovingToGateZoneB = true;
-                //FortBoyardGameController.Instance.IsGateZone = true;
-                //FortBoyardGameController.Instance.IsAlphabetZone = false;
-                //FortBoyardGameController.Instance.IsTreasureZone = false;
-                //FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
                 break;
             case "Point_AlphabetZone_A":
                 DisableChecks();
@@ -210,18 +203,10 @@ public class FB_CamMovingController : MonoBehaviour {
             case "Point_AlphabetZone_B":
                 DisableChecks();
                 isMovingToAlphabetZoneB = true;
-                //FortBoyardGameController.Instance.IsGateZone = false;
-                //FortBoyardGameController.Instance.IsAlphabetZone = true;
-                //FortBoyardGameController.Instance.IsTreasureZone = false;
-                //FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
                 break;
             case "Point_Treasure_Zone":
                 DisableChecks();
                 isMovingToTreasureZone = true;
-                //FortBoyardGameController.Instance.IsGateZone = false;
-                //FortBoyardGameController.Instance.IsAlphabetZone = false;
-                //FortBoyardGameController.Instance.IsTreasureZone = true;
-                //FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
                 break;
             case "Point_Treasure_Calculate_Zone_A":
                 DisableChecks();
@@ -230,116 +215,82 @@ public class FB_CamMovingController : MonoBehaviour {
             case "Point_Treasure_Calculate_Zone_B":
                 DisableChecks();
                 isMovingToTreasureCalculateZoneB = true;
-                //FortBoyardGameController.Instance.IsGateZone = false;
-                //FortBoyardGameController.Instance.IsAlphabetZone = false;
-                //FortBoyardGameController.Instance.IsTreasureZone = false;
-                //FortBoyardGameController.Instance.IsTreasureCalculateZone = true;
                 break;
         }
         cameraToMovingFromScene.DOMove(point.transform.position, speedDurationMovingCamera).Play();
         cameraToMovingFromScene.DORotate(point.transform.eulerAngles, speedDurationMovingCamera).Play();
     }
-    //public IEnumerator CameraMovingToPoint(Transform pointA, Transform pointB) //Движение камеры к точкам
-    //{
-    //    cameraToMovingFromScene.DOMove(pointA.transform.position, speedDurationMovingCamera).Play();
-    //    cameraToMovingFromScene.DORotate(pointA.transform.eulerAngles, speedDurationMovingCamera).Play();
-    //    string pointName = pointA.name;
-    //    yield return new WaitForSeconds(speedDurationMovingCamera);
-    //    cameraToMovingFromScene.DOMove(pointB.transform.position, speedDurationMovingCamera).Play();
-    //    cameraToMovingFromScene.DORotate(pointB.transform.eulerAngles, speedDurationMovingCamera).Play();
-    //    pointName = pointB.name;
-    //    switch (pointName)
-    //    {
-    //        case "Point_StartPosition_A":
-    //            DisableChecks();
-    //            isMovingToStartPositionA = true;
-    //            break;
-    //        case "Point_StartPosition_B":
-    //            DisableChecks();
-    //            isMovingToStartPositionB = true;
-    //            break;
-    //        case "Target_ForCamRotation":
-    //            DisableChecks();
-    //            isRotateOnTarget = true;
-    //            break;
-    //        case "Point_Briefing":
-    //            DisableChecks();
-    //            isMovingToBriefing = true;
-    //            break;
-    //        case "Point_Door1":
-    //            DisableChecks();
-    //            isMovingToDoor1 = true;
-    //            break;
-    //        case "Point_Door2":
-    //            DisableChecks();
-    //            isMovingToDoor2 = true;
-    //            break;
-    //        case "Point_Door3":
-    //            DisableChecks();
-    //            isMovingToDoor3 = true;
-    //            break;
-    //        case "Point_Door4":
-    //            DisableChecks();
-    //            isMovingToDoor4 = true;
-    //            break;
-    //        case "Point_Door5":
-    //            DisableChecks();
-    //            isMovingToDoor5 = true;
-    //            break;
-    //        case "Point_Door6":
-    //            DisableChecks();
-    //            isMovingToDoor6 = true;
-    //            break;
-    //        case "Point_GateZone_A":
-    //            DisableChecks();
-    //            isMovingToGateZoneA = true;
-    //            break;
-    //        case "Point_GateZone_B":
-    //            DisableChecks();
-    //            isMovingToGateZoneB = true;
-    //            //FortBoyardGameController.Instance.IsGateZone = true;
-    //            //FortBoyardGameController.Instance.IsAlphabetZone = false;
-    //            //FortBoyardGameController.Instance.IsTreasureZone = false;
-    //            //FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
-    //            break;
-    //        case "Point_AlphabetZone_A":
-    //            DisableChecks();
-    //            isMovingToAlphabetZoneA = true;
-    //            break;
-    //        case "Point_AlphabetZone_B":
-    //            DisableChecks();
-    //            isMovingToAlphabetZoneB = true;
-    //            //FortBoyardGameController.Instance.IsGateZone = false;
-    //            //FortBoyardGameController.Instance.IsAlphabetZone = true;
-    //            //FortBoyardGameController.Instance.IsTreasureZone = false;
-    //            //FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
-    //            break;
-    //        case "Point_Treasure_Zone":
-    //            DisableChecks();
-    //            isMovingToTreasureZone = true;
-    //            //FortBoyardGameController.Instance.IsGateZone = false;
-    //            //FortBoyardGameController.Instance.IsAlphabetZone = false;
-    //            //FortBoyardGameController.Instance.IsTreasureZone = true;
-    //            //FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
-    //            break;
-    //        case "Point_Treasure_Calculate_Zone_A":
-    //            DisableChecks();
-    //            isMovingToTreasureCalculateZoneA = true;
-    //            break;
-    //        case "Point_Treasure_Calculate_Zone_B":
-    //            DisableChecks();
-    //            isMovingToTreasureCalculateZoneB = true;
-    //            //FortBoyardGameController.Instance.IsGateZone = false;
-    //            //FortBoyardGameController.Instance.IsAlphabetZone = false;
-    //            //FortBoyardGameController.Instance.IsTreasureZone = false;
-    //            //FortBoyardGameController.Instance.IsTreasureCalculateZone = true;
-    //            break;
-    //    }
-        
-    //}
-    //IEnumerator AfterStopMovingCamera(bool thisZone)
-    //{
-    //    yield return new WaitForSeconds(speedDurationMovingCamera);
-    //    thisZone = true;
-    //}
+
+    public IEnumerator GoToGateZone()
+    {
+        cameraToMovingFromScene.DOMove(pointToGateZoneA.transform.position, speedDurationMovingCamera)
+            .OnComplete(() =>
+            {
+                cameraToMovingFromScene.DOMove(pointToGateZoneB.transform.position, speedDurationMovingCamera)
+                .OnComplete(() =>
+                {
+                    FortBoyardGameController.Instance.DisableAllCheckZones();
+                    FortBoyardGameController.Instance.IsGateZone = true;
+                    GateZoneController.Instance.GateZoneEntered();
+                })
+                .Play();
+                cameraToMovingFromScene.DORotate(pointToGateZoneB.transform.eulerAngles, speedDurationMovingCamera).Play();
+            })
+            .Play();
+        cameraToMovingFromScene.DORotate(pointToGateZoneA.transform.eulerAngles, speedDurationMovingCamera).Play();
+        yield return null;
+    }
+
+    public IEnumerator GoToAlphabetZone()
+    {
+        cameraToMovingFromScene.DOMove(pointToAlphabetZoneA.transform.position, speedDurationMovingCamera)
+            .OnComplete(() =>
+            {
+                cameraToMovingFromScene.DOMove(pointToAlphabetZoneB.transform.position, speedDurationMovingCamera)
+                .OnComplete(() =>
+                {
+                    FortBoyardGameController.Instance.DisableAllCheckZones();
+                    FortBoyardGameController.Instance.IsAlphabetZone = true;
+                    AlphabetZoneController.Instance.AlphabetZoneEntered();
+                })
+                .Play();
+                cameraToMovingFromScene.DORotate(pointToAlphabetZoneB.transform.eulerAngles, speedDurationMovingCamera).Play();
+            })
+            .Play();
+        cameraToMovingFromScene.DORotate(pointToAlphabetZoneA.transform.eulerAngles, speedDurationMovingCamera).Play();
+        yield return null;
+    }
+
+    public IEnumerator GoToTreasureZone()
+    {
+        cameraToMovingFromScene.DOMove(pointToTreasure_Zone.transform.position, speedDurationMovingCamera)
+            .OnComplete(() =>
+            {
+                FortBoyardGameController.Instance.DisableAllCheckZones();
+                FortBoyardGameController.Instance.IsTreasureZone = true;
+                TreasureZoneController.Instance.TreasureZoneEntered();
+            })
+            .Play();
+        cameraToMovingFromScene.DORotate(pointToTreasure_Zone.transform.eulerAngles, speedDurationMovingCamera).Play();
+        yield return null;
+    }
+
+    public IEnumerator GoToTreasureCalculateZone()
+    {
+        cameraToMovingFromScene.DOMove(pointToTreasure_Calculate_Zone_A.transform.position, speedDurationMovingCamera)
+            .OnComplete(() =>
+            {
+                FortBoyardGameController.Instance.DisableAllCheckZones();
+                FortBoyardGameController.Instance.IsTreasureCalculateZone = true;
+                StartCoroutine(TreasureCalculateZoneController.Instance.CapacityAnimateNumber());
+            })
+            .Play();
+        cameraToMovingFromScene.DORotate(pointToTreasure_Calculate_Zone_A.transform.eulerAngles, speedDurationMovingCamera).Play();
+        yield return null;
+    }
+    
+    public void CameraShake()
+    {
+        cameraToMovingFromScene.DOShakePosition(durationShake, strengthShake, vibratoShake, randomnesShake).Play();
+    }
 }

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 namespace cakeslice
 {
     public class TreasureCalculateZoneController : MonoBehaviour
     {
+        public GameObject goldCap;
         public TextMeshProUGUI CapacityGoldText;
         public TextMeshProUGUI CapacityGoldTextShadow;
         public TextMeshProUGUI finishUI_nameText;
@@ -44,50 +46,16 @@ namespace cakeslice
             CalculateGold();
         }
 
-        void Update()
-        {
-            //if (FortBoyardGameController.Instance.IsTreasureCalculateZone)
-            //{
-            //    //spawn1.SetActive(false);
-            //    //spawn2.SetActive(false);
-            //    //treasurZoneCamera.SetActive(false);
-            //    //treasureCalculateZoneCamera.SetActive(true);
-            //    //_highscores_FortBoyard._fortBoyardGameController.FB_CamMovingController.CameraMovingToPoint(_highscores_FortBoyard._fortBoyardGameController.FB_CamMovingController.pointToTreasure_Calculate_Zone_A);
-            //    //StartCoroutine(Wait());
-            //    //uiCanvas.SetActive(true);
-            //    //currentCoins = _hitColliderCoin.currentCoins;
-            //    //if (Chest.Instance.countKeyOpened == 5)
-            //    //{
-            //    //    currentCoins = Chest.Instance.coinsBoyard;
-            //    //}
-            //    //else
-            //    //{
-            //    //    currentCoins = 0;
-            //    //}
-            //    //currentCoinstext.text = currentCoins.ToString();
-            //    //_hitColliderCoin.enabled = false;
-            //    //watchUI.SetActive(false);
-            //    FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
-            //}
-        }
-        IEnumerator Wait()
-        {
-            yield return new WaitForSeconds(2);
-            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Calculate_Zone_B);
-        }
-
         public void CalculateGold()
         {
-            //totalCalculateCoins = _hitColliderCoin.currentCoins * 63f;
             if (Chest.Instance.countKeyOpened == 5)
             {
-                TotalCalculateCoins = Chest.Instance.coinsBoyard * 63f;
+                TotalCalculateCoins = Chest.Instance.coinsBoyard * 6f;
             }
             else
             {
                 TotalCalculateCoins = 0;
             }
-            //treasureCalculateZoneCamera.GetComponent<Animator>().enabled = true;
             StartCoroutine("NumberAnimate");
         }
         public IEnumerator CapacityAnimateNumber()
@@ -102,6 +70,31 @@ namespace cakeslice
                 result = (int)result;
                 CapacityGoldText.text = result.ToString();
                 CapacityGoldTextShadow.text = result.ToString();
+                if (result > 20000)
+                {
+                    goldCap.transform.DOLocalMoveY(65f, 1);
+                    goldCap.transform.DOScale(new Vector3(80,80,80), 1);
+                }
+                if (result > 50000)
+                {
+                    goldCap.transform.DOLocalMoveY(75f, 1);
+                    goldCap.transform.DOScale(new Vector3(81, 90, 81), 1);
+                }
+                if (result > 80000)
+                {
+                    goldCap.transform.DOLocalMoveY(85f, 1);
+                    goldCap.transform.DOScale(new Vector3(86, 100, 86), 1);
+                }
+                if (result > 120000)
+                {
+                    goldCap.transform.DOLocalMoveY(95f, 1);
+                    goldCap.transform.DOScale(new Vector3(90, 110, 90), 1);
+                }
+                if (result > 150000)
+                {
+                    goldCap.transform.DOLocalMoveY(105f, 1);
+                    goldCap.transform.DOScale(new Vector3(92, 120, 92), 1);
+                }
                 yield return null;
             }
             CapacityGoldText.text = Chest.Instance.coinsBoyard.ToString();
@@ -120,7 +113,7 @@ namespace cakeslice
             {
                 fraction = Mathf.Clamp01((Time.realtimeSinceStartup - startTime) / time);
                 float result = Mathf.Lerp(0, TotalCalculateCoins, fraction);
-                totalGoldsTextMeshPro.text = "$ " + result.ToString();
+                totalGoldsTextMeshPro.text = result.ToString("C0");
                 yield return null;
             }
             StartCoroutine("ShowPojertvovanieUI");
@@ -130,15 +123,14 @@ namespace cakeslice
             }
             else
             {
-                recordText.text = string.Format("Предыдущий рекорд: ($ {0})", Highscores_FortBoyard.Instance.maxValue);
+                recordText.text = string.Format("Предыдущий рекорд: ({0:C0})", Highscores_FortBoyard.Instance.maxValue);
             }
         }
 
         IEnumerator ShowPojertvovanieUI()
         {
             yield return new WaitForSeconds(2f);
-            pojertvovanieUItext.text = "Поздравляем ваш выигрыш составил:<size=70 ><b><color=#FF6400FF>\n" + "$ "
-                                        + TotalCalculateCoins.ToString() + "</color></b></font>";
+            pojertvovanieUItext.text = "Поздравляем ваш выигрыш составил:<size=70 ><b><color=#FF6400FF>\n" + TotalCalculateCoins.ToString("C0") + "</color></b></font>";
             pojertvovanieUI.SetActive(true);
         }
         public void SelectDonation(TextMeshProUGUI selecetDonationName)
@@ -152,7 +144,7 @@ namespace cakeslice
                 Highscores_FortBoyard.Instance.UpdateDonationName();
                 Highscores_FortBoyard.Instance.UpdatedScoreName();
                 finishUI_nameText.text = "Уважаемый<b><color=#FF6400FF> " + Highscores_FortBoyard.Instance.realname + "</color></b></font>!";
-                finishUI_resultMoneyText.text = "<size=40> Ваш результат<b><color=#FF6400FF>"+ " $ "+ TotalCalculateCoins.ToString() + "</color> был добавлен на доску рекордов.</size>";
+                finishUI_resultMoneyText.text = "<size=40> Ваш результат<b><color=#FF6400FF>"+ TotalCalculateCoins.ToString("C0") + "</color> был добавлен на доску рекордов.</size>";
                 finishUI_positionLeaderboardText.text = "Ваша позиция в рейтинге: <size=70><b><color=#FF6400FF>" + " - " + "</color></b></font>";
                 finishUI_donateText.text = "Так же вы пожертвовали заработанные средства в:" + "\n" + "<size=50><b><color=#FF6400FF>" + DonationName + "</color></b></font>";
                 selectDonateModalUI.SetActive(false);

@@ -7,6 +7,7 @@ namespace cakeslice
 {
     public class GateZoneController : MonoBehaviour
     {
+        public SelectOpenTipsMechanism SelectOpenTipsMechanism;
         public GameObject UI_GateZone;
         public GameObject arrow3DKeysHolder, arrow3DTipsMechanism;
 
@@ -63,6 +64,8 @@ namespace cakeslice
 
         int counter = 0;
         int counter2 = 0;
+
+        public bool isOpenTipsMechanismEnabled = true;
         public static GateZoneController Instance { get; private set; }
 
         public void Awake()
@@ -91,6 +94,7 @@ namespace cakeslice
                     keys3DIcons[i].SetActive(true);
                     activeKeyCount++;
                 }
+                isOpenTipsMechanismEnabled = true;
             }
         }
 
@@ -217,15 +221,12 @@ namespace cakeslice
 
         public void GoToAlphabetZone()
         {
-            FortBoyardGameController.Instance.IsGateZone = false;
-            FortBoyardGameController.Instance.IsAlphabetZone = true;
-            FortBoyardGameController.Instance.IsTreasureZone = false;
-            FortBoyardGameController.Instance.IsTreasureCalculateZone = false;
-
             FortBoyardGameController.Instance.mainUconsUI.SetActive(false);
             FortBoyardGameController.Instance.GameRooms = false;
             UI_GateZone.SetActive(false);
-            StartCoroutine(FortBoyardGameController.Instance.GoToAlphabetZone()); // Переход к зоне с алфавитом
+            isOpenTipsMechanismEnabled = false;
+            StartCoroutine(FB_CamMovingController.Instance.GoToAlphabetZone()); // Переход к зоне с алфавитом
+            SelectOpenTipsMechanism._outLine.enabled = false;
         }
 
         public void OpenTip()
@@ -264,6 +265,7 @@ namespace cakeslice
             isOpenGate = true;
             gateAnimation.enabled = true;
             OnEnableGreenLamp();
+            isOpenTipsMechanismEnabled = true;
         }
 
         public void OnEnableGreenLamp()

@@ -27,9 +27,12 @@ namespace cakeslice
                 {
                     if (isClicked)
                     {
-                        StartCoroutine("FiilImage");
-                        TimerGame.Instance.RunTime = true;
-                        GateZoneController.Instance.arrow3DTipsMechanism.SetActive(false);
+                        if (GateZoneController.Instance.isOpenTipsMechanismEnabled)
+                        {
+                            StartCoroutine("FiilImage");
+                            TimerGame.Instance.RunTime = true;
+                            GateZoneController.Instance.arrow3DTipsMechanism.SetActive(false);
+                        }
                     }
                 }
                 else alertUI.ShowWarningModalWindow("Доступ запрещен. У вас нет подсказок. \nДополнительные подсказки вы можете взять на панели, в нижней части экрана");
@@ -39,12 +42,18 @@ namespace cakeslice
 
         void OnMouseEnter()
         {
-            _outLine.enabled = true;
+            if (GateZoneController.Instance.isOpenTipsMechanismEnabled)
+            {
+                _outLine.enabled = true;
+            }
         }
 
         void OnMouseExit()
         {
-            _outLine.enabled = false;
+            if (GateZoneController.Instance.isOpenTipsMechanismEnabled)
+            {
+                _outLine.enabled = false;
+            }
         }
 
         IEnumerator FiilImage()

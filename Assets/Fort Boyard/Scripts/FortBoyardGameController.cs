@@ -18,6 +18,7 @@ namespace cakeslice
         public GameObject mainCamera;
 
         [Header("UI Elements")]
+        public GameObject inputGetKeyDownToContinue;
         public GameObject canvasTreasureZone;
         public GameObject fpsGameObject;
         public GameObject mainMenu;
@@ -81,9 +82,24 @@ namespace cakeslice
             TimerGame.Instance.seconds = totalTime;
             ReloadTimer();
         }
-
+        IEnumerator ShowMainMenuFloating()
+        {
+            if (Input.GetKey(KeyCode.Space))
+            {
+                float i = 0;
+                while (mainMenu.GetComponent<CanvasGroup>().alpha < 1)
+                {
+                    i = i + 0.05f;
+                    inputGetKeyDownToContinue.SetActive(false);
+                    mainMenu.GetComponent<CanvasGroup>().alpha = i;
+                    mainMenu.GetComponent<CanvasGroup>().interactable = true;
+                    yield return null;//new WaitForSeconds(0.1f);
+                }
+            }
+        }
         private void Update()
         {
+            StartCoroutine(ShowMainMenuFloating());
             EndTimes();
             if (Input.GetKeyDown(KeyCode.BackQuote))
             {
@@ -149,41 +165,15 @@ namespace cakeslice
                 }
             }
         }
-        public IEnumerator GoToGateZone()
-        {
-            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToGateZoneA);
-            yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera);
-            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToGateZoneB);
-            GateZoneController.Instance.GateZoneEntered();
-        }
 
-        public IEnumerator GoToAlphabetZone()
+        public void DisableAllCheckZones()
         {
-            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToAlphabetZoneA);
-            yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera);
-            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToAlphabetZoneB);
-            AlphabetZoneController.Instance.AlphabetZoneEntered();
-        }
-
-        public IEnumerator GoToTreasureZone()
-        {
-            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Zone);
-            yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera);
             IsGateZone = false;
             IsAlphabetZone = false;
-            IsTreasureZone = true;
+            IsTreasureZone = false;
             IsTreasureCalculateZone = false;
-            TreasureZoneController.Instance.TreasureZoneEntered();
         }
 
-        public IEnumerator GoToTreasureCalculateZone()
-        {
-            FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Calculate_Zone_A);
-            yield return new WaitForSeconds(FB_CamMovingController.Instance.speedDurationMovingCamera);
-            StartCoroutine(TreasureCalculateZoneController.Instance.CapacityAnimateNumber());
-            //FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToTreasure_Calculate_Zone_B);
-            //TreasureCalculateZoneController.Instance.TreasureCalculateZoneEntered();
-        }
         public void ClosePauseModal()
         {
             pauseGameModal.SetActive(false);
@@ -274,11 +264,7 @@ namespace cakeslice
                             FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToDoor6);
                             break;
                         case 5:
-                            Instance.IsGateZone = true;
-                            Instance.IsAlphabetZone = false;
-                            Instance.IsTreasureZone = false;
-                            Instance.IsTreasureCalculateZone = false;
-                            StartCoroutine(GoToGateZone()); // Переход к зоне с воротами
+                            StartCoroutine(FB_CamMovingController.Instance.GoToGateZone()); // Переход к зоне с воротами
                             break;
                     }
                     //else _cameraDoorsController.GoToCamToNextDoor("GoToDoorNumber_0" + numberRoom);

@@ -6,7 +6,8 @@ namespace cakeslice
 {
     public class AlphabetZoneController : MonoBehaviour
     {
-        public GameObject UI_AlphabetZone;//
+        public bool isEnableChars = false;
+        public GameObject UI_AlphabetZone;
         public TextMeshProUGUI tips;
         public GameObject treasureCoinFall, treasureCoinSpawn;
         public float waitForMoneyFalling = 0f;
@@ -43,6 +44,7 @@ namespace cakeslice
             maxChar = correctWord.Length;
             for (int i = 0; i < outlines.Length; i++) outlines[i].enabled = false;
             for (int i = 0; i < selectChars.Length; i++) selectChars[i].selectObject = false;
+            isEnableChars = true;
         }
 
         public void ClearOutline()
@@ -63,6 +65,7 @@ namespace cakeslice
                         RotationHead();
                         runTime = false;
                         seconds = 0;
+                        ClearOutline();
                     }
                     else
                     {
@@ -79,7 +82,7 @@ namespace cakeslice
                 {
                     
                     UI_AlphabetZone.SetActive(false);
-                    StartCoroutine(FortBoyardGameController.Instance.GoToTreasureZone()); // Переход к сокровищнице
+                    StartCoroutine(FB_CamMovingController.Instance.GoToTreasureZone()); // Переход к сокровищнице
                     runFakeSekonds = false;
                 }
             }

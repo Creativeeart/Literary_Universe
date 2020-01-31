@@ -5,7 +5,6 @@ using TMPro;
 using UnityEngine.UI;
 using cakeslice;
 public class Chest : MonoBehaviour {
-    public CameraShakeHitHammer cameraShakeHitHammer;
     public GameObject hammer;
     public GameObject hitParticle;
     public AudioClip hitToMetalSound;
@@ -27,10 +26,7 @@ public class Chest : MonoBehaviour {
     {
         Instance = this;
     }
-    IEnumerator CoinsFall()
-    {
-        yield return new WaitForSeconds(2);
-    }
+
     void Update()
     {
         if (FortBoyardGameController.Instance.IsTreasureZone)
@@ -50,7 +46,7 @@ public class Chest : MonoBehaviour {
                     {
                         coinsBoyard -= coinsFall;
                         timeToFallCoin = 0.01f;
-                        allMoneyTMPro.text = "$ " + coinsBoyard.ToString();
+                        allMoneyTMPro.text = coinsBoyard.ToString();
                         allMoneyTMPro_shadow.text = allMoneyTMPro.text;
                     }
                 }
@@ -78,7 +74,8 @@ public class Chest : MonoBehaviour {
                                 Destroy(ins, 0.20f);
                                 Destroy(insParticle, 1f);
                                 ins.transform.LookAt(hit.transform.position);
-                                cameraShakeHitHammer.shakeDuration = 0.1f;
+                                //cameraShakeHitHammer.shakeDuration = 0.1f;
+                                FB_CamMovingController.Instance.CameraShake();
                                 hit.transform.GetComponent<CameraShakeHitHammer>().shakeDuration = 0.1f;
                             }
                         }
