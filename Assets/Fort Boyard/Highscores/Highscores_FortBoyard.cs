@@ -1,14 +1,18 @@
 using UnityEngine;
 using System.Collections;
+using System;
 using TMPro;
 using System.Linq;
 using cakeslice;
     public class Highscores_FortBoyard : MonoBehaviour
     {
         public GameObject loginFormUI, inputField;
+        public GameObject CurrentFormUI;
+    public TextMeshProUGUI CurrentNameUI_TextMeshProUGUI;
+    public string CurrentRealName;
         public TextMeshProUGUI[] highscoreFields, highscoreRecord, highscoreDonate;
         public TMP_InputField registrationRealnameUI;
-        public Highscore_FortBoyard[] highscoresList;
+    
         //const string privateCode = "skTTCvwFf0-wg9Q_TJ-_Wws59uWyamAU6na3BTMSXjYg";
         //const string publicCode = "5d416c3a76827f1758c4b7da";
         //const string webURL = "http://dreamlo.com/lb/";
@@ -19,11 +23,11 @@ using cakeslice;
         int[] records;
         int statusRegistration = 0;  //0 = ошибка регистрации; 1 = успешная регистрация; 2 = имя персонажа занято;        3 = поля не могут быть пустыми;
         //string text;
-        [HideInInspector]
         public int maxValue;
         public static Highscores_FortBoyard Instance { get; private set; }
-
-        public void Awake()
+    [SerializeField]
+    public Highscore_FortBoyard[] highscoresList;
+    public void Awake()
         {
             Instance = this;
         }
@@ -36,40 +40,55 @@ using cakeslice;
                 highscoreDonate[i].text = "-";
             }
             StartCoroutine("RefreshHighscores");
-        }
+        
+    }
+    public void Boom()
+    {
+        OnRealName(highscoresList);
+    }
 
-
-
-        IEnumerator RefreshHighscores()
+    IEnumerator RefreshHighscores()
         {
             while (true)
             {
                 DownloadHighscores();
-                yield return new WaitForSeconds(15);
+            yield return new WaitForSeconds(15);
             }
         }
-
+    public void SwitchName()
+    {
+        SupportScripts.Instance._authorization.SwitchName();
+        CurrentFormUI.SetActive(false);
+    }
         public void ContinueFromGuest()
         {
             SupportScripts.Instance._authorization.CloseLoginAndRegistrationForm();
             //_fortBoyardGameController.StartGame();
             //username = _supportScripts._authorization.currentUser;
-            username = "Guest" + Random.Range(0, 99999) + Random.Range(0, 99999);
+            username = "Guest" + UnityEngine.Random.Range(0, 99999) + UnityEngine.Random.Range(0, 99999);
             loginFormUI.SetActive(true);
         }
 
-        public void LaunchGame()
+    public void LaunchGame()
+    {
+        if (SupportScripts.Instance._authorization.currentUser == "Гость")
         {
-            if (SupportScripts.Instance._authorization.currentUser == "Гость")
-            {
             SupportScripts.Instance._authorization.OpenGuestForm();
-            }
-            else
-            {
-                username = SupportScripts.Instance._authorization.currentUser;
-                FortBoyardGameController.Instance.StartGame();
-            }
         }
+        else
+        {
+            username = SupportScripts.Instance._authorization.currentUser;
+            CurrentNameUI_TextMeshProUGUI.text = CurrentRealName;
+            CurrentFormUI.SetActive(true);
+            //FortBoyardGameController.Instance.StartGame();
+        }
+    }
+    public void LaunchGame2()
+    {
+        username = SupportScripts.Instance._authorization.currentUser;
+        FortBoyardGameController.Instance.StartGame();
+        CurrentFormUI.SetActive(false);
+    }
 
         public void EnterName()
         {
@@ -174,6 +193,7 @@ using cakeslice;
             {
                 FormatHighscores(www.text);
                 OnHighscoresDownloaded(highscoresList);
+                Boom();
                 Debug.Log("База загружена");
             }
             else
@@ -190,20 +210,32 @@ using cakeslice;
             for (int i = 0; i < entries.Length; i++)
             {
                 string[] entryInfo = entries[i].Split(new char[] { '|' });
-                string username = entryInfo[1];
-                int score = int.Parse(entryInfo[2]);
+                
+                string username = entryInfo[0];
+            string realname = entryInfo[1];
+            int score = int.Parse(entryInfo[2]);
                 string donate = entryInfo[4];
-                highscoresList[i] = new Highscore_FortBoyard(username, score, donate);
+            highscoresList[i] = new Highscore_FortBoyard(username, realname, score, donate);
             }
         }
-
-        public void OnHighscoresDownloaded(Highscore_FortBoyard[] highscoreList)
+    public void OnRealName(Highscore_FortBoyard[] highscoreList)
+    {
+        for (int i = 0; i < highscoreList.Length; i++)
+        {
+            if (SupportScripts.Instance._authorization.currentUser == highscoreList[i].username)
+            {
+                CurrentRealName = highscoreList[i].realname;
+                break;
+            }
+        }
+    }
+    public void OnHighscoresDownloaded(Highscore_FortBoyard[] highscoreList)
         {
             for (int i = 0; i < highscoreFields.Length; i++)
             {
                 if (i < highscoreList.Length)
                 {
-                    highscoreFields[i].text = highscoreList[i].username;
+                    highscoreFields[i].text = highscoreList[i].realname;
                     highscoreRecord[i].text = highscoreList[i].score.ToString("C0");
                     highscoreDonate[i].text = highscoreList[i].donate;
                     records[i] = highscoreList[i].score;
@@ -230,16 +262,19 @@ using cakeslice;
         //	yield return www;
         //}
     }
-
+[Serializable]
 public struct Highscore_FortBoyard
 {
 	public string username;
-	public int score;
+    public string realname;
+    public int score;
     public string donate;
+    
 
-	public Highscore_FortBoyard(string _username, int _score, string _donate) {
+	public Highscore_FortBoyard(string _username, string _realname, int _score, string _donate) {
 		username = _username;
-		score = _score;
+        realname = _realname;
+        score = _score;
         donate = _donate;
 	}
 }

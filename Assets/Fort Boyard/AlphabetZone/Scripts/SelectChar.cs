@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
 namespace cakeslice
 {
     public class SelectChar : MonoBehaviour
@@ -28,6 +29,7 @@ namespace cakeslice
                         if (!selectObject)
                         {
                             selectObject = true;
+                            gameObject.transform.DOLocalMoveY(0, 0.6f);
                             AlphabetZoneController.Instance.Word.Add(gameObject.name);
                             AlphabetZoneController.Instance.LastChar = gameObject.name;
                             AlphabetZoneController.Instance.WordUI_TextMeshPro.text = AlphabetZoneController.Instance.MergeText();
@@ -68,6 +70,7 @@ namespace cakeslice
                                     AlphabetZoneController.Instance.WordUI_TextMeshPro.text = AlphabetZoneController.Instance.MergeText();
                                     AlphabetZoneController.Instance.InputWord = AlphabetZoneController.Instance.WordUI_TextMeshPro.text;
                                     AlphabetZoneController.Instance.CurentChar -= 1;
+                                    gameObject.transform.DOLocalMoveY(0.06f, 0.6f);
                                 }
                                 else
                                 {

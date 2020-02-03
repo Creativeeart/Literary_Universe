@@ -66,9 +66,64 @@ namespace cakeslice
                 DontDestroyOnLoad(gameObject);
             }
         }
+        public void SavePlayerPrefs()
+        {
+            //PlayerPrefs.SetFloat("saveFloat", saveFloat);
+            //PlayerPrefs.SetInt("saveInt", saveInt);
+            //PlayerPrefs.SetString("saveBool", saveBool.ToString());
+
+            //for (int i = 0; i < saveArray.Length; i++)
+            //{
+            //PlayerPrefs.SetString("elementArray_" + i, saveArray[i]);
+            //}
+
+            PlayerPrefs.SetString("currentUser", currentUser.ToString());
+            //PlayerPrefs.SetString("IsShowTips", IsShowTips.ToString());
+            //PlayerPrefs.SetString("startIntro", startIntro.ToString());
+            //PlayerPrefs.SetFloat("musicVolume", musicVolume);
+            //PlayerPrefs.SetFloat("soundVolume", soundVolume);
+        }
+
+        public void LoadPlayerPrefs()
+        {
+            //if (PlayerPrefs.HasKey("saveFloat")) loadFloat = PlayerPrefs.GetFloat("saveFloat");
+            //if (PlayerPrefs.HasKey("saveInt")) loadInt = PlayerPrefs.GetInt("saveInt");
+            //if (PlayerPrefs.HasKey("saveBool")) loadBool = bool.Parse(PlayerPrefs.GetString("saveBool"));
+
+            //int j = 0;
+            //List<string> tmp = new List<string>();
+            //while (PlayerPrefs.HasKey("elementArray_" + j))
+            //{
+            //tmp.Add(PlayerPrefs.GetString("elementArray_" + j));
+            //j++;
+            //}
+
+            //loadArray = new string[tmp.Count];
+            //for (int i = 0; i < tmp.Count; i++)
+            //{
+            //loadArray[i] = tmp[i];
+            //}
+
+            if (PlayerPrefs.HasKey("currentUser"))
+            {
+                currentUser = PlayerPrefs.GetString("currentUser");
+                currentUserUI.text = "Вы вошли как: <b><i><color=#FF8E00FF><u>" + currentUser + "</u></color></i></b>";
+                loginAndRegistrationButtons.SetActive(false);
+                exitButtons.SetActive(true);
+            }
+            else
+            {
+                currentUser = "Гость";
+            }
+            //if (PlayerPrefs.HasKey("IsShowTips")) IsShowTips = bool.Parse(PlayerPrefs.GetString("IsShowTips"));
+            //if (PlayerPrefs.HasKey("startIntro")) startIntro = bool.Parse(PlayerPrefs.GetString("startIntro"));
+            //if (PlayerPrefs.HasKey("musicVolume")) musicVolume = PlayerPrefs.GetFloat("musicVolume");
+            //if (PlayerPrefs.HasKey("soundVolume")) soundVolume = PlayerPrefs.GetFloat("soundVolume");
+        }
         void Start()
         {
-            currentUser = "Гость";
+            //currentUser = "Гость";
+            LoadPlayerPrefs();
         }
         public void ContinueFromGuest()
         {
@@ -114,8 +169,13 @@ namespace cakeslice
             loginAndRegistrationButtons.SetActive(true);
             currentUser = "Гость";
             currentUserUI.text = "Вы вошли как: <b><i><color=#FF8E00FF><u>" + currentUser + "</u></color></i></b>";
+            PlayerPrefs.DeleteKey("currentUser");
         }
-
+        public void SwitchName()
+        {
+            Logout();
+            ContinueFromGuest();
+        }
 
         IEnumerator Login_POST()
         {
@@ -145,6 +205,7 @@ namespace cakeslice
                         loginAndRegistrationButtons.SetActive(false);
                         exitButtons.SetActive(true);
                         CloseLoginAndRegistrationForm();
+                        SavePlayerPrefs();
                         break;
                     case 3:
                         loginErrorUI.text = "Поля не могут быть пустыми";

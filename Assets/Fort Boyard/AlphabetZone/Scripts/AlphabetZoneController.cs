@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.Linq;
-namespace cakeslice
-{
+using cakeslice;
     public class AlphabetZoneController : MonoBehaviour
     {
         public string CorrectWord;
@@ -13,15 +12,15 @@ namespace cakeslice
         public TextMeshProUGUI Tips;
         public Animator headLion;
 
-        public List<string> Word { get; set; }
-        public string LastChar { get; set; }
-        public string InputWord { get; set; }
-        public bool IsEnableChars { get; set; }
-        public bool IsWordCorrect { get; set; }
-        public bool RunTime { get; set; }
-        public float Seconds { set; get; }
-        public int MaxChar { get; set; }
-        public int CurentChar { get; set; }
+        public List<string> Word;
+        public string LastChar;
+        public string InputWord;
+        public bool IsEnableChars;
+        public bool IsWordCorrect;
+        public bool RunTime;
+        public float Seconds;
+        public int MaxChar;
+        public int CurentChar;
         bool runFakeSekonds = false;
         float waitForMoneyFalling = 0f;
         GameObject[] selectChars;
@@ -130,4 +129,3 @@ namespace cakeslice
         }
 
     }
-}
