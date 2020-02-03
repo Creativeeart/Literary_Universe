@@ -103,7 +103,7 @@ ModelImporter:
     4300030: Top_dinamic_5
     4300032: Base
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:
@@ -144,9 +144,9 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 0
   tangentSpace:
-    normalSmoothAngle: 60
-    normalImportMode: 0
-    tangentImportMode: 3
+    normalSmoothAngle: 0
+    normalImportMode: 1
+    tangentImportMode: 1
   importAnimation: 0
   copyAvatar: 0
   humanDescription:

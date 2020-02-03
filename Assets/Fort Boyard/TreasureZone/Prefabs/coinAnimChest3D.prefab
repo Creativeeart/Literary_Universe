@@ -385,7 +385,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 511d58f5d9d9da745baf7768d3b1c97b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8b8dde466f134424c85061e46f995e5a, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -404,8 +404,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18e56966ae4ed914ab379128bdf6193f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceType: 0
-  value: 1
 --- !u!114 &114263644688985332
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -468,7 +466,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 511d58f5d9d9da745baf7768d3b1c97b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8b8dde466f134424c85061e46f995e5a, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -599,7 +597,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3220e6640e59b1841acecc5579737171, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chest: {fileID: 0}
   currentNumber_TextMeshPro: {fileID: 114158607379224366}
   currentNumber2_TextMeshPro: {fileID: 114572853720465318}
   randomNumber: 1

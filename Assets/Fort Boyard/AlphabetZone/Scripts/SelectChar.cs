@@ -17,44 +17,66 @@ namespace cakeslice
 
         void OnMouseDown()
         {
-            if (AlphabetZoneController.Instance.isEnableChars)
+            if (AlphabetZoneController.Instance.IsEnableChars)
             {
                 if (!AlertUI.Instance.isAlertUIActive)
                 {
-                    if (AlphabetZoneController.Instance.curentChar != AlphabetZoneController.Instance.maxChar)
+                    if (AlphabetZoneController.Instance.CurentChar != AlphabetZoneController.Instance.MaxChar)
                     {
                         _outLine.enabled = true;
 
                         if (!selectObject)
                         {
                             selectObject = true;
-                            AlphabetZoneController.Instance.word.text = AlphabetZoneController.Instance.word.text + gameObject.name;
-                            AlphabetZoneController.Instance.curentChar += 1;
-                            AlphabetZoneController.Instance.inputWord = AlphabetZoneController.Instance.word.text;
+                            AlphabetZoneController.Instance.Word.Add(gameObject.name);
+                            AlphabetZoneController.Instance.LastChar = gameObject.name;
+                            AlphabetZoneController.Instance.WordUI_TextMeshPro.text = AlphabetZoneController.Instance.MergeText();
+                            AlphabetZoneController.Instance.InputWord = AlphabetZoneController.Instance.WordUI_TextMeshPro.text;
+                            //AlphabetZoneController.Instance.word.text += gameObject.name;
+                            AlphabetZoneController.Instance.CurentChar += 1;
+                            //AlphabetZoneController.Instance.inputWord = AlphabetZoneController.Instance.word.text;
 
-                            if (AlphabetZoneController.Instance.curentChar == AlphabetZoneController.Instance.maxChar)
+                            if (AlphabetZoneController.Instance.CurentChar == AlphabetZoneController.Instance.MaxChar)
                             {
-                                if (AlphabetZoneController.Instance.inputWord == AlphabetZoneController.Instance.correctWord)
+                                if (AlphabetZoneController.Instance.InputWord == AlphabetZoneController.Instance.CorrectWord)
                                 {
                                     //Debug.Log("Слово ВЕРНОЕ");
-                                    AlphabetZoneController.Instance.runTime = true;
+                                    AlphabetZoneController.Instance.RunTime = true;
                                     FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToAlphabetZoneA);
-                                    AlphabetZoneController.Instance.isWordCorrect = true;
-                                    AlphabetZoneController.Instance.isEnableChars = false;
+                                    AlphabetZoneController.Instance.IsWordCorrect = true;
+                                    AlphabetZoneController.Instance.IsEnableChars = false;
                                 }
                                 else
                                 {
                                     //Debug.Log("Слово НЕВЕРНОЕ");
-                                    AlphabetZoneController.Instance.runTime = true;
+                                    AlphabetZoneController.Instance.RunTime = true;
                                     FB_CamMovingController.Instance.CameraMovingToPoint(FB_CamMovingController.Instance.pointToAlphabetZoneA);
-                                    AlphabetZoneController.Instance.isWordCorrect = false;
+                                    AlphabetZoneController.Instance.IsWordCorrect = false;
                                     AlphabetZoneController.Instance.ClearInput();
                                 }
                             }
                         }
                         else
                         {
-                            AlertUI.Instance.ShowWarningModalWindow("Буквы нельзя выбрать дважды! Если ошиблись при вводе буквы, нажмите кнопку 'Стереть слово'");
+                            if (AlphabetZoneController.Instance.Word.Contains(AlphabetZoneController.Instance.LastChar))
+                            {
+                                if (AlphabetZoneController.Instance.LastChar == gameObject.name)
+                                {
+                                    AlphabetZoneController.Instance.Word.RemoveAt(AlphabetZoneController.Instance.Word.Count - 1);
+                                    AlphabetZoneController.Instance.LastChar = gameObject.name;
+                                    selectObject = false;
+                                    AlphabetZoneController.Instance.WordUI_TextMeshPro.text = AlphabetZoneController.Instance.MergeText();
+                                    AlphabetZoneController.Instance.InputWord = AlphabetZoneController.Instance.WordUI_TextMeshPro.text;
+                                    AlphabetZoneController.Instance.CurentChar -= 1;
+                                }
+                                else
+                                {
+                                    //Debug.LogFormat("Вы можете удалить только последний введенный символ: {0}", AlphabetZoneController.Instance.LastWord);
+                                    AlertUI.Instance.ShowWarningModalWindow("Вы можете удалить только последний введенный символ: <b>'" + AlphabetZoneController.Instance.LastChar + "'.</b>" +
+                                        "\nЧтобы стереть все буквы, нажмите кнопку 'Стереть слово'");
+                                }
+                            }
+                            //AlertUI.Instance.ShowWarningModalWindow("Буквы нельзя выбрать дважды! Если ошиблись при вводе буквы, нажмите кнопку 'Стереть слово'");
                         }
                     }
                 }
@@ -63,7 +85,7 @@ namespace cakeslice
         
         void OnMouseEnter()
         {
-            if (AlphabetZoneController.Instance.isEnableChars)
+            if (AlphabetZoneController.Instance.IsEnableChars)
             {
                 if (selectObject == false) _outLine.enabled = true;
             }
@@ -71,7 +93,7 @@ namespace cakeslice
 
         void OnMouseExit()
         {
-            if (AlphabetZoneController.Instance.isEnableChars)
+            if (AlphabetZoneController.Instance.IsEnableChars)
             {
                 if (selectObject == false) _outLine.enabled = false;
             }

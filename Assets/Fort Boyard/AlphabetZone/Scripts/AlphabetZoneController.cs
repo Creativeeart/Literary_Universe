@@ -2,79 +2,90 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 namespace cakeslice
 {
     public class AlphabetZoneController : MonoBehaviour
     {
-        public bool isEnableChars = false;
+        public string CorrectWord;
         public GameObject UI_AlphabetZone;
-        public TextMeshProUGUI tips;
-        public GameObject treasureCoinFall, treasureCoinSpawn;
-        public float waitForMoneyFalling = 0f;
-        bool runFakeSekonds = false;
-        public TextMeshProUGUI word;
-        public Animator alphabet_CamAnimator;
+        public TextMeshProUGUI WordUI_TextMeshPro;
+        public TextMeshProUGUI Tips;
         public Animator headLion;
-        public bool isWordCorrect = false;
-        public bool runTime;
-        public float seconds;
-        public int maxChar = 0;
-        public int curentChar = 0;
-        public string correctWord;
-        public string inputWord;
-        public Outline[] outlines;
-        public SelectChar[] selectChars;
-        public Color red;
-        public Color green;
-        public Color defaultColor;
-        //public CameraShake cameraShake;
+
+        public List<string> Word { get; set; }
+        public string LastChar { get; set; }
+        public string InputWord { get; set; }
+        public bool IsEnableChars { get; set; }
+        public bool IsWordCorrect { get; set; }
+        public bool RunTime { get; set; }
+        public float Seconds { set; get; }
+        public int MaxChar { get; set; }
+        public int CurentChar { get; set; }
+        bool runFakeSekonds = false;
+        float waitForMoneyFalling = 0f;
+        GameObject[] selectChars;
+        
         public static AlphabetZoneController Instance { get; private set; }
+
+        public string MergeText()
+        {
+            string result = string.Empty;
+            foreach (string item in Word)
+            {
+                result += item;
+            }
+            return result;
+        }
 
         public void Awake()
         {
             Instance = this;
         }
-
+        void Start()
+        {
+            selectChars = GameObject.FindGameObjectsWithTag("Words").OrderBy(go => go.name).ToArray();
+        }
         public void AlphabetZoneEntered()
         {
             FortBoyardGameController.Instance.IsAlphabetZone = true;
             UI_AlphabetZone.SetActive(true);
-            word.text = string.Empty;
-            tips.text = GateZoneController.Instance.tipsText.text;
-            maxChar = correctWord.Length;
-            for (int i = 0; i < outlines.Length; i++) outlines[i].enabled = false;
-            for (int i = 0; i < selectChars.Length; i++) selectChars[i].selectObject = false;
-            isEnableChars = true;
+            WordUI_TextMeshPro.text = string.Empty;
+            Tips.text = GateZoneController.Instance.tipsText.text;
+            MaxChar = CorrectWord.Length;
+            for (int i = 0; i < selectChars.Length; i++) selectChars[i].GetComponent<Outline>().enabled = false;
+            for (int i = 0; i < selectChars.Length; i++) selectChars[i].GetComponent<SelectChar>().selectObject = false;
+            IsEnableChars = true;
         }
 
         public void ClearOutline()
         {
-            for (int i = 0; i < outlines.Length; i++) outlines[i].enabled = false;
-            for (int i = 0; i < selectChars.Length; i++) selectChars[i].selectObject = false;
+            for (int i = 0; i < selectChars.Length; i++) selectChars[i].GetComponent<Outline>().enabled = false;
+            for (int i = 0; i < selectChars.Length; i++) selectChars[i].GetComponent<SelectChar>().selectObject = false;
         }
         void Update()
         {
             if (FortBoyardGameController.Instance.IsAlphabetZone)
             {
-                if (runTime) seconds += Time.deltaTime;
-                if (seconds >= 3)
+                if (RunTime) Seconds += Time.deltaTime;
+                if (Seconds >= 3)
                 {
-                    if (isWordCorrect)
+                    if (IsWordCorrect)
                     {
-                        word.color = green;
+                        WordUI_TextMeshPro.color = Color.green;
                         RotationHead();
-                        runTime = false;
-                        seconds = 0;
+                        RunTime = false;
+                        Seconds = 0;
                         ClearOutline();
                     }
                     else
                     {
                         //cameraShake.shakeDuration = 0.5f;
-                        word.color = red;
+                        WordUI_TextMeshPro.color = Color.red;
                         GateZoneController.Instance.TimeReducing(5);
                         ReturnToAlphabet();
-                        runTime = false;
-                        seconds = 0;
+                        RunTime = false;
+                        Seconds = 0;
                     }
                 }
                 if (runFakeSekonds) waitForMoneyFalling += Time.deltaTime;
@@ -101,15 +112,16 @@ namespace cakeslice
 
         public void ClearInput()
         {
-            inputWord = string.Empty;
-            curentChar = 0;
+            InputWord = string.Empty;
+            CurentChar = 0;
             ClearOutline();
         }
         public void ClearInputByInterface()
         {
             ClearInput();
-            word.text = string.Empty;
-            word.color = defaultColor;
+            WordUI_TextMeshPro.text = string.Empty;
+            WordUI_TextMeshPro.color = Color.white;
+            Word.Clear();
         }
         IEnumerator ClearInterfaceWaiting()
         {

@@ -34,6 +34,7 @@ TagManager:
   - UI
   - CustomStar
   - Chest_key
+  - Words
   layers:
   - Default
   - TransparentFX
