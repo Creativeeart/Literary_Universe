@@ -9,10 +9,13 @@ namespace cakeslice
     {
         [Header("Профиль гостевого аккаунта")]
         public GameObject guestProfileForm;
+        public string guestLogin = "Guest";
+        public string guestRealName = "Гость";
 
         [Header("Текущий пользователь")]
         public TextMeshProUGUI currentUserUI;
         public string currentUser = string.Empty;
+        public string currentRealName = string.Empty;
 
         [Header("Поля для авторизации")]
         public TMP_InputField loginUsernameUI;
@@ -46,10 +49,9 @@ namespace cakeslice
         public static Authorization instance;
         public bool isDontDestroyOnLoad = true;
 
+        [SerializeField]
+        public UserList[] usersList;
 
-        Highscores_FortBoyard _highscores_FortBoyard;
-
-        bool internetConnection = false;
         void Awake()
         {
             if (isDontDestroyOnLoad)
@@ -68,69 +70,43 @@ namespace cakeslice
         }
         public void SavePlayerPrefs()
         {
-            //PlayerPrefs.SetFloat("saveFloat", saveFloat);
-            //PlayerPrefs.SetInt("saveInt", saveInt);
-            //PlayerPrefs.SetString("saveBool", saveBool.ToString());
-
-            //for (int i = 0; i < saveArray.Length; i++)
-            //{
-            //PlayerPrefs.SetString("elementArray_" + i, saveArray[i]);
-            //}
-
             PlayerPrefs.SetString("currentUser", currentUser.ToString());
-            //PlayerPrefs.SetString("IsShowTips", IsShowTips.ToString());
-            //PlayerPrefs.SetString("startIntro", startIntro.ToString());
-            //PlayerPrefs.SetFloat("musicVolume", musicVolume);
-            //PlayerPrefs.SetFloat("soundVolume", soundVolume);
+            PlayerPrefs.SetString("currentRealName", currentRealName.ToString());
         }
 
         public void LoadPlayerPrefs()
         {
-            //if (PlayerPrefs.HasKey("saveFloat")) loadFloat = PlayerPrefs.GetFloat("saveFloat");
-            //if (PlayerPrefs.HasKey("saveInt")) loadInt = PlayerPrefs.GetInt("saveInt");
-            //if (PlayerPrefs.HasKey("saveBool")) loadBool = bool.Parse(PlayerPrefs.GetString("saveBool"));
-
-            //int j = 0;
-            //List<string> tmp = new List<string>();
-            //while (PlayerPrefs.HasKey("elementArray_" + j))
-            //{
-            //tmp.Add(PlayerPrefs.GetString("elementArray_" + j));
-            //j++;
-            //}
-
-            //loadArray = new string[tmp.Count];
-            //for (int i = 0; i < tmp.Count; i++)
-            //{
-            //loadArray[i] = tmp[i];
-            //}
-
             if (PlayerPrefs.HasKey("currentUser"))
             {
                 currentUser = PlayerPrefs.GetString("currentUser");
+                currentRealName = PlayerPrefs.GetString("currentRealName");
                 currentUserUI.text = "Вы вошли как: <b><i><color=#FF8E00FF><u>" + currentUser + "</u></color></i></b>";
                 loginAndRegistrationButtons.SetActive(false);
                 exitButtons.SetActive(true);
             }
             else
             {
-                currentUser = "Гость";
+                currentUser = guestLogin;
+                currentRealName = guestRealName;
+                currentUserUI.text = "Вы вошли как: <b><i><color=#FF8E00FF><u>" + currentUser + "</u></color></i></b>";
+                loginAndRegistrationButtons.SetActive(false);
+                exitButtons.SetActive(true);
             }
-            //if (PlayerPrefs.HasKey("IsShowTips")) IsShowTips = bool.Parse(PlayerPrefs.GetString("IsShowTips"));
-            //if (PlayerPrefs.HasKey("startIntro")) startIntro = bool.Parse(PlayerPrefs.GetString("startIntro"));
-            //if (PlayerPrefs.HasKey("musicVolume")) musicVolume = PlayerPrefs.GetFloat("musicVolume");
-            //if (PlayerPrefs.HasKey("soundVolume")) soundVolume = PlayerPrefs.GetFloat("soundVolume");
         }
         void Start()
         {
-            //currentUser = "Гость";
             LoadPlayerPrefs();
-        }
-        public void ContinueFromGuest()
-        {
-            _highscores_FortBoyard = GameObject.Find("HighScoreManager").GetComponent<Highscores_FortBoyard>();
-            _highscores_FortBoyard.ContinueFromGuest();
+            StartCoroutine(RefreshHighscores());
         }
 
+        IEnumerator RefreshHighscores() //Обновить таблицу рекордов
+        {
+            while (true)
+            {
+                DownloadHighscores();
+                yield return new WaitForSeconds(10);
+            }
+        }
         public void OpenGuestForm()
         {
             loginAndregistrationForms.SetActive(true);
@@ -167,10 +143,21 @@ namespace cakeslice
         {
             exitButtons.SetActive(false);
             loginAndRegistrationButtons.SetActive(true);
-            currentUser = "Гость";
+            currentUser = guestLogin;
+            currentRealName = guestRealName;
             currentUserUI.text = "Вы вошли как: <b><i><color=#FF8E00FF><u>" + currentUser + "</u></color></i></b>";
             PlayerPrefs.DeleteKey("currentUser");
         }
+
+        public void ContinueFromGuest()
+        {
+            CloseLoginAndRegistrationForm();
+            System.DateTime localDate = System.DateTime.Now;
+            string tempDate = localDate.ToString().ReplaceFromCollection(new char[] { ':', '/', ' ', 'A', 'M', 'P' });
+            guestLogin = guestLogin + tempDate;
+            currentUser = guestLogin;
+        }
+
         public void SwitchName()
         {
             Logout();
@@ -186,8 +173,8 @@ namespace cakeslice
             yield return Query;
             if (Query.error != null)
             {
-                Debug.Log("Сервер не отвечает: " + Query.error);
-                loginErrorUI.text = Query.error;
+                Debug.Log("Сервер не отвечает: " + Query.error + "(Отсутствует подключение к интернету)");
+                loginErrorUI.text = Query.error + "(Отсутствует подключение к интернету)";
             }
             else
             {
@@ -201,6 +188,7 @@ namespace cakeslice
                     case 1:
                         loginErrorUI.text = "Авторизация успешна";
                         currentUser = loginUsername;
+                        DownloadHighscores();
                         currentUserUI.text = "Вы вошли как: <b><i><color=#FF8E00FF><u>" + currentUser + "</u></color></i></b>";
                         loginAndRegistrationButtons.SetActive(false);
                         exitButtons.SetActive(true);
@@ -227,21 +215,6 @@ namespace cakeslice
                 loginErrorUI.text = "Поля не могут пустыми";
             }
         }
-        IEnumerator CheckInternetConnection()
-        {
-            WWW www = new WWW("http://google.com");
-            yield return www;
-            if (www.error != null)
-            {
-                internetConnection = false;
-                Debug.Log("Ошибка интернета");
-            }
-            else
-            {
-                internetConnection = true;
-                Debug.Log("Интернет работает");
-            }
-        }
 
         IEnumerator Registration_POST()
         {
@@ -254,7 +227,7 @@ namespace cakeslice
             if (Query.error != null)
             {
                 Debug.Log("Сервер не отвечает: " + Query.error);
-                registrationErrorUI.text = Query.text;
+                registrationErrorUI.text = Query.error + "(Отсутствует подключение к интернету)";
             }
             else
             {
@@ -270,6 +243,7 @@ namespace cakeslice
                         loginUsername = registrationUsername;
                         loginPassword = registrationPassword;
                         currentUser = registrationUsername;
+                        currentRealName = registrationRealName;
                         StartCoroutine(Login_POST());
                         break;
                     case 2:
@@ -301,5 +275,88 @@ namespace cakeslice
             StartCoroutine(Registration_POST());
         }
 
+
+        public void DownloadHighscores() //Загрузка результатов в таблицу рекордов
+        {
+            StartCoroutine(DownloadHighscoresFromDatabase());
+        }
+
+        IEnumerator DownloadHighscoresFromDatabase()
+        {
+            WWW www = new WWW(url + "/users.txt");
+            yield return www;
+
+            if (string.IsNullOrEmpty(www.error))
+            {
+                FormatHighscores(www.text);
+                OnRealName();
+                Debug.Log("База загружена");
+            }
+            else
+            {
+                Debug.Log("Ошибка Загрузки: " + www.error);
+            }
+        }
+
+
+        public void OnRealName()
+        {
+            for (int i = 0; i < usersList.Length; i++)
+            {
+                if (currentUser == usersList[i].username)
+                {
+                    currentRealName = usersList[i].realname;
+                    break;
+                }
+            }
+        }
+
+        void FormatHighscores(string textStream)
+        {
+            string[] entries = textStream.Split(new char[] { '\n' }, System.StringSplitOptions.RemoveEmptyEntries);
+            usersList = new UserList[entries.Length];
+            //records = new int[entries.Length];
+            for (int i = 0; i < entries.Length; i++)
+            {
+                string[] entryInfo = entries[i].Split(new char[] { '|' });
+                string username = entryInfo[0];
+                string realname = entryInfo[2];
+                //int score = int.Parse(entryInfo[2]);
+                //string donate = entryInfo[4];
+                usersList[i] = new UserList(username, realname/*, score, donate*/);
+            }
+        }
+
+    }
+
+    [System.Serializable]
+    public struct UserList
+    {
+        public string username;
+        //public string realname;
+        //public int score;
+        //public string donate;
+        public string realname;
+
+        public UserList(string _username, string _realname/*, int _score, string _donate*/)
+        {
+            username = _username;
+            realname = _realname;
+            //score = _score;
+            //donate = _donate;
+        }
+    }
+
+}
+
+static class Extensions
+{
+    public static string ReplaceFromCollection(this string text, IEnumerable<char> characters)
+    {
+        foreach (var chr in characters)
+        {
+            text = text.Replace(chr.ToString(), string.Empty);
+        }
+        return text;
     }
 }

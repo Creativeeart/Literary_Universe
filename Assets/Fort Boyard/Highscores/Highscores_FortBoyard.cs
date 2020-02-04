@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 using TMPro;
 using System.Linq;
@@ -9,7 +10,6 @@ using cakeslice;
         public GameObject loginFormUI, inputField;
         public GameObject CurrentFormUI;
     public TextMeshProUGUI CurrentNameUI_TextMeshProUGUI;
-    public string CurrentRealName;
         public TextMeshProUGUI[] highscoreFields, highscoreRecord, highscoreDonate;
         public TMP_InputField registrationRealnameUI;
     
@@ -17,251 +17,219 @@ using cakeslice;
         //const string publicCode = "5d416c3a76827f1758c4b7da";
         //const string webURL = "http://dreamlo.com/lb/";
         const string webURL = "http://literaryuniverse.unitycoding.ru";
-        string username;
-        public string realname;
-        public string donationName;
         int[] records;
         int statusRegistration = 0;  //0 = ошибка регистрации; 1 = успешная регистрация; 2 = имя персонажа занято;        3 = поля не могут быть пустыми;
         //string text;
         public int maxValue;
-        public static Highscores_FortBoyard Instance { get; private set; }
+    public bool isInternetConnection = false;
+
+    public static Highscores_FortBoyard Instance { get; private set; }
     [SerializeField]
     public Highscore_FortBoyard[] highscoresList;
     public void Awake()
-        {
-            Instance = this;
-        }
-        void Start()
-        {
-            for (int i = 0; i < highscoreFields.Length; i++)
-            {
-                highscoreFields[i].text = "-";
-                highscoreRecord[i].text = "-";
-                highscoreDonate[i].text = "-";
-            }
-            StartCoroutine("RefreshHighscores");
-        
-    }
-    public void Boom()
     {
-        OnRealName(highscoresList);
+        Instance = this;
+    }
+    void Start()
+    {
+        StartCoroutine(CheckInternetConnection());
+        for (int i = 0; i < highscoreFields.Length; i++)
+        {
+            highscoreFields[i].text = "-";
+            highscoreRecord[i].text = "-";
+            highscoreDonate[i].text = "-";
+        }
+        StartCoroutine(RefreshHighscores());
     }
 
-    IEnumerator RefreshHighscores()
+    IEnumerator RefreshHighscores() //Обновить таблицу рекордов
+    {
+        while (true)
         {
-            while (true)
-            {
-                DownloadHighscores();
-            yield return new WaitForSeconds(15);
-            }
+            DownloadHighscores();
+            yield return new WaitForSeconds(10);
         }
+    }
+    IEnumerator CheckInternetConnection()
+    {
+        while (true)
+        {
+            WWW www = new WWW("http://google.com");
+            yield return www;
+            if (www.error == null)
+            {
+                isInternetConnection = true;
+                Debug.Log("Интернет работает");
+            }
+            else
+            {
+                isInternetConnection = false;
+                Debug.Log("Интернет НЕ работает");
+            }
+            yield return new WaitForSeconds(1);
+        }
+    }
     public void SwitchName()
     {
-        SupportScripts.Instance._authorization.SwitchName();
-        CurrentFormUI.SetActive(false);
-    }
-        public void ContinueFromGuest()
+        if (isInternetConnection)
         {
-            SupportScripts.Instance._authorization.CloseLoginAndRegistrationForm();
-            //_fortBoyardGameController.StartGame();
-            //username = _supportScripts._authorization.currentUser;
-            username = "Guest" + UnityEngine.Random.Range(0, 99999) + UnityEngine.Random.Range(0, 99999);
+            SupportScripts.Instance._authorization.SwitchName();
+            CurrentFormUI.SetActive(false);
             loginFormUI.SetActive(true);
-        }
-
-    public void LaunchGame()
-    {
-        if (SupportScripts.Instance._authorization.currentUser == "Гость")
-        {
-            SupportScripts.Instance._authorization.OpenGuestForm();
         }
         else
         {
-            username = SupportScripts.Instance._authorization.currentUser;
-            CurrentNameUI_TextMeshProUGUI.text = CurrentRealName;
+            Debug.Log("Сменить имя возможно только при наличии интернета");
+        }
+    }
+    
+
+    public void LaunchGame()
+    {
+        //if (SupportScripts.Instance._authorization.currentUser == "Guest")
+        //{
+        //    SupportScripts.Instance._authorization.OpenGuestForm();
+        //}
+        //else
+        //{
+            CurrentNameUI_TextMeshProUGUI.text = SupportScripts.Instance._authorization.currentRealName;
             CurrentFormUI.SetActive(true);
             //FortBoyardGameController.Instance.StartGame();
-        }
+        //}
     }
     public void LaunchGame2()
     {
-        username = SupportScripts.Instance._authorization.currentUser;
         FortBoyardGameController.Instance.StartGame();
         CurrentFormUI.SetActive(false);
     }
-
-        public void EnterName()
+    
+    public void EnterName()
+    {
+        if (isInternetConnection)
         {
             if (inputField.GetComponent<TMP_InputField>().text != string.Empty)
             {
-                realname = inputField.GetComponent<TMP_InputField>().text;
-                FortBoyardGameController.Instance.StartGame();
+                
                 loginFormUI.SetActive(false);
-            SupportScripts.Instance._authorization.registrationRealName = realname;
-            SupportScripts.Instance._authorization.registrationUsername = username;
-            SupportScripts.Instance._authorization.registrationPassword = "guest";
-            //_supportScripts._authorization.currentUserUI.text = "Вы вошли как: <b><i><color=#FF8E00FF><u>" + _supportScripts._authorization.currentUser + "</u></color></i></b>";
-            SupportScripts.Instance._authorization.loginAndRegistrationButtons.SetActive(false);
-            SupportScripts.Instance._authorization.exitButtons.SetActive(true);
-            SupportScripts.Instance._authorization.SendRegistrationWithGuest();
+                SupportScripts.Instance._authorization.registrationRealName = inputField.GetComponent<TMP_InputField>().text;
+                SupportScripts.Instance._authorization.currentRealName = inputField.GetComponent<TMP_InputField>().text;
+
+                SupportScripts.Instance._authorization.registrationUsername = SupportScripts.Instance._authorization.currentUser;
+                SupportScripts.Instance._authorization.currentUser = SupportScripts.Instance._authorization.currentUser;
+
+                SupportScripts.Instance._authorization.registrationPassword = "guest";
+                SupportScripts.Instance._authorization.currentUserUI.text = "Вы вошли как: <b><i><color=#FF8E00FF><u>" + SupportScripts.Instance._authorization.currentUser + "</u></color></i></b>";
+                SupportScripts.Instance._authorization.loginAndRegistrationButtons.SetActive(false);
+                SupportScripts.Instance._authorization.exitButtons.SetActive(true);
+                SupportScripts.Instance._authorization.SendRegistrationWithGuest();
+                FortBoyardGameController.Instance.StartGame();
                 //_supportScripts._authorization.CloseLoginAndRegistrationForm();
             }
         }
-        public void UpdateDonationName()
+        else
         {
-            donationName = TreasureCalculateZoneController.Instance.DonationName;
-        }
 
-        public void UpdatedScoreName()
-        {
-            AddNewHighscore(username, (int)TreasureCalculateZoneController.Instance.TotalCalculateCoins, donationName);
         }
+    }
 
-        public void AddNewHighscore(string username, int score, string donationName)
-        {
-            StartCoroutine(UploadNewHighscore(username, score, donationName));
-        }
-
-        IEnumerator UploadNewHighscore(string username, int score, string donationName)
-        {
-            //WWW www = new WWW(webURL + privateCode + "/add/" + WWW.EscapeURL(username) + "/" + score);
-            var Data = new WWWForm();
-            Data.AddField("login", username);
-            Data.AddField("realname", realname);
-            Data.AddField("fb_score", score);
-            Data.AddField("donation_name", donationName);
-            var www = new WWW(webURL + "/highScoreAdds.php", Data);
-            yield return www;
-            if (www.error != null)
-            {
-                Debug.Log("Сервер не отвечает: " + www.error);
-                //registrationErrorUI.text = Query.text;
-            }
-            else
-            {
-                Debug.Log("Сервер ответил: " + www.text);
-                //statusRegistration = int.Parse(www.text);
-                //text = www.text;
-                switch (statusRegistration)
-                {
-                    case 0:
-                        //registrationErrorUI.text = "Ошибка регистрации";
-                        break;
-                    case 1:
-                        //registrationErrorUI.text = "Регистрация успешна";
-                        //loginUsername = registrationUsername;
-                        //loginPassword = registrationPassword;
-                        //currentUser = registrationUsername;
-                        //StartCoroutine(Login_POST());
-                        break;
-                    case 2:
-                        //registrationErrorUI.text = "Имя пользователя уже занято";
-                        break;
-                    case 3:
-                        //registrationErrorUI.text = "Поля не могут быть пустыми";
-                        break;
-                }
-            }
-            www.Dispose();
-            //if (string.IsNullOrEmpty(www.error))
-            //{
-            //    Debug.Log("Успешно загружено в онлайн базу");
-            //    DownloadHighscores();
-            //}
-            //else
-            //{
-            //    Debug.Log("Ошибка загрузки в онлайн базу: " + www.error);
-            //}
-        }
-        /// <summary>
-        /// Кира Булычева
-        /// Технический разработчик изменить у себя
-        /// </summary>
-
-        public void DownloadHighscores()
-        {
-            StartCoroutine("DownloadHighscoresFromDatabase");
-        }
-
-        IEnumerator DownloadHighscoresFromDatabase()
-        {
-            //WWW www = new WWW(webURL + publicCode + "/pipe/");
-            WWW www = new WWW(webURL + "/scores.txt");
-            yield return www;
-
-            if (string.IsNullOrEmpty(www.error))
-            {
-                FormatHighscores(www.text);
-                OnHighscoresDownloaded(highscoresList);
-                Boom();
-                Debug.Log("База загружена");
-            }
-            else
-            {
-                Debug.Log("Ошибка Загрузки: " + www.error);
-            }
-        }
-
-        void FormatHighscores(string textStream)
-        {
-            string[] entries = textStream.Split(new char[] { '\n' }, System.StringSplitOptions.RemoveEmptyEntries);
-            highscoresList = new Highscore_FortBoyard[entries.Length];
-            records = new int[entries.Length];
-            for (int i = 0; i < entries.Length; i++)
-            {
-                string[] entryInfo = entries[i].Split(new char[] { '|' });
-                
-                string username = entryInfo[0];
-            string realname = entryInfo[1];
-            int score = int.Parse(entryInfo[2]);
-                string donate = entryInfo[4];
-            highscoresList[i] = new Highscore_FortBoyard(username, realname, score, donate);
-            }
-        }
-    public void OnRealName(Highscore_FortBoyard[] highscoreList)
+    public void AddNewHighscore()
     {
-        for (int i = 0; i < highscoreList.Length; i++)
+        StartCoroutine(UploadNewHighscore(
+            SupportScripts.Instance._authorization.currentUser, 
+            SupportScripts.Instance._authorization.currentRealName, 
+            (int)TreasureCalculateZoneController.Instance.TotalCalculateCoins, 
+            TreasureCalculateZoneController.Instance.DonationName)
+            );
+    }
+
+    IEnumerator UploadNewHighscore(string username, string realname, int score, string donationName)
+    {
+        WWWForm Data = new WWWForm();
+        Data.AddField("login", username);
+        Data.AddField("realname", realname);
+        Data.AddField("fb_score", score);
+        Data.AddField("donation_name", donationName);
+        WWW www = new WWW(webURL + "/highScoreAdds.php", Data);
+        yield return www;
+        if (www.error != null)
         {
-            if (SupportScripts.Instance._authorization.currentUser == highscoreList[i].username)
+            Debug.Log("Сервер не отвечает: " + www.error);
+        }
+        else
+        {
+            Debug.Log("Сервер ответил: " + www.text);
+        }
+        www.Dispose();
+    }
+
+
+    public void DownloadHighscores() //Загрузка результатов в таблицу рекордов
+    {
+        StartCoroutine(DownloadHighscoresFromDatabase());
+    }
+
+    IEnumerator DownloadHighscoresFromDatabase()
+    {
+        WWW www = new WWW(webURL + "/scores.txt");
+        yield return www;
+
+        if (string.IsNullOrEmpty(www.error))
+        {
+            FormatHighscores(www.text);
+            OnHighscoresDownloaded(highscoresList);
+            OnRealName();
+            Debug.Log("База загружена");
+        }
+        else
+        {
+            Debug.Log("Ошибка Загрузки: " + www.error);
+        }
+    }
+
+    
+    public void OnRealName()
+    {
+        for (int i = 0; i < highscoresList.Length; i++)
+        {
+            if (SupportScripts.Instance._authorization.currentUser == highscoresList[i].username)
             {
-                CurrentRealName = highscoreList[i].realname;
+                //CurrentRealName = highscoresList[i].realname;
                 break;
             }
         }
     }
     public void OnHighscoresDownloaded(Highscore_FortBoyard[] highscoreList)
+    {
+        for (int i = 0; i < highscoreFields.Length; i++)
         {
-            for (int i = 0; i < highscoreFields.Length; i++)
+            if (i < highscoreList.Length)
             {
-                if (i < highscoreList.Length)
-                {
-                    highscoreFields[i].text = highscoreList[i].realname;
-                    highscoreRecord[i].text = highscoreList[i].score.ToString("C0");
-                    highscoreDonate[i].text = highscoreList[i].donate;
-                    records[i] = highscoreList[i].score;
-                    maxValue = records.Max();
-                }
+                highscoreFields[i].text = highscoreList[i].realname;
+                highscoreRecord[i].text = highscoreList[i].score.ToString("C0");
+                highscoreDonate[i].text = highscoreList[i].donate;
+                records[i] = highscoreList[i].score;
+                maxValue = records.Max();
             }
         }
-
-        public void ClearLeaderBoard()
-        {
-            StartCoroutine("SendServerCommandClearLeaderBoard");
-            for (int i = 0; i < highscoreFields.Length; i++)
-            {
-                highscoreFields[i].text = i + 1 + ". Загрузка данных...";
-                highscoreRecord[i].text = "";
-                highscoreDonate[i].text = "";
-
-            }
-            DownloadHighscores();
-        }
-
-        //IEnumerator SendServerCommandClearLeaderBoard(){
-        //	WWW www = new WWW(webURL + privateCode + "/clear/");
-        //	yield return www;
-        //}
     }
+
+    void FormatHighscores(string textStream)
+    {
+        string[] entries = textStream.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        highscoresList = new Highscore_FortBoyard[entries.Length];
+        records = new int[entries.Length];
+        for (int i = 0; i < entries.Length; i++)
+        {
+            string[] entryInfo = entries[i].Split(new char[] { '|' });
+            string username = entryInfo[0];
+            string realname = entryInfo[1];
+            int score = int.Parse(entryInfo[2]);
+            string donate = entryInfo[4];
+            highscoresList[i] = new Highscore_FortBoyard(username, realname, score, donate);
+        }
+    }
+
+}
 [Serializable]
 public struct Highscore_FortBoyard
 {
@@ -270,7 +238,6 @@ public struct Highscore_FortBoyard
     public int score;
     public string donate;
     
-
 	public Highscore_FortBoyard(string _username, string _realname, int _score, string _donate) {
 		username = _username;
         realname = _realname;
@@ -278,3 +245,4 @@ public struct Highscore_FortBoyard
         donate = _donate;
 	}
 }
+
