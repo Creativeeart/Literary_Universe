@@ -5,22 +5,20 @@ using System;
 using TMPro;
 using System.Linq;
 using cakeslice;
-    public class Highscores_FortBoyard : MonoBehaviour
-    {
-        public GameObject loginFormUI, inputField;
-        public GameObject CurrentFormUI;
-    public TextMeshProUGUI CurrentNameUI_TextMeshProUGUI;
-        public TextMeshProUGUI[] highscoreFields, highscoreRecord, highscoreDonate;
-        public TMP_InputField registrationRealnameUI;
-    
-        //const string privateCode = "skTTCvwFf0-wg9Q_TJ-_Wws59uWyamAU6na3BTMSXjYg";
-        //const string publicCode = "5d416c3a76827f1758c4b7da";
-        //const string webURL = "http://dreamlo.com/lb/";
-        const string webURL = "http://literaryuniverse.unitycoding.ru";
-        int[] records;
-        int statusRegistration = 0;  //0 = ошибка регистрации; 1 = успешная регистрация; 2 = имя персонажа занято;        3 = поля не могут быть пустыми;
-        //string text;
-        public int maxValue;
+public class Highscores_FortBoyard : MonoBehaviour
+{
+    //public GameObject loginFormUI, inputField;
+    //public GameObject CurrentFormUI;
+    //public TextMeshProUGUI CurrentNameUI_TextMeshProUGUI;
+    public TextMeshProUGUI[] highscoreFields, highscoreRecord, highscoreDonate;
+    public TMP_InputField registrationRealnameUI;
+
+    //const string privateCode = "skTTCvwFf0-wg9Q_TJ-_Wws59uWyamAU6na3BTMSXjYg";
+    //const string publicCode = "5d416c3a76827f1758c4b7da";
+    //const string webURL = "http://dreamlo.com/lb/";
+    const string webURL = "http://literaryuniverse.unitycoding.ru";
+    int[] records;
+    public int maxValue;
     public bool isInternetConnection = false;
 
     public static Highscores_FortBoyard Instance { get; private set; }
@@ -69,75 +67,75 @@ using cakeslice;
             yield return new WaitForSeconds(1);
         }
     }
-    public void SwitchName()
-    {
-        if (isInternetConnection)
-        {
-            SupportScripts.Instance._authorization.SwitchName();
-            CurrentFormUI.SetActive(false);
-            loginFormUI.SetActive(true);
-        }
-        else
-        {
-            Debug.Log("Сменить имя возможно только при наличии интернета");
-        }
-    }
-    
+    //public void SwitchName()
+    //{
+    //    if (isInternetConnection)
+    //    {
+    //        SupportScripts.Instance._authorization.SwitchName();
+    //        CurrentFormUI.SetActive(false);
+    //        loginFormUI.SetActive(true);
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("Сменить имя возможно только при наличии интернета");
+    //    }
+    //}
 
-    public void LaunchGame()
-    {
-        //if (SupportScripts.Instance._authorization.currentUser == "Guest")
-        //{
-        //    SupportScripts.Instance._authorization.OpenGuestForm();
-        //}
-        //else
-        //{
-            CurrentNameUI_TextMeshProUGUI.text = SupportScripts.Instance._authorization.currentRealName;
-            CurrentFormUI.SetActive(true);
-            //FortBoyardGameController.Instance.StartGame();
-        //}
-    }
-    public void LaunchGame2()
-    {
-        FortBoyardGameController.Instance.StartGame();
-        CurrentFormUI.SetActive(false);
-    }
-    
-    public void EnterName()
-    {
-        if (isInternetConnection)
-        {
-            if (inputField.GetComponent<TMP_InputField>().text != string.Empty)
-            {
-                
-                loginFormUI.SetActive(false);
-                SupportScripts.Instance._authorization.registrationRealName = inputField.GetComponent<TMP_InputField>().text;
-                SupportScripts.Instance._authorization.currentRealName = inputField.GetComponent<TMP_InputField>().text;
 
-                SupportScripts.Instance._authorization.registrationUsername = SupportScripts.Instance._authorization.currentUser;
-                SupportScripts.Instance._authorization.currentUser = SupportScripts.Instance._authorization.currentUser;
+    //public void LaunchGame()
+    //{
+    //    //if (SupportScripts.Instance._authorization.currentUser == "Guest")
+    //    //{
+    //    //    SupportScripts.Instance._authorization.OpenGuestForm();
+    //    //}
+    //    //else
+    //    //{
+    //    CurrentNameUI_TextMeshProUGUI.text = SupportScripts.Instance._authorization.currentRealName;
+    //    CurrentFormUI.SetActive(true);
+    //    //FortBoyardGameController.Instance.StartGame();
+    //    //}
+    //}
+    //public void LaunchGame2()
+    //{
+    //    FortBoyardGameController.Instance.StartGame();
+    //    CurrentFormUI.SetActive(false);
+    //}
 
-                SupportScripts.Instance._authorization.registrationPassword = "guest";
-                SupportScripts.Instance._authorization.currentUserUI.text = "Вы вошли как: <b><i><color=#FF8E00FF><u>" + SupportScripts.Instance._authorization.currentUser + "</u></color></i></b>";
-                SupportScripts.Instance._authorization.loginAndRegistrationButtons.SetActive(false);
-                SupportScripts.Instance._authorization.exitButtons.SetActive(true);
-                SupportScripts.Instance._authorization.SendRegistrationWithGuest();
-                FortBoyardGameController.Instance.StartGame();
-                //_supportScripts._authorization.CloseLoginAndRegistrationForm();
-            }
-        }
-        else
-        {
+    //public void EnterName()
+    //{
+    //    if (isInternetConnection)
+    //    {
+    //        if (inputField.GetComponent<TMP_InputField>().text != string.Empty)
+    //        {
 
-        }
-    }
+    //            loginFormUI.SetActive(false);
+    //            SupportScripts.Instance._authorization.registrationRealName = inputField.GetComponent<TMP_InputField>().text;
+    //            SupportScripts.Instance._authorization.currentRealName = inputField.GetComponent<TMP_InputField>().text;
+
+    //            SupportScripts.Instance._authorization.registrationUsername = SupportScripts.Instance._authorization.currentUser;
+    //            SupportScripts.Instance._authorization.currentUser = SupportScripts.Instance._authorization.currentUser;
+
+    //            SupportScripts.Instance._authorization.registrationPassword = "guest";
+    //            SupportScripts.Instance._authorization.currentUserUI.text = "Вы вошли как: <b><i><color=#FF8E00FF><u>" + SupportScripts.Instance._authorization.currentUser + "</u></color></i></b>";
+    //            SupportScripts.Instance._authorization.loginAndRegistrationButtons.SetActive(false);
+    //            SupportScripts.Instance._authorization.exitButtons.SetActive(true);
+    //            SupportScripts.Instance._authorization.SendRegistrationWithGuest();
+    //            FortBoyardGameController.Instance.StartGame();
+    //            //_supportScripts._authorization.CloseLoginAndRegistrationForm();
+    //        }
+    //    }
+    //    else
+    //    {
+
+    //    }
+    //}
 
     public void AddNewHighscore()
     {
         StartCoroutine(UploadNewHighscore(
-            SupportScripts.Instance._authorization.currentUser, 
-            SupportScripts.Instance._authorization.currentRealName, 
-            (int)TreasureCalculateZoneController.Instance.TotalCalculateCoins, 
+            FB_GameMenuController.Instance.currentLogin,
+            FB_GameMenuController.Instance.currentRealName,
+            (int)TreasureCalculateZoneController.Instance.TotalCalculateCoins,
             TreasureCalculateZoneController.Instance.DonationName)
             );
     }
@@ -177,7 +175,7 @@ using cakeslice;
         {
             FormatHighscores(www.text);
             OnHighscoresDownloaded(highscoresList);
-            OnRealName();
+            //OnRealName();
             Debug.Log("База загружена");
         }
         else
@@ -186,18 +184,18 @@ using cakeslice;
         }
     }
 
-    
-    public void OnRealName()
-    {
-        for (int i = 0; i < highscoresList.Length; i++)
-        {
-            if (SupportScripts.Instance._authorization.currentUser == highscoresList[i].username)
-            {
-                //CurrentRealName = highscoresList[i].realname;
-                break;
-            }
-        }
-    }
+
+    //public void OnRealName()
+    //{
+    //    for (int i = 0; i < highscoresList.Length; i++)
+    //    {
+    //        if (SupportScripts.Instance._authorization.currentUser == highscoresList[i].username)
+    //        {
+    //            //CurrentRealName = highscoresList[i].realname;
+    //            break;
+    //        }
+    //    }
+    //}
     public void OnHighscoresDownloaded(Highscore_FortBoyard[] highscoreList)
     {
         for (int i = 0; i < highscoreFields.Length; i++)
@@ -228,7 +226,6 @@ using cakeslice;
             highscoresList[i] = new Highscore_FortBoyard(username, realname, score, donate);
         }
     }
-
 }
 [Serializable]
 public struct Highscore_FortBoyard
