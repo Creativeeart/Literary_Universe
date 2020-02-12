@@ -214,8 +214,8 @@ public class Highscores_FortBoyard : MonoBehaviour
     void FormatHighscores(string textStream)
     {
         string[] entries = textStream.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-        highscoresList = new Highscore_FortBoyard[entries.Length];
-        records = new int[entries.Length];
+            highscoresList = new Highscore_FortBoyard[entries.Length];
+            records = new int[entries.Length];
         for (int i = 0; i < entries.Length; i++)
         {
             string[] entryInfo = entries[i].Split(new char[] { '|' });

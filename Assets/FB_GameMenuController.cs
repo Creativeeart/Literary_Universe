@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using cakeslice;
 public class FB_GameMenuController : MonoBehaviour {
     [Header("Settings")]
     const string webURL = "http://literaryuniverse.unitycoding.ru";
@@ -17,6 +18,7 @@ public class FB_GameMenuController : MonoBehaviour {
     //public UserList[] usersList;
 
     [Header("Game Menu")]
+    public GameObject FirstMainMenu;
     public GameObject FBGameMenuCanvas; //Главный Canvas
 
     [Header("Internet Status")]
@@ -36,11 +38,16 @@ public class FB_GameMenuController : MonoBehaviour {
     [Header("Status Create User Menu")]
     public GameObject StatusCreateUserMenu; //Форма стадии статуса после создания пользователя
     public TextMeshProUGUI StatusCreateUserText; //Текст отображения статуса создания пользователя (успешно, ошибка)
+    public Button StatusCreateUserMenu_StartGameBTN;
+    public bool isUserCreate = false;
     public bool isStatusCreateUserMenu = false;
 
     [Header("Select Users Menu")]
+    public Transform UserInfo_Parent;
+    public GameObject UserInfo_Prefab;
     public GameObject SelectUserMenu; //Общая форма выбора пользователя из списка
     public GameObject InputPasswordLockedUser; //Форма ввода пароля для защищеного паролем пользователя
+    public TMP_InputField InputPasswordUI;
     public TextMeshProUGUI StatusInputPasswordText; //Текст отображения статуса ввода пароля (правильно, неправильно)
 
     [Header("ConfirmAfterSelectUser")]
@@ -52,6 +59,16 @@ public class FB_GameMenuController : MonoBehaviour {
     public GameObject GuestUserMenu; //Общая форма выбора пользователя из списка
     public bool isGuestMenu = false;
 
+    [Header("Profile User Menu")]
+    public GameObject ProfileUserMenu; //Общая форма выбора пользователя из списка
+    public TextMeshProUGUI UserRealNameUI;
+    public TextMeshProUGUI UserRecordsUI;
+    public bool isProfileUserMenu = false;
+
+
+    [SerializeField]
+    public UserList[] usersList;
+
     public static FB_GameMenuController Instance { get; private set; }
 
     public void Awake()
@@ -61,21 +78,24 @@ public class FB_GameMenuController : MonoBehaviour {
 
     void Start()
     {
-        LoadPlayerPrefs();
         StartCoroutine(CheckInternetConnection()); //Проверка соединения с интернетом
+        LoadPlayerPrefs();
     }
     public void SavePlayerPrefs()
     {
         PlayerPrefs.SetString("currentLogin", currentLogin.ToString());
         PlayerPrefs.SetString("currentRealName", currentRealName.ToString());
+        PlayerPrefs.SetString("currentPassword", currentPassword.ToString());
     }
 
     public void LoadPlayerPrefs()
     {
         if (PlayerPrefs.HasKey("currentLogin"))
         {
+            isProfileUserMenu = true;
             currentLogin = PlayerPrefs.GetString("currentLogin");
             currentRealName = PlayerPrefs.GetString("currentRealName");
+            currentPassword = PlayerPrefs.GetString("currentPassword");
             //currentUserUI.text = "Вы вошли как: <b><i><color=#FF8E00FF><u>" + currentUser + "</u></color></i></b>";
             //loginAndRegistrationButtons.SetActive(false);
             //exitButtons.SetActive(true);
@@ -89,6 +109,17 @@ public class FB_GameMenuController : MonoBehaviour {
             //exitButtons.SetActive(true);
         }
     }
+
+    public void DeletePlayerPrefs()
+    {
+        PlayerPrefs.DeleteKey("currentLogin");
+        PlayerPrefs.DeleteKey("currentRealName");
+        PlayerPrefs.DeleteKey("currentPassword");
+        currentLogin = string.Empty;
+        currentRealName = string.Empty;
+        currentPassword = string.Empty;
+        isProfileUserMenu = false;
+    }
     IEnumerator CheckInternetConnection() //Проверка соединения с интернетом
     {
         while (true)
@@ -99,6 +130,7 @@ public class FB_GameMenuController : MonoBehaviour {
             {
                 isInternetConnection = true;
                 StatusInternetConnectionText.text = "Интернет-соединение: <color=green>Онлайн</color>";
+                Debug.Log("Интернет - соединение: Онлайн");
                 CreateUserBTN.interactable = true;
                 SelectUserBTN.interactable = true;
             }
@@ -106,6 +138,7 @@ public class FB_GameMenuController : MonoBehaviour {
             {
                 isInternetConnection = false;
                 StatusInternetConnectionText.text = "Интернет-соединение: <color=red>Оффлайн</color>";
+                Debug.Log("Интернет - соединение: Оффлайн");
                 CreateUserBTN.interactable = false;
                 SelectUserBTN.interactable = false;
             }
@@ -116,12 +149,23 @@ public class FB_GameMenuController : MonoBehaviour {
     //ГЛАВНЫЙ КАНВАС
     public void ShowFBMainMenuCanvas() //Показать канвас главного меню
     {
-        FBGameMenuCanvas.SetActive(true);
+        if (PlayerPrefs.HasKey("currentLogin"))
+        {
+            FBGameMenuCanvas.SetActive(true);
+            ShowUserProfile();
+        }
+        else
+        {
+            FBGameMenuCanvas.SetActive(true);
+            ShowMainMenu();
+        }
     }
 
     public void CloseFBMainMenuCanvas() //Закрыть канвас главного меню
     {
         FBGameMenuCanvas.SetActive(false);
+        CloseMainMenu();
+        CloseUserProfile();
     }
     //ГЛАВНЫЙ КАНВАС
 
@@ -167,8 +211,18 @@ public class FB_GameMenuController : MonoBehaviour {
 
     public void CloseStatusAfterCreateUser() //Закрыть результат создания пользователя, вернуться в главное меню
     {
-        ShowMainMenu();
-        StatusCreateUserMenu.SetActive(false);
+        if (isUserCreate)
+        {
+            CloseMainMenu();
+            LoadPlayerPrefs();
+            ShowUserProfile();
+            StatusCreateUserMenu.SetActive(false);
+        }
+        else
+        {
+            ShowMainMenu();
+            StatusCreateUserMenu.SetActive(false);
+        }
     }
 
     public void AcceptStatusAfterCreateUserMenu()
@@ -186,6 +240,7 @@ public class FB_GameMenuController : MonoBehaviour {
     {
         CloseMainMenu();
         SelectUserMenu.SetActive(true);
+        StartCoroutine(DownloadHighscoresFromDatabase());
     }
     public void CloseSelectUserMenu() //Закрыть список пользователей и показать главное меню
     {
@@ -209,15 +264,38 @@ public class FB_GameMenuController : MonoBehaviour {
 
 
     //ОКНО ПОДТВЕРЖДЕНИЯ ПОЛЬЗОВАТЕЛЯ ПОСЛЕ ВЫБОРА ИЗ СПИСКА
-    public void ShowConfirmAfterSelectUserMenu() //Открыть окно после выбора пользователя из списка
+    string TempPassword = string.Empty;
+    public void ShowConfirmAfterSelectUserMenu(string UserName, string RealName, string Password, bool isLocked) //Открыть окно после выбора пользователя из списка
     {
-        CloseInputPasswordLockedUser();
-        ConfirmAfterSelectUserMenu.SetActive(true);
+        if (isLocked)
+        {
+            ShowInputPasswordLockedUser();
+            TempPassword = Password;
+        }
+        else
+        {
+            CloseInputPasswordLockedUser();
+            ConfirmAfterSelectUserMenu.SetActive(true);
+        }
+    }
+    public void CheckPassword()
+    {
+        if (InputPasswordUI.text == TempPassword)
+        {
+            CloseInputPasswordLockedUser();
+            ConfirmAfterSelectUserMenu.SetActive(true);
+        }
+        else
+        {
+            Debug.Log("Not Correct Password");
+            StatusInputPasswordText.text = "Пароль не верный";
+        }
     }
 
     public void CloseConfirmAfterSelectUserMenu() //Закрыть окно после выбора пользователя из списка и отобразить список пользователей
     {
-        ShowSelectUserMenu();
+        CloseMainMenu();
+        SelectUserMenu.SetActive(true);
         CloseInputPasswordLockedUser();
         ConfirmAfterSelectUserMenu.SetActive(false);
     }
@@ -255,26 +333,65 @@ public class FB_GameMenuController : MonoBehaviour {
     //МЕНЮ ГОСТЕВОГО ВХОДА
 
 
+    //МЕНЮ ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ
+    public void ShowUserProfile()
+    {
+        ProfileUserMenu.SetActive(true);
+        UserRealNameUI.text = "Добро пожаловать, <color=#ffae00><b>"+ currentRealName + "</color> !" ;
+    }
+
+    public void CloseUserProfile()
+    {
+        ProfileUserMenu.SetActive(false);
+    }
+
+    public void ExitUserProfile()
+    {
+        DeletePlayerPrefs();
+        CloseUserProfile();
+        ShowFBMainMenuCanvas();
+    }
+    //МЕНЮ ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ
+
+
+
     public void StartGame()
     {
         if (isStatusCreateUserMenu)
         {
             CloseStatusAfterCreateUser();
             CloseFBMainMenuCanvas();
+            FirstMainMenu.SetActive(false);
+            FortBoyardGameController.Instance.StartGame();
             Debug.Log("Start game after CREATE user");
         }
         if (isConfirmAfterSelectUser)
         {
             CloseConfirmAfterSelectUserMenu();
             CloseSelectUserMenu();
-            CloseFBMainMenuCanvas();
+            CloseMainMenu();
+            //CloseFBMainMenuCanvas();
+            ShowUserProfile();
             Debug.Log("Start game after SELECT user");
         }
         if (isGuestMenu)
         {
             CloseGuestMenu();
             CloseFBMainMenuCanvas();
-            Debug.Log("Start game after GUEST user");
+            Debug.Log("Start game after GUEST profile");
+            currentLogin = "guest";
+            currentRealName = "guest";
+            currentPassword = "guest";
+            FirstMainMenu.SetActive(false);
+            FortBoyardGameController.Instance.StartGame();
+        }
+        if (isProfileUserMenu)
+        {
+            CloseUserProfile();
+            Debug.Log("Start game after USER profile");
+            CloseFBMainMenuCanvas();
+            FirstMainMenu.SetActive(false);
+            FortBoyardGameController.Instance.StartGame();
         }
     }
 
@@ -283,7 +400,7 @@ public class FB_GameMenuController : MonoBehaviour {
         System.DateTime localDate = System.DateTime.Now;
         string tempDate = localDate.ToString().ReplaceFromCollection(new char[] { ':', '/', ' ', 'A', 'M', 'P' });
         string result = string.Empty;
-        result = "Guest" + tempDate;
+        result = "User" + tempDate;
         return result;
     }
 
@@ -322,12 +439,16 @@ public class FB_GameMenuController : MonoBehaviour {
             switch (statusRegistration)
             {
                 case 0:
+                    isUserCreate = false;
                     Debug.Log("Ошибка регистрации");
+                    StatusCreateUserMenu_StartGameBTN.interactable = false;
                     StatusCreateUserText.text = "<color=red>Ошибка регистрации, попытайтесь еще раз</color>";
                     break;
                 case 1:
+                    isUserCreate = true;
                     Debug.Log("Регистрация успешна");
                     StatusCreateUserText.text = "Пользователь: <color=#ffae00>"+ registrationRealName + "</color>, <color=green>успешно создан</color>";
+                    StatusCreateUserMenu_StartGameBTN.interactable = true;
                     currentLogin = registrationLogin;
                     currentRealName = registrationRealName;
                     currentPassword = registrationPassword;
@@ -335,11 +456,15 @@ public class FB_GameMenuController : MonoBehaviour {
                     //StartCoroutine(Login_POST());
                     break;
                 case 2:
+                    isUserCreate = false;
                     Debug.Log("Имя пользователя уже занято");
                     StatusCreateUserText.text = "<color=red>Имя пользователя уже занято</color>";
+                    StatusCreateUserMenu_StartGameBTN.interactable = false;
                     break;
                 case 3:
+                    isUserCreate = false;
                     StatusCreateUserText.text = "<color=red>Поля не могут быть пустыми</color>";
+                    StatusCreateUserMenu_StartGameBTN.interactable = false;
                     break;
             }
         }
@@ -360,6 +485,75 @@ public class FB_GameMenuController : MonoBehaviour {
         }
     }
 
+    IEnumerator DownloadHighscoresFromDatabase()
+    {
+        WWW www = new WWW(webURL + "/users.txt");
+        yield return www;
+
+        if (string.IsNullOrEmpty(www.error))
+        {
+            FormatHighscores(www.text);
+            for (int i = 0; i < usersList.Length; i++)
+            {
+                GameObject ins = Instantiate(UserInfo_Prefab, UserInfo_Parent);
+                ins.GetComponent<UserInfo>().UserName = usersList[i].username;
+                ins.GetComponent<UserInfo>().RealName = usersList[i].realname;
+                ins.GetComponent<UserInfo>().Password = usersList[i].password;
+                ins.GetComponent<UserInfo>().DateRegistration = usersList[i].dateRegistration;
+                ins.GetComponent<UserInfo>().Score = usersList[i].score;
+                ins.GetComponent<UserInfo>().DateScore = usersList[i].dateScore;
+                ins.GetComponent<UserInfo>().DonationName = usersList[i].donationName;
+            }
+            Debug.Log("База загружена");
+        }
+        else
+        {
+            Debug.Log("Ошибка Загрузки: " + www.error);
+        }
+    }
+
+    void FormatHighscores(string textStream)
+    {
+        string[] entries = textStream.Split(new char[] { '\n' }, System.StringSplitOptions.RemoveEmptyEntries);
+        usersList = new UserList[entries.Length];
+        //records = new int[entries.Length];
+        for (int i = 0; i < entries.Length; i++)
+        {
+            string[] entryInfo = entries[i].Split(new char[] { '|' });
+            string username = entryInfo[0];
+            string realname = entryInfo[1];
+            string password = entryInfo[2];
+            string dateRegistration = entryInfo[3];
+            int score = int.Parse(entryInfo[4]);
+            string dateScore = entryInfo[5];
+            string donationName = entryInfo[6];
+            usersList[i] = new UserList(username, realname, password, dateRegistration, score, dateScore, donationName);
+        }
+    }
+
 
 
 }
+[System.Serializable]
+public struct UserList
+{
+    public string username;
+    public string realname;
+    public string password;
+    public string dateRegistration;
+    public int score;
+    public string dateScore;
+    public string donationName;
+
+    public UserList(string _username, string _realname, string _password, string _dateRegistration, int _score, string _dateScore, string _donationName)
+    {
+        username = _username;
+        realname = _realname;
+        password = _password;
+        dateRegistration = _dateRegistration;
+        score = _score;
+        dateScore = _dateScore;
+        donationName = _donationName;
+    }
+}
+
