@@ -168,7 +168,7 @@ public class Highscores_FortBoyard : MonoBehaviour
 
     IEnumerator DownloadHighscoresFromDatabase()
     {
-        WWW www = new WWW(webURL + "/scores.txt");
+        WWW www = new WWW(webURL + "/users.txt");
         yield return www;
 
         if (string.IsNullOrEmpty(www.error))
@@ -221,8 +221,8 @@ public class Highscores_FortBoyard : MonoBehaviour
             string[] entryInfo = entries[i].Split(new char[] { '|' });
             string username = entryInfo[0];
             string realname = entryInfo[1];
-            int score = int.Parse(entryInfo[2]);
-            string donate = entryInfo[4];
+            int score = int.Parse(entryInfo[4]);
+            string donate = entryInfo[6];
             highscoresList[i] = new Highscore_FortBoyard(username, realname, score, donate);
         }
     }

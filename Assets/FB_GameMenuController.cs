@@ -231,6 +231,7 @@ public class FB_GameMenuController : MonoBehaviour {
         isStatusCreateUserMenu = true;
         isConfirmAfterSelectUser = false;
         isGuestMenu = false;
+        isProfileUserMenu = false;
         StartGame();
     }
     //РЕЗУЛЬТАТ СОЗДАНИЯ ПОЛЬЗОВАТЕЛЯ
@@ -241,7 +242,7 @@ public class FB_GameMenuController : MonoBehaviour {
     {
         CloseMainMenu();
         SelectUserMenu.SetActive(true);
-        
+        StartCoroutine(DownloadUsersFromDatabase());
     }
     public void CloseSelectUserMenu() //Закрыть список пользователей и показать главное меню
     {
@@ -276,6 +277,7 @@ public class FB_GameMenuController : MonoBehaviour {
         TempPassword = Password;
         if (isLocked)
         {
+            InputPasswordUI.text = string.Empty;
             ShowInputPasswordLockedUser();
             HeaderTitleInputPasswordText.text = "Ввод пароля для пользователя - <color=#ffa800>" + RealName + "</color>";
         }
@@ -292,11 +294,13 @@ public class FB_GameMenuController : MonoBehaviour {
         {
             CloseInputPasswordLockedUser();
             AcceptConfirmAfterSelectUserMenu();
+            InputPasswordUI.text = string.Empty;
         }
         else
         {
             Debug.Log("Not Correct Password");
             StatusInputPasswordText.text = "Пароль не верный";
+            InputPasswordUI.text = string.Empty;
         }
     }
 
@@ -313,11 +317,17 @@ public class FB_GameMenuController : MonoBehaviour {
         isConfirmAfterSelectUser = true;
         isStatusCreateUserMenu = false;
         isGuestMenu = false;
+        isProfileUserMenu = false;
         currentLogin = TempUserName;
         currentRealName = TempRealName;
         currentPassword = TempPassword;
         SavePlayerPrefs();
-        StartGame();
+        CloseConfirmAfterSelectUserMenu();
+        CloseSelectUserMenu();
+        CloseMainMenu();
+        //CloseFBMainMenuCanvas();
+        ShowUserProfile();
+        Debug.Log("Start game after SELECT user");
     }
     //ОКНО ПОДТВЕРЖДЕНИЯ ПОЛЬЗОВАТЕЛЯ ПОСЛЕ ВЫБОРА ИЗ СПИСКА
 
@@ -340,6 +350,7 @@ public class FB_GameMenuController : MonoBehaviour {
         isGuestMenu = true;
         isStatusCreateUserMenu = false;
         isConfirmAfterSelectUser = false;
+        isProfileUserMenu = false;
         StartGame();
     }
     //МЕНЮ ГОСТЕВОГО ВХОДА
@@ -348,9 +359,24 @@ public class FB_GameMenuController : MonoBehaviour {
     //МЕНЮ ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ
     public void ShowUserProfile()
     {
+        StartCoroutine(DownloadUsersFromDatabase());
+        int tempScore = 0;
+        for (int i = 0; i < usersList.Length; i++)
+        {
+            if (currentLogin == usersList[i].username)
+            {
+                tempScore = usersList[i].score;
+                break;
+            }
+        }
+        isConfirmAfterSelectUser = false;
+        isStatusCreateUserMenu = false;
+        isGuestMenu = false;
+        isProfileUserMenu = true;
         ProfileUserMenu.SetActive(true);
         UserLoginUI.text = "Текущий профиль - " + currentLogin;
-        UserRealNameUI.text = "Добро пожаловать, <color=#ffae00><b>" + currentRealName + "</color> !" ;
+        UserRealNameUI.text = "Добро пожаловать, <color=#ffae00><b>" + currentRealName + "</b></color> !" ;
+        UserRecordsUI.text = "Ваш последний рекорд: <color=#ffae00><b>" + tempScore.ToString("C0") + "</b></color>";
     }
 
     public void CloseUserProfile()
@@ -506,6 +532,11 @@ public class FB_GameMenuController : MonoBehaviour {
         if (string.IsNullOrEmpty(www.error))
         {
             FormatHighscores(www.text);
+            for (int i = 0; i < UserInfo_Parent.childCount; i++)
+            {
+                Destroy(UserInfo_Parent.GetChild(i).gameObject);
+            }
+
             for (int i = 0; i < usersList.Length; i++)
             {
                 GameObject ins = Instantiate(UserInfo_Prefab, UserInfo_Parent);

@@ -141,12 +141,13 @@ namespace cakeslice
         {
             if (DonationName != null)
             {
-                finishUI_nameText.text = "Уважаемый<b><color=#FF6400FF> " + SupportScripts.Instance._authorization.currentRealName + "</color></b></font>!";
+                finishUI_nameText.text = "Уважаемый<b><color=#FF6400FF> " + FB_GameMenuController.Instance.currentRealName + "</color></b></font>!";
                 finishUI_resultMoneyText.text = "<size=40> Ваш результат<b><color=#FF6400FF>"+ TotalCalculateCoins.ToString("C0") + "</color> был добавлен на доску рекордов.</size>";
                 finishUI_positionLeaderboardText.text = "Ваша позиция в рейтинге: <size=70><b><color=#FF6400FF>" + " - " + "</color></b></font>";
                 finishUI_donateText.text = "Так же вы пожертвовали заработанные средства в:" + "\n" + "<size=50><b><color=#FF6400FF>" + DonationName + "</color></b></font>";
                 selectDonateModalUI.SetActive(false);
                 finishModalUI.SetActive(true);
+                Highscores_FortBoyard.Instance.AddNewHighscore();
             }
         }
         public void GameReload()
