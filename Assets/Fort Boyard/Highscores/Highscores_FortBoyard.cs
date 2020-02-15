@@ -10,6 +10,8 @@ public class Highscores_FortBoyard : MonoBehaviour
     //public GameObject loginFormUI, inputField;
     //public GameObject CurrentFormUI;
     //public TextMeshProUGUI CurrentNameUI_TextMeshProUGUI;
+    public GameObject ParentTableRecords;
+    public GameObject RecordsPrefab;
     public TextMeshProUGUI[] highscoreFields, highscoreRecord, highscoreDonate;
     public TMP_InputField registrationRealnameUI;
 
@@ -31,20 +33,19 @@ public class Highscores_FortBoyard : MonoBehaviour
     void Start()
     {
         StartCoroutine(CheckInternetConnection());
-        for (int i = 0; i < highscoreFields.Length; i++)
-        {
-            highscoreFields[i].text = "-";
-            highscoreRecord[i].text = "-";
-            highscoreDonate[i].text = "-";
-        }
         StartCoroutine(RefreshHighscores());
+    }
+
+    public void RefreshRecords()
+    {
+        StartCoroutine(DownloadHighscoresFromDatabase());
     }
 
     IEnumerator RefreshHighscores() //Обновить таблицу рекордов
     {
         while (true)
         {
-            DownloadHighscores();
+            StartCoroutine(DownloadHighscoresFromDatabase());
             yield return new WaitForSeconds(10);
         }
     }
@@ -161,11 +162,6 @@ public class Highscores_FortBoyard : MonoBehaviour
     }
 
 
-    public void DownloadHighscores() //Загрузка результатов в таблицу рекордов
-    {
-        StartCoroutine(DownloadHighscoresFromDatabase());
-    }
-
     IEnumerator DownloadHighscoresFromDatabase()
     {
         WWW www = new WWW(webURL + "/users.txt");
@@ -175,7 +171,6 @@ public class Highscores_FortBoyard : MonoBehaviour
         {
             FormatHighscores(www.text);
             OnHighscoresDownloaded(highscoresList);
-            //OnRealName();
             Debug.Log("База загружена");
         }
         else
@@ -184,38 +179,60 @@ public class Highscores_FortBoyard : MonoBehaviour
         }
     }
 
-
-    //public void OnRealName()
-    //{
-    //    for (int i = 0; i < highscoresList.Length; i++)
-    //    {
-    //        if (SupportScripts.Instance._authorization.currentUser == highscoresList[i].username)
-    //        {
-    //            //CurrentRealName = highscoresList[i].realname;
-    //            break;
-    //        }
-    //    }
-    //}
     public void OnHighscoresDownloaded(Highscore_FortBoyard[] highscoreList)
     {
-        for (int i = 0; i < highscoreFields.Length; i++)
+        int position = 0;
+        for (int i = 0; i < ParentTableRecords.transform.childCount; i++)
         {
-            if (i < highscoreList.Length)
+            Destroy(ParentTableRecords.transform.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < highscoreList.Length; i++)
+        {
+            GameObject ins = Instantiate(RecordsPrefab, ParentTableRecords.transform);
+            position++;
+            for (int j = 0; j < ins.transform.GetChild(0).childCount; j++)
             {
-                highscoreFields[i].text = highscoreList[i].realname;
-                highscoreRecord[i].text = highscoreList[i].score.ToString("C0");
-                highscoreDonate[i].text = highscoreList[i].donate;
-                records[i] = highscoreList[i].score;
-                maxValue = records.Max();
+                ins.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = position.ToString();
+                ins.transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = highscoreList[i].realname;
+                ins.transform.GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>().text = highscoreList[i].score.ToString("C0");
+                ins.transform.GetChild(0).GetChild(3).GetComponent<TextMeshProUGUI>().text = highscoreList[i].donate;
             }
+            if (i == 0) //Золото
+            {
+                for (int j = 0; j < ins.transform.GetChild(0).childCount; j++)
+                {
+                    ins.transform.GetChild(0).GetChild(j).GetComponent<TextMeshProUGUI>().color = "#FD9900FF".ToColor(); /*new Color32(255, 153, 0, 255);*/
+                    ins.transform.GetChild(0).GetChild(j).GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Bold;
+                }
+            }
+            if (i == 1) //Серебро
+            {
+                for (int j = 0; j < ins.transform.GetChild(0).childCount; j++)
+                {
+                    ins.transform.GetChild(0).GetChild(j).GetComponent<TextMeshProUGUI>().color = "#C3C3C3FF".ToColor(); /*new Color32(195, 195, 195, 255);*/
+                    ins.transform.GetChild(0).GetChild(j).GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Bold;
+                }
+            }
+            if (i == 2) //Бронза
+            {
+                for (int j = 0; j < ins.transform.GetChild(0).childCount; j++)
+                {
+                    ins.transform.GetChild(0).GetChild(j).GetComponent<TextMeshProUGUI>().color = "#FF4F00FF".ToColor(); /*new Color32(255, 79, 0, 255);*/
+                    ins.transform.GetChild(0).GetChild(j).GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Bold;
+                }
+            }
+            records[i] = highscoreList[i].score;
+            maxValue = records.Max();
         }
     }
+
+    
 
     void FormatHighscores(string textStream)
     {
         string[] entries = textStream.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            highscoresList = new Highscore_FortBoyard[entries.Length];
-            records = new int[entries.Length];
+        highscoresList = new Highscore_FortBoyard[entries.Length];
+        records = new int[entries.Length];
         for (int i = 0; i < entries.Length; i++)
         {
             string[] entryInfo = entries[i].Split(new char[] { '|' });
@@ -242,4 +259,3 @@ public struct Highscore_FortBoyard
         donate = _donate;
 	}
 }
-
