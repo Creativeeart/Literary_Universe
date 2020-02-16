@@ -117,13 +117,13 @@ namespace cakeslice
                 yield return null;
             }
             StartCoroutine("ShowPojertvovanieUI");
-            if (TotalCalculateCoins > Highscores_FortBoyard.Instance.maxValue)
+            if (TotalCalculateCoins > FB_GameMenuController.Instance.GetMaxValue())
             {
                 recordText.text = "Вы установили новый рекорд!";
             }
             else
             {
-                recordText.text = string.Format("Предыдущий рекорд: ({0:C0})", Highscores_FortBoyard.Instance.maxValue);
+                recordText.text = string.Format("Предыдущий рекорд: ({0:C0})", FB_GameMenuController.Instance.GetMaxValue());
             }
         }
 
@@ -147,7 +147,7 @@ namespace cakeslice
                 finishUI_donateText.text = "Так же вы пожертвовали заработанные средства в:" + "\n" + "<size=50><b><color=#FF6400FF>" + DonationName + "</color></b></font>";
                 selectDonateModalUI.SetActive(false);
                 finishModalUI.SetActive(true);
-                Highscores_FortBoyard.Instance.AddNewHighscore();
+                FB_GameMenuController.Instance.AddNewHighscore();
             }
         }
         public void GameReload()

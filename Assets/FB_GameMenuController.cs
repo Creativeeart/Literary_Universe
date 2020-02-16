@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using cakeslice;
+using System.Linq;
 public class FB_GameMenuController : MonoBehaviour {
     [Header("Settings")]
     const string webURL = "http://literaryuniverse.unitycoding.ru";
@@ -65,6 +66,13 @@ public class FB_GameMenuController : MonoBehaviour {
     public TextMeshProUGUI UserRecordsUI;
     public bool isProfileUserMenu = false;
 
+    public GameObject ParentTableRecords;
+    public GameObject RecordsPrefab;
+    public Sprite[] IconsPlace;
+
+    int[] records;
+    int MaxValue;
+
 
     [SerializeField]
     public UserList[] usersList;
@@ -81,6 +89,7 @@ public class FB_GameMenuController : MonoBehaviour {
         StartCoroutine(CheckInternetConnection()); //Проверка соединения с интернетом
         LoadPlayerPrefs();
         StartCoroutine(DownloadUsersFromDatabase());
+        StartCoroutine(RefreshHighscores());
     }
     public void SavePlayerPrefs()
     {
@@ -548,6 +557,7 @@ public class FB_GameMenuController : MonoBehaviour {
                 ins.GetComponent<UserInfo>().DateScore = usersList[i].dateScore;
                 ins.GetComponent<UserInfo>().DonationName = usersList[i].donationName;
             }
+            OnHighscoresDownloaded(usersList);
             Debug.Log("База загружена");
         }
         else
@@ -556,11 +566,115 @@ public class FB_GameMenuController : MonoBehaviour {
         }
     }
 
+    public int GetMaxValue()
+    {
+        return MaxValue;
+    }
+
+    IEnumerator RefreshHighscores() //Обновить таблицу рекордов
+    {
+        while (true)
+        {
+            StartCoroutine(DownloadUsersFromDatabase());
+            yield return new WaitForSeconds(10);
+        }
+    }
+
+    public void AddNewHighscore()
+    {
+        StartCoroutine(UploadNewHighscore(
+            currentLogin,
+            currentRealName,
+            (int)TreasureCalculateZoneController.Instance.TotalCalculateCoins,
+            TreasureCalculateZoneController.Instance.DonationName)
+            );
+    }
+
+    IEnumerator UploadNewHighscore(string username, string realname, int score, string donationName)
+    {
+        WWWForm Data = new WWWForm();
+        Data.AddField("login", username);
+        Data.AddField("realname", realname);
+        Data.AddField("fb_score", score);
+        Data.AddField("donation_name", donationName);
+        WWW www = new WWW(webURL + "/highScoreAdds.php", Data);
+        yield return www;
+        if (www.error != null)
+        {
+            Debug.Log("Сервер не отвечает: " + www.error);
+        }
+        else
+        {
+            Debug.Log("Сервер ответил: " + www.text);
+        }
+        www.Dispose();
+    }
+
+    public void OnHighscoresDownloaded(UserList[] userList)
+    {
+        int position = 0;
+        for (int i = 0; i < ParentTableRecords.transform.childCount; i++)
+        {
+            Destroy(ParentTableRecords.transform.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < userList.Length; i++)
+        {
+            GameObject ins = Instantiate(RecordsPrefab, ParentTableRecords.transform);
+            position++;
+            for (int j = 0; j < ins.transform.GetChild(0).childCount; j++)
+            {
+                ins.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = position.ToString();
+                ins.transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = userList[i].realname;
+                ins.transform.GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>().text = userList[i].score.ToString("C0");
+                ins.transform.GetChild(0).GetChild(3).GetComponent<TextMeshProUGUI>().text = userList[i].donationName;
+            }
+            if (i == 0) //Золото
+            {
+                for (int j = 0; j < ins.transform.GetChild(0).childCount; j++)
+                {
+                    ins.transform.GetChild(0).GetChild(j).GetComponent<TextMeshProUGUI>().color = "#FD9900FF".ToColor(); /*new Color32(255, 153, 0, 255);*/
+                    ins.transform.GetChild(0).GetChild(j).GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Bold;
+                }
+                ins.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().enabled = false;
+                ins.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
+                ins.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = IconsPlace[0];
+            }
+            if (i == 1) //Серебро
+            {
+                for (int j = 0; j < ins.transform.GetChild(0).childCount; j++)
+                {
+                    ins.transform.GetChild(0).GetChild(j).GetComponent<TextMeshProUGUI>().color = "#EAEAEAFF".ToColor(); /*new Color32(195, 195, 195, 255);*/
+                    ins.transform.GetChild(0).GetChild(j).GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Bold;
+                }
+                ins.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().enabled = false;
+                ins.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
+                ins.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = IconsPlace[1];
+            }
+            if (i == 2) //Бронза
+            {
+                for (int j = 0; j < ins.transform.GetChild(0).childCount; j++)
+                {
+                    ins.transform.GetChild(0).GetChild(j).GetComponent<TextMeshProUGUI>().color = "#BD6E31FF".ToColor(); /*new Color32(255, 79, 0, 255);*/
+                    ins.transform.GetChild(0).GetChild(j).GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Bold;
+                }
+                ins.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().enabled = false;
+                ins.transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
+                ins.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = IconsPlace[2];
+            }
+            
+        }
+        records = new int[userList.Length];
+        for (int i = 0; i < userList.Length; i++)
+        {
+            records [i] = userList[i].score;
+        }
+        MaxValue = records.Max();
+    }
+
     void FormatHighscores(string textStream)
     {
         string[] entries = textStream.Split(new char[] { '\n' }, System.StringSplitOptions.RemoveEmptyEntries);
         usersList = new UserList[entries.Length];
-        //records = new int[entries.Length];
         for (int i = 0; i < entries.Length; i++)
         {
             string[] entryInfo = entries[i].Split(new char[] { '|' });

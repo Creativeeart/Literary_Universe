@@ -5,27 +5,25 @@ namespace cakeslice
 {
     public class SwitchCamOnTrigger : MonoBehaviour
     {
-        public Game_01 _game_01;
-        
         private void OnTriggerEnter(Collider other)
         {
-            if (_game_01.camFollowShip.activeSelf == true)
+            if (Game_01.Instance.camFollowShip.activeSelf == true)
             {
-                _game_01.slowTime = true;
-                _game_01.camViewKey.SetActive(true);
-                _game_01.camFollowShip.SetActive(false);
+                Game_01.Instance.slowTime = true;
+                Game_01.Instance.camViewKey.SetActive(true);
+                Game_01.Instance.camFollowShip.SetActive(false);
             }
             else
             {
-                _game_01.slowTime = false;
-                _game_01.camViewKey.SetActive(false);
-                _game_01.camFollowShip.SetActive(true);
+                Game_01.Instance.slowTime = false;
+                Game_01.Instance.camViewKey.SetActive(false);
+                Game_01.Instance.camFollowShip.SetActive(true);
             }
         }
         void Update()
         {
-            _game_01.camViewKey.transform.LookAt(_game_01.ship.transform);
-            if (_game_01.slowTime)
+            Game_01.Instance.camViewKey.transform.LookAt(Game_01.Instance.ObjectForCam2View.transform);
+            if (Game_01.Instance.slowTime)
             {
                 Time.timeScale = 0.2f;
                 Time.fixedDeltaTime = 0.02f * Time.timeScale;

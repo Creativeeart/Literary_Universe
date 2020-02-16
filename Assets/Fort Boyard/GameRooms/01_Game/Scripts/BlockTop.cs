@@ -5,12 +5,11 @@ namespace cakeslice
 {
     public class BlockTop : MonoBehaviour
     {
-        public Game_01 _game_01;
         private void OnCollisionEnter(Collision collision)
         {
             Debug.Log("Touch Block Top");
-            _game_01.DownShip();
-            _game_01.metalHit.Play();
+            Game_01.Instance.DownShip();
+            Game_01.Instance.metalHit.Play();
         }
     }
 }

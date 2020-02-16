@@ -182,6 +182,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbb1e1e8c7671eb4baec55ac74adcf39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _fortBoyardGameController: {fileID: 0}
+  countArrow: {fileID: 0}
+  countHitTargets: {fileID: 0}
+  hitPrefab: {fileID: 0}
   depth: 1000
   mainCam: {fileID: 0}
   aim: {x: 0, y: 0, z: 0}
@@ -199,7 +203,7 @@ MonoBehaviour:
       outSlope: 3.473854
       tangentMode: 0
     - serializedVersion: 2
-      time: 0.37633154
+      time: 0.3763315
       value: 1.2026801
       inSlope: 0.071988955
       outSlope: 0.071988955
@@ -232,6 +236,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   ReturnTime: 0.2
+  ArrowIndex: 0
   ArrowSpeed: 50
   BowTensionAudioSource: {fileID: 0}
   BowWhistlingAudioSource: {fileID: 0}
@@ -247,6 +252,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  curentHitTargets: 0
+  keyRotationCenter: {fileID: 0}
+  isWinner: 0
 --- !u!137 &137971043952593558
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
@@ -291,5 +299,5 @@ SkinnedMeshRenderer:
   m_RootBone: {fileID: 4881592310183680}
   m_AABB:
     m_Center: {x: 0.001431115, y: 0, z: -0.00040856004}
-    m_Extent: {x: 0.032199193, y: 0.7580676, z: 0.18123905}
+    m_Extent: {x: 0.032199193, y: 0.7580676, z: 0.18123904}
   m_DirtyAABB: 0

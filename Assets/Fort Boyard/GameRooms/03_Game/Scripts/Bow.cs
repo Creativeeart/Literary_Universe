@@ -111,7 +111,7 @@ namespace cakeslice
             }
             RopeTransform.localPosition = Vector3.Lerp(RopeNearLocalPosition, RopeFarLocalPosition, Tension);
         }
-        IEnumerator RopeReturn()
+        public IEnumerator RopeReturn()
         {
             Vector3 startLocalPosition = RopeTransform.localPosition;
             for (float f = 0; f < 1f; f += Time.deltaTime / ReturnTime)

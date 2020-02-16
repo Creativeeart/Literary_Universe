@@ -4,16 +4,14 @@ using UnityEngine;
 namespace cakeslice
 {
     public class BlockDown : MonoBehaviour
-    {
-        public Game_01 _game_01;
-        
+    {        
         private void OnCollisionEnter(Collision collision)
         {
             Debug.Log("Touch Block Down");
-            _game_01.isBounce = true;
-            _game_01.isReady = true;
-            _game_01.audioSource.Stop();
-            if (_game_01.isReady && _game_01.isTouchKey)
+            Game_01.Instance.isReady = true;
+            Game_01.Instance.audioSource.Stop();
+            StartCoroutine(Game_01.Instance.RopeReturn(false));
+            if (Game_01.Instance.isReady && Game_01.Instance.isTouchKey)
             {
                 StartCoroutine(ShowCenterRotationKey());
             }
@@ -21,9 +19,9 @@ namespace cakeslice
         IEnumerator ShowCenterRotationKey()
         {
             yield return new WaitForSeconds(1);
-            _game_01.keyRotationCenter.SetActive(true);
+            Game_01.Instance.keyRotationCenter.SetActive(true);
             yield return new WaitForSeconds(2);
-            _game_01._fortBoyardGameController.WinnerRoom("Keys");
+            FortBoyardGameController.Instance.WinnerRoom("Keys");
         }
     }
 }
