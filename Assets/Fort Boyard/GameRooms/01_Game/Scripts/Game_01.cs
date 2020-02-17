@@ -5,6 +5,11 @@ using UnityEngine.UI;
 namespace cakeslice
 {
     public class Game_01 : MonoBehaviour {
+        public GameObject DownBlock;
+        public Transform RezinaRope_Parent;
+        public Vector3 StartPos_Ship_Parent;
+        public Vector3 StartRot_Ship_Parent;
+        public GameObject Ship_Parent;
         public GameObject Ship;
         public float MaxStamina = 5;
         public float CurrentStamina = 0;
@@ -48,18 +53,20 @@ namespace cakeslice
         }
 
         void Start() {
+            StartPos_Ship_Parent = Ship_Parent.transform.position;
+            StartRot_Ship_Parent = Ship_Parent.transform.localEulerAngles;
             SliderStamina.minValue = 0;
             SliderStamina.maxValue = MaxStamina;
             SliderStamina.value = MaxStamina;
             RezinaNearLocalPosition = RezinaTransform.localPosition;
-            Ship.GetComponent<Rigidbody>().centerOfMass = com;
+            //Ship.GetComponent<Rigidbody>().centerOfMass = com;
             CurrentStamina = MaxStamina;
         }
         
         void Update() {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                Ship.GetComponent<Rigidbody>().AddTorque(Vector3.left * 200, ForceMode.Impulse);
+                //Ship.GetComponent<Rigidbody>().AddTorque(Vector3.left * 200, ForceMode.Impulse);
             }
             if (isReady)
             {
@@ -70,12 +77,15 @@ namespace cakeslice
                 }
                 if (Input.GetMouseButton(1) && !IsStaminaLose)
                 {
+                    DownBlock.SetActive(false);
                     StopperDown.SetActive(false);
+                    Ship.GetComponent<Rigidbody2D>().simulated = false;
                     if (Tension < 1f)
                     {
                         Tension += Time.deltaTime;
                     }
-                    Ship.transform.localEulerAngles = new Vector3(-Tension * 3.5f, Ship.transform.localEulerAngles.y, Ship.transform.localEulerAngles.z);
+                    //Ship.transform.SetParent(RezinaRope_Parent);
+                    Ship_Parent.transform.localEulerAngles = new Vector3(Ship_Parent.transform.localEulerAngles.x, Ship_Parent.transform.localEulerAngles.y, -Tension * 3.5f);
                     RezinaTransform.localPosition = Vector3.Lerp(RezinaNearLocalPosition, RezinaFarLocalPosition, Tension);
                     CurrentStamina -= Time.deltaTime;
                     SliderStamina.value = CurrentStamina;
@@ -120,25 +130,36 @@ namespace cakeslice
         }
         public void StartShip()
         {
+            Ship_Parent.transform.position = StartPos_Ship_Parent;
+            Ship_Parent.transform.localEulerAngles = StartRot_Ship_Parent;
             StartCoroutine(RopeReturn(true));
             Tension = 0;
             Rezina.material.color = Color.black;
-            Ship.GetComponent<Rigidbody>().AddTorque(Vector3.right * launchForce, ForceMode.Impulse);
+            Ship.GetComponent<Rigidbody2D>().simulated = true;
+            Ship.GetComponent<Rigidbody2D>().AddTorque(launchForce, ForceMode2D.Impulse);
+            //Ship.GetComponent<Rigidbody>().AddTorque(Vector3.right * launchForce, ForceMode.Impulse);
             isReady = false;
             audioSource.Stop();
             audioSource.PlayOneShot(vagonetkaClip);
             CurrentStamina = MaxStamina;
             SliderStamina.value = MaxStamina;
+            StartCoroutine(EnableBlockAfterShot());
+        }
+        IEnumerator EnableBlockAfterShot()
+        {
+            yield return new WaitForSeconds(0.5f);
+            DownBlock.SetActive(true);
         }
         public void DownShip()
         {
             CurrentStamina = MaxStamina;
             SliderStamina.value = MaxStamina;
             StopperDown.SetActive(true);
+
             audioSource.Stop();
             audioSource.PlayOneShot(KnockWall);
             audioSource.PlayOneShot(vagonetkaClip);
-            Ship.GetComponent<Rigidbody>().AddTorque(Vector3.left * 200, ForceMode.Impulse);
+            //Ship.GetComponent<Rigidbody>().AddTorque(Vector3.left * 200, ForceMode.Impulse);
         }
     }
 }

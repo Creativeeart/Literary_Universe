@@ -6,7 +6,6 @@ namespace cakeslice
 {
     public class CameraDoorsController : MonoBehaviour
     {
-        public GameObject[] game_room;
         public static CameraDoorsController Instance { get; private set; }
 
         public void Awake()
@@ -16,7 +15,7 @@ namespace cakeslice
 
         public void StartGames(int numberRoom)
         {
-            game_room[numberRoom].SetActive(true);
+            FortBoyardGameController.Instance.game_rooms[numberRoom].SetActive(true);
             FortBoyardGameController.Instance.CurrentNumberRoom = numberRoom;
         }
     }
