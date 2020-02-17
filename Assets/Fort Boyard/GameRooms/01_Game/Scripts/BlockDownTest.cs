@@ -21,7 +21,7 @@ namespace cakeslice
             {
                 rb2.simulated = false;
                 rb2.transform.position = new Vector3(0, rb2.transform.position.y, 0);
-                rb2.transform.localEulerAngles = Vector3.zero;
+                rb2.transform.localEulerAngles = new Vector3(0, -90, 0);
                 Game_01.Instance.isReady = true;
                 Game_01.Instance.audioSource.Stop();
                 StartCoroutine(Game_01.Instance.RopeReturn(false));

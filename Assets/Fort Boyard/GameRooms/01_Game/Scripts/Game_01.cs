@@ -85,7 +85,8 @@ namespace cakeslice
                         Tension += Time.deltaTime;
                     }
                     //Ship.transform.SetParent(RezinaRope_Parent);
-                    Ship_Parent.transform.localEulerAngles = new Vector3(Ship_Parent.transform.localEulerAngles.x, Ship_Parent.transform.localEulerAngles.y, -Tension * 3.5f);
+                    //Ship_Parent.transform.localEulerAngles = new Vector3(Ship_Parent.transform.localEulerAngles.x, Ship_Parent.transform.localEulerAngles.y, -Tension * 3.5f);
+                    Ship_Parent.transform.localPosition = new Vector3(Ship_Parent.transform.localPosition.x, Ship_Parent.transform.localPosition.y, Tension * 2f);
                     RezinaTransform.localPosition = Vector3.Lerp(RezinaNearLocalPosition, RezinaFarLocalPosition, Tension);
                     CurrentStamina -= Time.deltaTime;
                     SliderStamina.value = CurrentStamina;
