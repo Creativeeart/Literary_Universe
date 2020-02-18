@@ -53,6 +53,7 @@ namespace cakeslice
         }
 
         void Start() {
+            Application.targetFrameRate = 60;
             StartPos_Ship_Parent = Ship_Parent.transform.position;
             StartRot_Ship_Parent = Ship_Parent.transform.localEulerAngles;
             SliderStamina.minValue = 0;

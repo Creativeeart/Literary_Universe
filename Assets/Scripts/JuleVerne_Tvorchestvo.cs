@@ -41,7 +41,7 @@ public class JuleVerne_Tvorchestvo : MonoBehaviour {
     float stepPercent = 0.0f;
 
     const string webURL = "http://literaryuniverse.unitycoding.ru";
-    int statusRegistration = 0;  //0 = ошибка регистрации; 1 = успешная регистрация; 2 = имя персонажа занято;        3 = поля не могут быть пустыми;
+    //int StatusRegistration = 0;  //0 = ошибка регистрации; 1 = успешная регистрация; 2 = имя персонажа занято;        3 = поля не могут быть пустыми;
 
     string nameXML;
     string selectedAuthorXML;
@@ -88,9 +88,8 @@ public class JuleVerne_Tvorchestvo : MonoBehaviour {
     }
     void MoveDoTween(GameObject otrMoveX, GameObject zeroMoveX)
     {
-        DOTween.defaultEaseType = Ease.InOutBack;
-        otrMoveX.GetComponent<RectTransform>().DOLocalMoveX(-1700, 1);
-        zeroMoveX.GetComponent<RectTransform>().DOLocalMoveX(0, 1);
+        otrMoveX.GetComponent<RectTransform>().DOLocalMoveX(-1700, 1).Play().SetEase(Ease.InOutBack);
+        zeroMoveX.GetComponent<RectTransform>().DOLocalMoveX(0, 1).Play().SetEase(Ease.InOutBack);
     }
 	public void EnterNameForm()
     {
@@ -356,22 +355,22 @@ public class JuleVerne_Tvorchestvo : MonoBehaviour {
         else
         {
             Debug.Log("Сервер ответил: " + www.text);
-            //statusRegistration = int.Parse(www.text);
-            switch (statusRegistration)
-            {
-                case 0:
-                    //registrationErrorUI.text = "Ошибка регистрации";
-                    break;
-                case 1:
-                    //registrationErrorUI.text = "Регистрация успешна";
-                    break;
-                case 2:
-                    //registrationErrorUI.text = "Имя пользователя уже занято";
-                    break;
-                case 3:
-                    //registrationErrorUI.text = "Поля не могут быть пустыми";
-                    break;
-            }
+            //StatusRegistration = int.Parse(www.text);
+            //switch (StatusRegistration)
+            //{
+            //    case 0:
+            //        //registrationErrorUI.text = "Ошибка регистрации";
+            //        break;
+            //    case 1:
+            //        //registrationErrorUI.text = "Регистрация успешна";
+            //        break;
+            //    case 2:
+            //        //registrationErrorUI.text = "Имя пользователя уже занято";
+            //        break;
+            //    case 3:
+            //        //registrationErrorUI.text = "Поля не могут быть пустыми";
+            //        break;
+            //}
         }
         www.Dispose();
     }

@@ -59,11 +59,13 @@ public class FB_CamMovingController : MonoBehaviour {
     public bool isMovingToTreasureCalculateZoneB = false;
 
     [Header("Main Settings")]
+    public Ease easeAnim;
     public float speedDurationMovingCamera = 2; //Скорость движения камеры от точки к точке
     public float durationShake = 0.1f;
     public float strengthShake = 0.5f;
     public int vibratoShake = 5;
     public float randomnesShake = 2f;
+    
 
     [Header("Rotation Camera Settings")]
     public Vector3 offset; //Сдвиг камеры от цели
@@ -104,8 +106,8 @@ public class FB_CamMovingController : MonoBehaviour {
             {
                 isRotateOnTarget = true;
             })
-            .Play();
-        cameraToMovingFromScene.DORotate(pointToStartPositionB.transform.eulerAngles, speedDurationMovingCamera).Play();
+            .Play().SetEase(easeAnim);
+        cameraToMovingFromScene.DORotate(pointToStartPositionB.transform.eulerAngles, speedDurationMovingCamera).Play().SetEase(easeAnim);
     }
 
     void CameraRotation() //Вращение камеры вокруг "цели"
@@ -217,8 +219,8 @@ public class FB_CamMovingController : MonoBehaviour {
                 isMovingToTreasureCalculateZoneB = true;
                 break;
         }
-        cameraToMovingFromScene.DOMove(point.transform.position, speedDurationMovingCamera).Play();
-        cameraToMovingFromScene.DORotate(point.transform.eulerAngles, speedDurationMovingCamera).Play();
+        cameraToMovingFromScene.DOMove(point.transform.position, speedDurationMovingCamera).Play().SetEase(easeAnim);
+        cameraToMovingFromScene.DORotate(point.transform.eulerAngles, speedDurationMovingCamera).Play().SetEase(easeAnim);
     }
 
     public IEnumerator GoToGateZone()

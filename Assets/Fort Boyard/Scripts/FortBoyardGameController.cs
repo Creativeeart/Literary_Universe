@@ -225,11 +225,7 @@ namespace cakeslice
             TextInfoToNextZone.SetActive(true);
             StartCoroutine(ReverseTime(1, CurrentNumberRoom));
             ReloadTimer();
-            for (int i = 0; i < disableObjects.Length; i++)
-            {
-                if (disableObjects[i] == null) continue;
-                disableObjects[i].SetActive(true);
-            }
+            EnabledObjects();
             Time.timeScale = 1;
             exitGameModal.SetActive(false);
             IsRoomPause = false;
@@ -237,6 +233,30 @@ namespace cakeslice
             FB_CamMovingController.Instance.cameraToMovingFromScene.GetComponent<Camera>().enabled = true;
         }
 
+        public void DisabledObjects()
+        {
+            for (int i = 0; i < disableObjects.Length; i++)
+            {
+                if (disableObjects[i] == null) continue;
+                disableObjects[i].SetActive(false);
+            }
+            if (CurrentNumberRoom == 5)
+            {
+                watchUI.SetActive(false);
+            }
+        }
+        public void EnabledObjects()
+        {
+            for (int i = 0; i < disableObjects.Length; i++)
+            {
+                if (disableObjects[i] == null) continue;
+                disableObjects[i].SetActive(true);
+            }
+            if (CurrentNumberRoom == 5)
+            {
+                watchUI.SetActive(true);
+            }
+        }
         private IEnumerator ReverseTime(float time, int currentRoom)
         {
             while (time > 0)
@@ -330,10 +350,7 @@ namespace cakeslice
         public void CloseRoomAfterWinner()
         {
             Close_Game_Room();
-            for (int i = 0; i < disableObjects.Length; i++)
-            {
-                disableObjects[i].SetActive(true);
-            }
+            EnabledObjects();
             winGameModalInRooms.SetActive(false);
         }
         
