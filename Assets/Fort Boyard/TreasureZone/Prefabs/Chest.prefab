@@ -695,7 +695,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4521655398137788}
   - component: {fileID: 114137089014226384}
-  - component: {fileID: 114378288174274354}
   - component: {fileID: 82062608426718576}
   - component: {fileID: 95415333476597498}
   m_Layer: 0
@@ -852,7 +851,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1425520150716216}
-  m_LocalRotation: {x: 2.016662e-10, y: -4.440892e-16, z: 8.955779e-26, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.2798354, y: 0.29309738, z: 0.23810314}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2540,7 +2539,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4765171f19daf64c91f03697efe76c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraShakeHitHammer: {fileID: 114378288174274354}
   hammer: {fileID: 1258206863371262, guid: f39899698ae4b57409768a1e46b6531d, type: 2}
   hitParticle: {fileID: 160696, guid: 740ca2bbd450e2648a70c3bdaa9a412c, type: 2}
   hitToMetalSound: {fileID: 8300000, guid: 4f4ab4ed227d25a44bbb00eca531e2e5, type: 3}
@@ -2551,10 +2549,9 @@ MonoBehaviour:
   hpBar: {fileID: 0}
   roofChest: {fileID: 95660362535543830}
   coinsBoyard: 100000
-  coinsFall: 25
-  timeRemainig: 60
+  coinsFall: 50
   offsetHammer: {x: 0, y: -0.04, z: -0.1}
-  timeToFallCoin: 0.01
+  TimeTick: 0.1
   countKeyOpened: 0
 --- !u!114 &114172986068468516
 MonoBehaviour:
@@ -2772,21 +2769,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114378288174274354
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1968137584071852}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7b0f7238675f9349beb48b95c241341, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  camTransform: {fileID: 0}
-  shakeDuration: 0
-  shakeAmount: 0.003
-  decreaseFactor: 0.3
 --- !u!114 &114382772974799986
 MonoBehaviour:
   m_ObjectHideFlags: 1

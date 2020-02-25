@@ -108,6 +108,7 @@ public class TreasureZoneController : MonoBehaviour {
             StartCoroutine(FB_CamMovingController.Instance.GoToTreasureCalculateZone()); // Переход к зоне подсчета золота
         }
     }
+
     void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 0, 0, 0.4f);

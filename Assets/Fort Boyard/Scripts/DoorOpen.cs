@@ -4,15 +4,12 @@ using cakeslice;
 
 public class DoorOpen : MonoBehaviour
 {
-    public GameObject textInfoToNextZone;
-    public AudioClip openedDoor;
-    public Animator doorAnimator;
-    public bool isOpened = false;
-    public bool isLocked = true;
     public int roomNumber = 0;
 
-    private Outline _outLine;
-    private AudioSource _audioSource;
+    public bool isOpened = false;
+    public bool isLocked = true;
+    Outline _outLine;
+    AudioSource _audioSource;
 
     void Start()
     {
@@ -28,12 +25,12 @@ public class DoorOpen : MonoBehaviour
             if (!isLocked)
             {
                 _outLine.enabled = false;
-                doorAnimator.enabled = true;
+                gameObject.transform.parent.gameObject.GetComponent<Animator>().enabled = true;
                 StartCoroutine(DoorAnimationOpened());
-                _audioSource.PlayOneShot(openedDoor);
+                _audioSource.PlayOneShot(FortBoyardGameController.Instance.openedDoor);
                 FortBoyardGameController.Instance.GameRooms = true;
-                FortBoyardGameController.Instance.AnimatorDoor = doorAnimator; //Передача переменной doorAnimator в скрипт FortBoyardGameController
-                FortBoyardGameController.Instance.TextInfoToNextZone = textInfoToNextZone;
+                FortBoyardGameController.Instance.AnimatorDoor = gameObject.transform.parent.gameObject.GetComponent<Animator>(); //Передача переменной doorAnimator в скрипт FortBoyardGameController
+                FortBoyardGameController.Instance.CurrentDoorOpen = gameObject.transform.parent.gameObject;
                 isLocked = true;
                 isOpened = true;
             }
@@ -46,6 +43,7 @@ public class DoorOpen : MonoBehaviour
         FortBoyardGameController.Instance.game_rooms[roomNumber].SetActive(true);
         FortBoyardGameController.Instance.DisabledObjects();
         FB_CamMovingController.Instance.cameraToMovingFromScene.GetComponent<Camera>().enabled = false;
+        FortBoyardGameController.Instance.mainUconsUI.SetActive(false);
     }
     void OnMouseEnter()
     {

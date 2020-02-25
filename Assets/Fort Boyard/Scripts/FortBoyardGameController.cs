@@ -13,6 +13,7 @@ namespace cakeslice
         [Header("Audio")]
         public AudioSource audioSourceDoors;
         public AudioClip closedDoor;
+        public AudioClip openedDoor;
 
         [Header("Main Camera")]
         public GameObject mainCamera;
@@ -30,11 +31,16 @@ namespace cakeslice
         public GameObject pauseGameModal;
         public GameObject exitGameModal;
         public GameObject failModal;
+        public TextMeshProUGUI failModalGameText;
         public GameObject failGameModalInRooms;
         public TextMeshProUGUI failGameText;
         public GameObject winGameModalInRooms;
         public TextMeshProUGUI textExitModal;
         public TextMeshProUGUI totalTimeText;
+
+        public GameObject TextInfoToNextZone_Parent;
+        public GameObject TextInfoToNextZone_Text;
+
 
         [Header("Objects in scene")]
         public GameObject fortBoyardGameObject;
@@ -54,7 +60,6 @@ namespace cakeslice
 
         
         public Animator AnimatorDoor { get; set; }
-        public GameObject TextInfoToNextZone { get; set; }
         public bool IsRoomPause { get; set; }
 
         public bool IsGateZone { get; set; }
@@ -64,7 +69,7 @@ namespace cakeslice
 
         public bool GameRooms { get; set; }
         public int CurrentNumberRoom { get; set; }
-
+        public GameObject CurrentDoorOpen { get; set; }
         public static FortBoyardGameController Instance { get; private set; }
 
         public void Awake()
@@ -139,11 +144,19 @@ namespace cakeslice
                 canvasTreasureZone.SetActive(true);
             }
         }
+        public void ShowFailModal(string Message)
+        {
+            TimerGame.Instance.RunTime = false;
+            failModal.SetActive(true);
+            failModalGameText.text = Message;
+        }
+
         void EndTimes()
         {
             if (TimerGame.Instance.seconds <= TimerGame.Instance.endTime)
             {
                 TimerGame.Instance.RunTime = false;
+                failModalGameText.text = "Время вышло! К сожалению вы не справились с заданием.<br> \nВы можете вернуться в главное меню и попытаться еще раз!";
                 if (IsTreasureZone)
                 {
                     failModal.SetActive(true);
@@ -215,15 +228,24 @@ namespace cakeslice
         public void Close_Game_Room()
         {
             game_rooms[CurrentNumberRoom].SetActive(false);
-            //camDoor.enabled = true;
             TimerGame.Instance.RunTime = false;
             TimerGame.Instance.seconds = totalTime;
             mainUconsUI.SetActive(true);
             watchUI.SetActive(true);
             AnimatorDoor.SetBool("doorIsClosed", true);
             audioSourceDoors.PlayOneShot(closedDoor);
-            TextInfoToNextZone.SetActive(true);
-            StartCoroutine(ReverseTime(1, CurrentNumberRoom));
+            TextInfoToNextZone_Parent.SetActive(true);
+            TextInfoToNextZone_Parent.transform.SetParent(CurrentDoorOpen.transform);
+            if (CurrentNumberRoom == 5)
+            {
+                TextInfoToNextZone_Parent.transform.localPosition = new Vector3(0, TextInfoToNextZone_Parent.transform.localPosition.y, 0);
+                TextInfoToNextZone_Parent.transform.localEulerAngles = new Vector3(0, 180, 0);
+            }
+            else
+            {
+                TextInfoToNextZone_Parent.transform.localPosition = new Vector3(0, TextInfoToNextZone_Parent.transform.localPosition.y, TextInfoToNextZone_Parent.transform.localPosition.z);
+            }
+            StartCoroutine(ReverseTime(4, CurrentNumberRoom));
             ReloadTimer();
             EnabledObjects();
             Time.timeScale = 1;
@@ -262,7 +284,7 @@ namespace cakeslice
             while (time > 0)
             {
                 time--;
-                TextInfoToNextZone.GetComponent<TextMeshProUGUI>().text = string.Format("СЛЕДУЮЩЕЕ ИСПЫТАНИЕ ЧЕРЕЗ ({0})", time.ToString());
+                TextInfoToNextZone_Text.GetComponent<TextMeshProUGUI>().text = string.Format("ПЕРЕХОД К СЛЕДУЮЩЕМУ ИСПЫТАНИЮ ({0})", time.ToString());
                 if (time <= 0)
                 {
                     int numberRoom = currentRoom;
@@ -288,9 +310,11 @@ namespace cakeslice
                             break;
                     }
                     //else _cameraDoorsController.GoToCamToNextDoor("GoToDoorNumber_0" + numberRoom);
+                    
                     yield return new WaitForSeconds(1);
-                    TextInfoToNextZone.SetActive(false);
+                    TextInfoToNextZone_Parent.SetActive(false);
                 }
+                
                 yield return new WaitForSeconds(1);
             }
         }
@@ -335,7 +359,7 @@ namespace cakeslice
         {
             game_rules_in_rooms[numberRule].SetActive(false);
             RunTimer();
-            mainUconsUI.SetActive(false);
+            //mainUconsUI.SetActive(false);
         }
         public void WinnerRoom(string typeRoom)
         {

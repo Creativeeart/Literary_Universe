@@ -1,62 +1,41 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-namespace cakeslice
+﻿using UnityEngine;
+
+public class DoorCameraTriggers : MonoBehaviour
 {
-    public class DoorCameraTriggers : MonoBehaviour
+    public DoorOpen[] doorOpens;
+
+    void AllDoorLocked(int IndexDoorNotLocked) //Блокируем сначала все двери, затем одну разблокировать
     {
-        public DoorOpen[] doorOpens;
-        private void OnTriggerEnter(Collider other)
+        for (int i = 0; i < doorOpens.Length; i++)
         {
-            Debug.Log(other.gameObject.name);
-            if (other.gameObject.name == "DoorTrigger#0")
-            {
-                for (int i = 0; i < doorOpens.Length; i++)
-                {
-                    doorOpens[i].isLocked = true;
-                }
-                doorOpens[0].isLocked = false;
-            }
-            if (other.gameObject.name == "DoorTrigger#1")
-            {
-                for (int i = 0; i < doorOpens.Length; i++)
-                {
-                    doorOpens[i].isLocked = true;
-                }
-                doorOpens[1].isLocked = false;
-            }
-            if (other.gameObject.name == "DoorTrigger#3")
-            {
-                for (int i = 0; i < doorOpens.Length; i++)
-                {
-                    doorOpens[i].isLocked = true;
-                }
-                doorOpens[2].isLocked = false;
-            }
-            if (other.gameObject.name == "DoorTrigger#4")
-            {
-                for (int i = 0; i < doorOpens.Length; i++)
-                {
-                    doorOpens[i].isLocked = true;
-                }
-                doorOpens[3].isLocked = false;
-            }
-            if (other.gameObject.name == "DoorTrigger#5")
-            {
-                for (int i = 0; i < doorOpens.Length; i++)
-                {
-                    doorOpens[i].isLocked = true;
-                }
-                doorOpens[4].isLocked = false;
-            }
-            if (other.gameObject.name == "DoorTrigger#6")
-            {
-                for (int i = 0; i < doorOpens.Length; i++)
-                {
-                    doorOpens[i].isLocked = true;
-                }
-                doorOpens[5].isLocked = false;
-            }
+            doorOpens[i].isLocked = true;
+        }
+        doorOpens[IndexDoorNotLocked].isLocked = false;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        switch (other.gameObject.name)
+        {
+            case "DoorTrigger#0":
+                AllDoorLocked(0);
+                break;
+            case "DoorTrigger#1":
+                AllDoorLocked(1);
+                break;
+            case "DoorTrigger#2":
+                AllDoorLocked(2);
+                break;
+            case "DoorTrigger#3":
+                AllDoorLocked(3);
+                break;
+            case "DoorTrigger#4":
+                AllDoorLocked(4);
+                break;
+            case "DoorTrigger#5":
+                AllDoorLocked(5);
+                break;
         }
     }
 }
+

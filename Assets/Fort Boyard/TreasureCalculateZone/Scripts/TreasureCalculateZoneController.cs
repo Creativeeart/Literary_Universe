@@ -62,7 +62,7 @@ namespace cakeslice
         {
             float startTime = Time.realtimeSinceStartup;
             float fraction = 0f;
-
+            Ease EaseAnim = Ease.Unset;
             while (fraction < 1f)
             {
                 fraction = Mathf.Clamp01((Time.realtimeSinceStartup - startTime) / time);
@@ -72,28 +72,28 @@ namespace cakeslice
                 CapacityGoldTextShadow.text = result.ToString();
                 if (result > 20000)
                 {
-                    goldCap.transform.DOLocalMoveY(65f, 1);
-                    goldCap.transform.DOScale(new Vector3(80,80,80), 1);
+                    goldCap.transform.DOLocalMoveY(65f, 1).Play().SetEase(EaseAnim);
+                    goldCap.transform.DOScale(new Vector3(80,80,80), 1).Play().SetEase(EaseAnim);
                 }
-                if (result > 50000)
+                if (result > 40000)
                 {
-                    goldCap.transform.DOLocalMoveY(75f, 1);
-                    goldCap.transform.DOScale(new Vector3(81, 90, 81), 1);
+                    goldCap.transform.DOLocalMoveY(75f, 1).Play().SetEase(EaseAnim);
+                    goldCap.transform.DOScale(new Vector3(81, 90, 81), 1).Play().SetEase(EaseAnim);
+                }
+                if (result > 60000)
+                {
+                    goldCap.transform.DOLocalMoveY(85f, 1).Play().SetEase(EaseAnim);
+                    goldCap.transform.DOScale(new Vector3(86, 100, 86), 1).Play().SetEase(EaseAnim);
                 }
                 if (result > 80000)
                 {
-                    goldCap.transform.DOLocalMoveY(85f, 1);
-                    goldCap.transform.DOScale(new Vector3(86, 100, 86), 1);
+                    goldCap.transform.DOLocalMoveY(95f, 1).Play().SetEase(EaseAnim);
+                    goldCap.transform.DOScale(new Vector3(90, 110, 90), 1).Play().SetEase(EaseAnim);
                 }
-                if (result > 120000)
+                if (result > 100000)
                 {
-                    goldCap.transform.DOLocalMoveY(95f, 1);
-                    goldCap.transform.DOScale(new Vector3(90, 110, 90), 1);
-                }
-                if (result > 150000)
-                {
-                    goldCap.transform.DOLocalMoveY(105f, 1);
-                    goldCap.transform.DOScale(new Vector3(92, 120, 92), 1);
+                    goldCap.transform.DOLocalMoveY(105f, 1).Play().SetEase(EaseAnim);
+                    goldCap.transform.DOScale(new Vector3(92, 120, 92), 1).Play().SetEase(EaseAnim);
                 }
                 yield return null;
             }
