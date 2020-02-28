@@ -1,19 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ArrowTorque : MonoBehaviour {
     
-    public Rigidbody Rigidbody;
+    Rigidbody RigidBody;
 
     public float VelocityMult;
     public float AngularVelocityMult;
+    private void Start()
+    {
+        RigidBody = GetComponent<Rigidbody>();
+    }
+    void FixedUpdate () {
 
-	void FixedUpdate () {
-
-        Vector3 cross = Vector3.Cross(transform.forward, Rigidbody.velocity.normalized);
-        Rigidbody.AddTorque(cross * Rigidbody.velocity.magnitude * VelocityMult);
-        Rigidbody.AddTorque((-Rigidbody.angularVelocity + Vector3.Project(Rigidbody.angularVelocity, transform.forward)) * Rigidbody.velocity.magnitude * AngularVelocityMult);
+        Vector3 cross = Vector3.Cross(transform.forward, RigidBody.velocity.normalized);
+        RigidBody.AddTorque(cross * RigidBody.velocity.magnitude * VelocityMult);
+        RigidBody.AddTorque((-RigidBody.angularVelocity + Vector3.Project(RigidBody.angularVelocity, transform.forward)) * RigidBody.velocity.magnitude * AngularVelocityMult);
 
 	}
 }

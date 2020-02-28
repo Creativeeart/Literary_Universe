@@ -53,9 +53,9 @@ public class Chest : MonoBehaviour {
                 else
                 {
                     coinsBoyard = 0;
-                    FortBoyardGameController.Instance.ShowFailModal("Золото закончилось! К сожалению вы не справились с заданием.<br> \nВы можете вернуться в главное меню и попытаться еще раз!");
+                    TimerGame.Instance.RunTime = false;
+                    AlertUI.Instance.ShowAlert_GAMEOVER_WITHOUT_ROOM("Золото закончилось!К сожалению вы не справились с заданием.< br > \nВы можете вернуться в главное меню и попытаться еще раз!");
                     FortBoyardGameController.Instance.IsTreasureZone = false;
-
                 }
             }
             if (Input.GetMouseButtonDown(0))

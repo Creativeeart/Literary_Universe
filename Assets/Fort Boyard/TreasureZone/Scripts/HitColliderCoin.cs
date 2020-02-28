@@ -58,12 +58,12 @@ public class HitColliderCoin : MonoBehaviour
                             }
                             else
                             {
-                                alertUI.ShowWarningModalWindow("Ждите. Золото высыпается");
+                                AlertUI.Instance.ShowAlert_DEFAULT("Ждите. Золото высыпается");
                             }
                         }
                         else
                         {
-                            alertUI.ShowWarningModalWindow("Вы не можете взять больше. Вам нужно высыпать золото в весы!");
+                            AlertUI.Instance.ShowAlert_DEFAULT("Вы не можете взять больше. Вам нужно высыпать золото в весы!");
                         }
                     }
                 }

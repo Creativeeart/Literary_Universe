@@ -8,7 +8,6 @@ namespace cakeslice
     public class SelectOpenTipsMechanism : MonoBehaviour
     {
         public Button nextZoneBTN;
-        public AlertUI alertUI;
         public Outline _outLine;
 
         public Image readyImage;
@@ -29,15 +28,15 @@ namespace cakeslice
                     {
                         if (GateZoneController.Instance.isOpenTipsMechanismEnabled)
                         {
-                            StartCoroutine("FiilImage");
+                            StartCoroutine(FiilImage());
                             TimerGame.Instance.RunTime = true;
                             GateZoneController.Instance.arrow3DTipsMechanism.SetActive(false);
                         }
                     }
                 }
-                else alertUI.ShowWarningModalWindow("Доступ запрещен. У вас нет подсказок. \nДополнительные подсказки вы можете взять на панели, в нижней части экрана");
+                else AlertUI.Instance.ShowAlert_DEFAULT("Доступ запрещен. У вас нет подсказок. \nДополнительные подсказки вы можете взять на панели, в нижней части экрана");
             }
-            else alertUI.ShowWarningModalWindow("Доступ запрещен. Сначала вставьте ключи в панель управления.");
+            else AlertUI.Instance.ShowAlert_DEFAULT("Доступ запрещен. \nСначала вставьте ключи в панель управления.");
         }
 
         void OnMouseEnter()

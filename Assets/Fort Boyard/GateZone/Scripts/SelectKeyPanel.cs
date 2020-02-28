@@ -22,7 +22,7 @@ namespace cakeslice
             //{
                 //selectObject = true;
                 //_outLine.enabled = false;
-                gateZoneController.CountingKeys();
+                //gateZoneController.CountingKeys();
             //}
         }
 
