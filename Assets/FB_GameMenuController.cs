@@ -78,6 +78,8 @@ public class FB_GameMenuController : MonoBehaviour {
     public UserList[] usersList;
 
     public static FB_GameMenuController Instance { get; private set; }
+    FortBoyardGameController FortBoyardGameController;
+    TreasureCalculateZoneController TreasureCalculateZoneController;
 
     public void Awake()
     {
@@ -86,6 +88,8 @@ public class FB_GameMenuController : MonoBehaviour {
 
     void Start()
     {
+        FortBoyardGameController = FortBoyardGameController.Instance;
+        TreasureCalculateZoneController = TreasureCalculateZoneController.Instance;
         StartCoroutine(CheckInternetConnection()); //Проверка соединения с интернетом
         LoadPlayerPrefs();
         StartCoroutine(DownloadUsersFromDatabase());
@@ -410,7 +414,7 @@ public class FB_GameMenuController : MonoBehaviour {
             CloseStatusAfterCreateUser();
             CloseFBMainMenuCanvas();
             FirstMainMenu.SetActive(false);
-            FortBoyardGameController.Instance.StartGame();
+            FortBoyardGameController.StartGame();
             Debug.Log("Start game after CREATE user");
         }
         if (isConfirmAfterSelectUser)
@@ -431,7 +435,7 @@ public class FB_GameMenuController : MonoBehaviour {
             currentRealName = "guest";
             currentPassword = "guest";
             FirstMainMenu.SetActive(false);
-            FortBoyardGameController.Instance.StartGame();
+            FortBoyardGameController.StartGame();
         }
         if (isProfileUserMenu)
         {
@@ -439,7 +443,7 @@ public class FB_GameMenuController : MonoBehaviour {
             Debug.Log("Start game after USER profile");
             CloseFBMainMenuCanvas();
             FirstMainMenu.SetActive(false);
-            FortBoyardGameController.Instance.StartGame();
+            FortBoyardGameController.StartGame();
         }
     }
 
@@ -585,8 +589,8 @@ public class FB_GameMenuController : MonoBehaviour {
         StartCoroutine(UploadNewHighscore(
             currentLogin,
             currentRealName,
-            (int)TreasureCalculateZoneController.Instance.TotalCalculateCoins,
-            TreasureCalculateZoneController.Instance.DonationName)
+            (int)TreasureCalculateZoneController.TotalCalculateCoins,
+            TreasureCalculateZoneController.DonationName)
             );
     }
 

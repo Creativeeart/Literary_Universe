@@ -10,7 +10,8 @@ public class Arrow : MonoBehaviour
     public Vector3 centerOfMass;
     Rigidbody RigidBody;
     public TrailRenderer TrailRenderer;
-
+    Bow Bow;
+    FortBoyardGameController FortBoyardGameController;
     private void Update()
     {
         Vector3 down = transform.TransformDirection(Vector3.forward) * distanceRay;
@@ -33,6 +34,8 @@ public class Arrow : MonoBehaviour
     }
     public void Start()
     {
+        Bow = Bow.Instance;
+        FortBoyardGameController = FortBoyardGameController.Instance;
         RigidBody = GetComponent<Rigidbody>();
         RigidBody.centerOfMass = centerOfMass;
     }
@@ -66,19 +69,19 @@ public class Arrow : MonoBehaviour
             RigidBody.velocity = Vector3.zero;
             RigidBody.isKinematic = true;
             RigidBody.useGravity = false;
-            Bow.Instance.ArrowHit.pitch = Random.Range(1f, 1.2f);
-            Bow.Instance.ArrowHit.Play();
+            Bow.ArrowHit.pitch = Random.Range(1f, 1.2f);
+            Bow.ArrowHit.Play();
             if (other.name != "Target")
             {
                 Debug.Log("Miss");
-                Bow.Instance.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().text = "Промах";
-                Bow.Instance.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().color = new Color32(255, 0, 0, 255);
+                Bow.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().text = "Промах";
+                Bow.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().color = new Color32(255, 0, 0, 255);
                 var ins = Instantiate(Bow.Instance.hitPrefab, transform.position, Quaternion.identity);
                 Destroy(ins, 1);
-                if (Bow.Instance.ArrowIndex == 10)
+                if (Bow.ArrowIndex == 10)
                 {
                     Debug.Log("No arrows. You failed");
-                    FortBoyardGameController.Instance.LoseRoom("Стрелы закончились!\nК сожалению вы не справились с испытанием");
+                    FortBoyardGameController.LoseRoom("Стрелы закончились!\nК сожалению вы не справились с испытанием");
                     Cursor.visible = true;
                 }
             }
@@ -94,24 +97,24 @@ public class Arrow : MonoBehaviour
             {
                 colliders[i].enabled = false;
             }
-            Bow.Instance.curentHitTargets++;
+            Bow.curentHitTargets++;
             Debug.Log("Hit");
-            Bow.Instance.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().text = "Попадание";
-            Bow.Instance.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().color = new Color32(255, 171, 0, 255);
-            Bow.Instance.countHitTargets.text = "Мишеней поражено: " + Bow.Instance.curentHitTargets + "/5";
+            Bow.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().text = "Попадание";
+            Bow.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().color = new Color32(255, 171, 0, 255);
+            Bow.countHitTargets.text = "Мишеней поражено: " + Bow.curentHitTargets + "/5";
             
-            var ins = Instantiate(Bow.Instance.hitPrefab, new Vector3(other.transform.parent.transform.position.x, other.transform.parent.transform.position.y - 0.3f, other.transform.parent.transform.position.z), Quaternion.identity);
+            var ins = Instantiate(Bow.hitPrefab, new Vector3(other.transform.parent.transform.position.x, other.transform.parent.transform.position.y - 0.3f, other.transform.parent.transform.position.z), Quaternion.identity);
             Destroy(ins, 1);
-            if (Bow.Instance.curentHitTargets >= 5)
+            if (Bow.curentHitTargets >= 5)
             {
                 Debug.Log("Done! All targets hits.");
-                Bow.Instance.isWinner = true;
+                Bow.isWinner = true;
                 StartCoroutine(ShowCenterRotationKey());
                 Cursor.visible = true;
             }
-            if (Bow.Instance.ArrowIndex == 10 && Bow.Instance.curentHitTargets < 5)
+            if (Bow.ArrowIndex == 10 && Bow.curentHitTargets < 5)
             {
-                FortBoyardGameController.Instance.LoseRoom("Стрелы закончились!\nК сожалению вы не справились с испытанием");
+                FortBoyardGameController.LoseRoom("Стрелы закончились!\nК сожалению вы не справились с испытанием");
                 Cursor.visible = true;
             }
         }
@@ -119,9 +122,9 @@ public class Arrow : MonoBehaviour
     IEnumerator ShowCenterRotationKey()
     {
         yield return new WaitForSeconds(1);
-        Bow.Instance.keyRotationCenter.SetActive(true);
+        Bow.keyRotationCenter.SetActive(true);
         yield return new WaitForSeconds(2);
-        FortBoyardGameController.Instance.WinnerRoom("Keys");
+        FortBoyardGameController.WinnerRoom("Keys");
     }
 }
 

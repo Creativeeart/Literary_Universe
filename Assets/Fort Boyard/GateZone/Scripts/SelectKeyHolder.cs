@@ -4,11 +4,15 @@ public class SelectKeyHolder : MonoBehaviour
 {
     Outline _outLine;
     GateZoneController GateZoneController;
+    AlertUI AlertUI;
+    FortBoyardGameController FortBoyardGameController;
     bool selectObject = false;
 
     void Start()
     {
         GateZoneController = GateZoneController.Instance;
+        AlertUI = AlertUI.Instance;
+        FortBoyardGameController = FortBoyardGameController.Instance;
         _outLine = gameObject.GetComponent<Outline>();
         _outLine.enabled = false;
         selectObject = false;
@@ -18,7 +22,7 @@ public class SelectKeyHolder : MonoBehaviour
     {
         if (!selectObject)
         {
-            if (FortBoyardGameController.Instance.CurrentKeys > 0)
+            if (FortBoyardGameController.CurrentKeys > 0)
             {
                 if (GateZoneController.countAddKeys != 0)
                 {
@@ -45,7 +49,7 @@ public class SelectKeyHolder : MonoBehaviour
     }
     void ShowAlertMessage()
     {
-        AlertUI.Instance.ShowAlert_DEFAULT("Доступ запрещен. У вас нет ключей. \nДополнительные ключи вы можете взять на панели, в нижней части экрана");
+        AlertUI.ShowAlert_DEFAULT("Доступ запрещен. У вас нет ключей. \nДополнительные ключи вы можете взять на панели, в нижней части экрана");
     }
 
     void OnMouseEnter()

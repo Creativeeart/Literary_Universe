@@ -11,8 +11,13 @@ public class DoorOpen : MonoBehaviour
     Outline _outLine;
     AudioSource _audioSource;
 
+    FortBoyardGameController FortBoyardGameController;
+    FB_CamMovingController FB_CamMovingController;
     void Start()
     {
+        FortBoyardGameController = FortBoyardGameController.Instance;
+        FB_CamMovingController = FB_CamMovingController.Instance;
+
         _outLine = gameObject.GetComponent<Outline>();
         gameObject.AddComponent<AudioSource>();
         _audioSource = gameObject.GetComponent<AudioSource>();
@@ -27,10 +32,10 @@ public class DoorOpen : MonoBehaviour
                 _outLine.enabled = false;
                 gameObject.transform.parent.gameObject.GetComponent<Animator>().enabled = true;
                 StartCoroutine(DoorAnimationOpened());
-                _audioSource.PlayOneShot(FortBoyardGameController.Instance.openedDoor);
-                FortBoyardGameController.Instance.GameRooms = true;
-                FortBoyardGameController.Instance.AnimatorDoor = gameObject.transform.parent.gameObject.GetComponent<Animator>(); //Передача переменной doorAnimator в скрипт FortBoyardGameController
-                FortBoyardGameController.Instance.CurrentDoorOpen = gameObject.transform.parent.gameObject;
+                _audioSource.PlayOneShot(FortBoyardGameController.openedDoor);
+                FortBoyardGameController.GameRooms = true;
+                FortBoyardGameController.AnimatorDoor = gameObject.transform.parent.gameObject.GetComponent<Animator>(); //Передача переменной doorAnimator в скрипт FortBoyardGameController
+                FortBoyardGameController.CurrentDoorOpen = gameObject.transform.parent.gameObject;
                 isLocked = true;
                 isOpened = true;
             }
@@ -39,11 +44,11 @@ public class DoorOpen : MonoBehaviour
     IEnumerator DoorAnimationOpened()
     {
         yield return new WaitForSeconds(1f);
-        FortBoyardGameController.Instance.CurrentNumberRoom = roomNumber;
-        FortBoyardGameController.Instance.game_rooms[roomNumber].SetActive(true);
-        FortBoyardGameController.Instance.DisabledObjects();
-        FB_CamMovingController.Instance.cameraToMovingFromScene.GetComponent<Camera>().enabled = false;
-        FortBoyardGameController.Instance.mainUconsUI.SetActive(false);
+        FortBoyardGameController.CurrentNumberRoom = roomNumber;
+        FortBoyardGameController.game_rooms[roomNumber].SetActive(true);
+        FortBoyardGameController.DisabledObjects();
+        FB_CamMovingController.cameraToMovingFromScene.GetComponent<Camera>().enabled = false;
+        FortBoyardGameController.mainUconsUI.SetActive(false);
     }
     void OnMouseEnter()
     {

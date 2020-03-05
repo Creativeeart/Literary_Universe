@@ -6,6 +6,14 @@ public class Crate : MonoBehaviour
     Vector3 forward, back, left, right;
     Vector3 posForward, posBack, posLeft, posRight;
 
+    CrateController CrateController;
+    FortBoyardGameController FortBoyardGameController;
+
+    void Start()
+    {
+        CrateController = CrateController.Instance;
+        FortBoyardGameController = FortBoyardGameController.Instance;
+    }
 
     void RaycastCustom()
     {
@@ -27,30 +35,30 @@ public class Crate : MonoBehaviour
 
     void RaycastHit()
     {
-        if (CrateController.Instance.steps > 0)
+        if (CrateController.steps > 0)
         {
             if (gameObject.tag == "Crate")
             {
-                if (!CrateController.Instance.moving)
+                if (!CrateController.moving)
                 {
                     RaycastCustom();
                     RaycastHit hit;
-                    if (!Physics.Raycast(posForward, forward, out hit, CrateController.Instance.distanceRay))
+                    if (!Physics.Raycast(posForward, forward, out hit, CrateController.distanceRay))
                     {
                         StartCoroutine(CrateMoving("Forward"));
                     }
 
-                    if (!Physics.Raycast(posBack, back, out hit, CrateController.Instance.distanceRay))
+                    if (!Physics.Raycast(posBack, back, out hit, CrateController.distanceRay))
                     {
                         StartCoroutine(CrateMoving("Back"));
                     }
 
-                    if (!Physics.Raycast(posLeft, left, out hit, CrateController.Instance.distanceRay))
+                    if (!Physics.Raycast(posLeft, left, out hit, CrateController.distanceRay))
                     {
                         StartCoroutine(CrateMoving("Left"));
                     }
 
-                    if (!Physics.Raycast(posRight, right, out hit, CrateController.Instance.distanceRay))
+                    if (!Physics.Raycast(posRight, right, out hit, CrateController.distanceRay))
                     {
                         StartCoroutine(CrateMoving("Right"));
                     }
@@ -62,31 +70,31 @@ public class Crate : MonoBehaviour
 
     void ShowArrow() //Показать стрелку которая указывает куда можно двигать ящик
     {
-        if (CrateController.Instance.steps > 0)
+        if (CrateController.steps > 0)
         {
             if (gameObject.tag == "Crate")
             {
                 RaycastCustom();
                 RaycastHit hit;
-                if (!Physics.Raycast(posForward, forward, out hit, CrateController.Instance.distanceRay)) //Если луч не касается объекта (ящика)
+                if (!Physics.Raycast(posForward, forward, out hit, CrateController.distanceRay)) //Если луч не касается объекта (ящика)
                 {
                     EnabledAnimationEmissionArrow();
                     ArrowOffsetAndRotation(-90, 0, 1.5f); //Угол, позиция X, позиция Z
                 }
 
-                if (!Physics.Raycast(posBack, back, out hit, CrateController.Instance.distanceRay))
+                if (!Physics.Raycast(posBack, back, out hit, CrateController.distanceRay))
                 {
                     EnabledAnimationEmissionArrow();
                     ArrowOffsetAndRotation(90, 0, -1.5f);
                 }
 
-                if (!Physics.Raycast(posLeft, left, out hit, CrateController.Instance.distanceRay))
+                if (!Physics.Raycast(posLeft, left, out hit, CrateController.distanceRay))
                 {
                     EnabledAnimationEmissionArrow();
                     ArrowOffsetAndRotation(180, -1.5f, 0);
                 }
 
-                if (!Physics.Raycast(posRight, right, out hit, CrateController.Instance.distanceRay))
+                if (!Physics.Raycast(posRight, right, out hit, CrateController.distanceRay))
                 {
                     EnabledAnimationEmissionArrow();
                     ArrowOffsetAndRotation(0, 1.5f, 0);
@@ -98,22 +106,22 @@ public class Crate : MonoBehaviour
 
     void EnabledAnimationEmissionArrow()
     {
-        CrateController.Instance.arrow.SetActive(true);
-        CrateController.Instance.arrow.transform.SetParent(transform);
+        CrateController.arrow.SetActive(true);
+        CrateController.arrow.transform.SetParent(transform);
         gameObject.GetComponent<MeshRenderer>().material.EnableKeyword("_EMISSION");
         gameObject.GetComponent<Animator>().enabled = true;
     }
 
     void ArrowOffsetAndRotation(int angle, float posX, float posZ)
     {
-        CrateController.Instance.arrow.transform.position = new Vector3(transform.position.x + posX, transform.position.y + CrateController.Instance.offsetYposArrow, transform.position.z + posZ);
-        CrateController.Instance.arrow.transform.rotation = Quaternion.Euler(-90, 0, angle);
+        CrateController.arrow.transform.position = new Vector3(transform.position.x + posX, transform.position.y + CrateController.offsetYposArrow, transform.position.z + posZ);
+        CrateController.arrow.transform.rotation = Quaternion.Euler(-90, 0, angle);
     }
 
 
     void Update()
     {
-        if (!FortBoyardGameController.Instance.IsRoomPause)
+        if (!FortBoyardGameController.IsRoomPause)
         {
             RaycastCustom();
         }
@@ -121,7 +129,7 @@ public class Crate : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (!FortBoyardGameController.Instance.IsRoomPause)
+        if (!FortBoyardGameController.IsRoomPause)
         {
             ShowArrow();
         }
@@ -129,7 +137,7 @@ public class Crate : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (!FortBoyardGameController.Instance.IsRoomPause)
+        if (!FortBoyardGameController.IsRoomPause)
         {
             RaycastHit();
         }
@@ -137,11 +145,11 @@ public class Crate : MonoBehaviour
 
     void OnMouseExit()
     {
-        if (!FortBoyardGameController.Instance.IsRoomPause)
+        if (!FortBoyardGameController.IsRoomPause)
         {
             if (gameObject.tag == "Crate")
             {
-                CrateController.Instance.arrow.SetActive(false);
+                CrateController.arrow.SetActive(false);
                 gameObject.GetComponent<Animator>().Rebind();
                 gameObject.GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
                 gameObject.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", new Color(0, 0, 0));
@@ -157,8 +165,8 @@ public class Crate : MonoBehaviour
         float startPoseNegativeX = transform.position.x - posToMove;
         float startPosePolojZ = transform.position.z + posToMove;
         float startPoseNegativeZ = transform.position.z - posToMove;
-        CrateController.Instance.moving = true;
-        CrateController.Instance.AudioSource.PlayOneShot(CrateController.Instance.crateMovingSound);
+        CrateController.moving = true;
+        CrateController.AudioSource.PlayOneShot(CrateController.crateMovingSound);
 
         switch (positionName) {
             case "Forward":
@@ -202,16 +210,16 @@ public class Crate : MonoBehaviour
                 break;
         }
 
-        CrateController.Instance.moving = false;
-        CrateController.Instance.steps -= 1;
-        CrateController.Instance.stepsUI.text = "Осталось ходов: " + CrateController.Instance.steps;
+        CrateController.moving = false;
+        CrateController.steps -= 1;
+        CrateController.stepsUI.text = "Осталось ходов: " + CrateController.steps;
 
-        if (CrateController.Instance.steps == 0 && CrateController.Instance._barrelTrigger.triggerEnter == false)
+        if (CrateController.steps == 0 && CrateController._barrelTrigger.triggerEnter == false)
         {
             Debug.Log("Lose");
-            CrateController.Instance._fortBoyardGameController.LoseRoom("Не осталось ходов!\nК сожалению вы не справились с испытанием");
+            FortBoyardGameController.LoseRoom("Не осталось ходов!\nК сожалению вы не справились с испытанием");
         }
-        if ((CrateController.Instance.steps == 0 || CrateController.Instance.steps > 0) && CrateController.Instance._barrelTrigger.triggerEnter == true)
+        if ((CrateController.steps == 0 || CrateController.steps > 0) && CrateController._barrelTrigger.triggerEnter == true)
         {
             Debug.Log("Win");
             StartCoroutine(ShowCenterRotationKey());
@@ -220,8 +228,8 @@ public class Crate : MonoBehaviour
     IEnumerator ShowCenterRotationKey()
     {
         yield return new WaitForSeconds(1);
-        CrateController.Instance.tipsScreenRotation.SetActive(true);
+        CrateController.tipsScreenRotation.SetActive(true);
         yield return new WaitForSeconds(2);
-        CrateController.Instance._fortBoyardGameController.WinnerRoom("Tips");
+        FortBoyardGameController.WinnerRoom("Tips");
     }
 }

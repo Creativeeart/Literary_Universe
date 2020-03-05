@@ -22,14 +22,22 @@ public class AlertUI : MonoBehaviour
     public GameObject Alert_EXIT_ROOM_SKIP_GAME;                //Предупреждение если игрок пытается покинуть комнату не пройдя испытание
     public TextMeshProUGUI Alert_EXIT_ROOM_SKIP_GAME_TextUI;    //
 
-    public GameObject Alert_PAUSE;                              //Предупреждение если игрок пытается нажимает клавишу ESC.
+    public GameObject Alert_PAUSE;                              //Предупреждение если игрок нажимает клавишу ESC.
     
     public bool isAlertUIActive = false;
     public static AlertUI Instance { get; private set; }
+    SupportScripts SupportScripts;
+    FortBoyardGameController FortBoyardGameController;
 
     public void Awake()
     {
         Instance = this;
+    }
+
+    void Start()
+    {
+        SupportScripts = SupportScripts.Instance;
+        FortBoyardGameController = FortBoyardGameController.Instance;
     }
 
     public void ShowModalWindow()
@@ -60,10 +68,10 @@ public class AlertUI : MonoBehaviour
 
     public void ReloadGame()
     {
-        SupportScripts.Instance.UI.SetActive(true);
+        SupportScripts.UI.SetActive(true);
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        SupportScripts.Instance.UI.SetActive(true);
+        SupportScripts.UI.SetActive(true);
     }
 
     public void ShowAlert_DEFAULT(string Message)
@@ -101,7 +109,7 @@ public class AlertUI : MonoBehaviour
     public void CloseAlert_EXIT_ROOM_SKIP_GAME()
     {
         CloseModalWindow();
-        FortBoyardGameController.Instance.IsRoomPause = false;
+        FortBoyardGameController.IsRoomPause = false;
     }
 
     public void ShowAlert_PAUSE()

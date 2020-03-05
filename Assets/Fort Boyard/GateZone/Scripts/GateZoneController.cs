@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using cakeslice;
 public class GateZoneController : MonoBehaviour
 {
-    public SelectOpenTipsMechanism SelectOpenTipsMechanism;
     public GameObject UI_GateZone;
     public GameObject arrow3DKeysHolder, arrow3DTipsMechanism;
     public int needKeys = 3;
@@ -59,6 +57,19 @@ public class GateZoneController : MonoBehaviour
     public bool isOpenTipsMechanismEnabled = true;
     public static GateZoneController Instance { get; private set; }
 
+    SelectOpenTipsMechanism SelectOpenTipsMechanism;
+    FortBoyardGameController FortBoyardGameController;
+    FB_CamMovingController FB_CamMovingController;
+    TimerGame TimerGame;
+
+    void Start()
+    {
+        SelectOpenTipsMechanism = SelectOpenTipsMechanism.Instance;
+        FortBoyardGameController = FortBoyardGameController.Instance;
+        FB_CamMovingController = FB_CamMovingController.Instance;
+        TimerGame = TimerGame.Instance;
+    }
+
     public void Awake()
     {
         Instance = this;
@@ -66,33 +77,33 @@ public class GateZoneController : MonoBehaviour
 
     public void GateZoneEntered()
     {
-        if (FortBoyardGameController.Instance.IsGateZone)
+        if (FortBoyardGameController.IsGateZone)
         {
             UI_GateZone.SetActive(true);
             CheckKeysAndTips();
             LampControl(greenLamp, redLamp, false, true);
-            for (int i = 0; i < FortBoyardGameController.Instance.TipsImage.Length; i++)
+            for (int i = 0; i < FortBoyardGameController.TipsImage.Length; i++)
             {
-                if (FortBoyardGameController.Instance.TipsImage[i].sprite == FortBoyardGameController.Instance.ActiveTip)
+                if (FortBoyardGameController.TipsImage[i].sprite == FortBoyardGameController.ActiveTip)
                 {
                     countAddTips++;
                 }
             }
 
-            for (int i = 0; i < FortBoyardGameController.Instance.CurrentTips; i++)
+            for (int i = 0; i < FortBoyardGameController.CurrentTips; i++)
             {
                 tips3DIcons[i].SetActive(true);
             }
 
-            for (int i = 0; i < FortBoyardGameController.Instance.KeysImage.Length; i++)
+            for (int i = 0; i < FortBoyardGameController.KeysImage.Length; i++)
             {
                 if (i >= needKeys) break;
-                if (FortBoyardGameController.Instance.KeysImage[i].sprite == FortBoyardGameController.Instance.ActiveKey)
+                if (FortBoyardGameController.KeysImage[i].sprite == FortBoyardGameController.ActiveKey)
                 {
                     countAddKeys++;
                 }
             }
-            for (int i = 0; i < FortBoyardGameController.Instance.CurrentKeys; i++)
+            for (int i = 0; i < FortBoyardGameController.CurrentKeys; i++)
             {
                 if (i >= needKeys) break;
                 keys3DIcons[i].SetActive(true);
@@ -104,7 +115,7 @@ public class GateZoneController : MonoBehaviour
 
     void Update()
     {
-        if (FortBoyardGameController.Instance.IsGateZone)
+        if (FortBoyardGameController.IsGateZone)
         {
             if (runTime)
             {
@@ -125,52 +136,52 @@ public class GateZoneController : MonoBehaviour
 
     public void AddKeys(int numberImage)
     {
-        FortBoyardGameController.Instance.CurrentKeys += 1;
+        FortBoyardGameController.CurrentKeys += 1;
         TimeReducing(10);
         countAddKeys++;
         for (int i = 0; i < countAddKeys; i++) keys3DIcons[i].SetActive(true);
         activeKeyCount++;
-        FortBoyardGameController.Instance.KeysImage[numberImage].gameObject.SetActive(true);
-        FortBoyardGameController.Instance.KeysImage[numberImage].sprite = FortBoyardGameController.Instance.ActiveKey;
-        FortBoyardGameController.Instance.KeysImage[numberImage].color = "#FFFFFFFF".ToColor();
+        FortBoyardGameController.KeysImage[numberImage].gameObject.SetActive(true);
+        FortBoyardGameController.KeysImage[numberImage].sprite = FortBoyardGameController.ActiveKey;
+        FortBoyardGameController.KeysImage[numberImage].color = "#FFFFFFFF".ToColor();
     }
 
     public void AddTips(int numberImage)
     {
-        if (FortBoyardGameController.Instance.CurrentTips < FortBoyardGameController.Instance.totalTips)
+        if (FortBoyardGameController.CurrentTips < FortBoyardGameController.totalTips)
         {
-            FortBoyardGameController.Instance.CurrentTips += 1;
+            FortBoyardGameController.CurrentTips += 1;
             TimeReducing(10);
             countAddTips++;
             for (int i = 0; i < countAddTips; i++) tips3DIcons[i].SetActive(true);
-            FortBoyardGameController.Instance.TipsImage[numberImage].gameObject.SetActive(true);
-            FortBoyardGameController.Instance.TipsImage[numberImage].sprite = FortBoyardGameController.Instance.ActiveTip;
-            FortBoyardGameController.Instance.TipsImage[numberImage].color = "#FFFFFFFF".ToColor();
+            FortBoyardGameController.TipsImage[numberImage].gameObject.SetActive(true);
+            FortBoyardGameController.TipsImage[numberImage].sprite = FortBoyardGameController.ActiveTip;
+            FortBoyardGameController.TipsImage[numberImage].color = "#FFFFFFFF".ToColor();
         }
-        if (FortBoyardGameController.Instance.CurrentTips == 5) addExtraTipButton.GetComponent<Button>().interactable = false;
+        if (FortBoyardGameController.CurrentTips == 5) addExtraTipButton.GetComponent<Button>().interactable = false;
     }
 
     public void TimeReducing(float countTime)
     {
-        FortBoyardGameController.Instance.timeReducing.GetComponent<TextMeshProUGUI>().text = "- " + countTime;
-        GameObject Ins = Instantiate(FortBoyardGameController.Instance.timeReducing, FortBoyardGameController.Instance.timeReducingParent);
+        FortBoyardGameController.timeReducing.GetComponent<TextMeshProUGUI>().text = "- " + countTime;
+        GameObject Ins = Instantiate(FortBoyardGameController.timeReducing, FortBoyardGameController.timeReducingParent);
         Destroy(Ins, 1);
-        FortBoyardGameController.Instance.totalTime -= countTime;
-        //FortBoyardGameController.Instance.totalTime = FortBoyardGameController.Instance.totalTime - countTime;
-        TimerGame.Instance.seconds -= countTime;
-        FortBoyardGameController.Instance.ReloadTimer();
+        FortBoyardGameController.totalTime -= countTime;
+        //FortBoyardGameController.totalTime = FortBoyardGameController.totalTime - countTime;
+        TimerGame.seconds -= countTime;
+        FortBoyardGameController.ReloadTimer();
     }
 
     public void CheckKeysAndTips()
     {
         for (int i = 0; i <= 2; i++)
         {
-            if (FortBoyardGameController.Instance.KeysImage[i].sprite != FortBoyardGameController.Instance.ActiveKey)
+            if (FortBoyardGameController.KeysImage[i].sprite != FortBoyardGameController.ActiveKey)
             {
                 buttonAddKeys[i].SetActive(true);
             }
 
-            if (FortBoyardGameController.Instance.TipsImage[i].sprite != FortBoyardGameController.Instance.ActiveTip)
+            if (FortBoyardGameController.TipsImage[i].sprite != FortBoyardGameController.ActiveTip)
             {
                 buttonAddTips[i].SetActive(true);
             }
@@ -180,14 +191,14 @@ public class GateZoneController : MonoBehaviour
         {
             if (buttonAddKeys[i].activeSelf)
             {
-                FortBoyardGameController.Instance.KeysImage[i].gameObject.SetActive(false);
+                FortBoyardGameController.KeysImage[i].gameObject.SetActive(false);
             }
         }
         for (int i = 0; i < buttonAddTips.Length; i++)
         {
             if (buttonAddTips[i].activeSelf)
             {
-                FortBoyardGameController.Instance.TipsImage[i].gameObject.SetActive(false);
+                FortBoyardGameController.TipsImage[i].gameObject.SetActive(false);
             }
         }
     }
@@ -200,7 +211,7 @@ public class GateZoneController : MonoBehaviour
     public void EnableDisable3DIconTips()
     {
         countAddTips--;
-        int result = FortBoyardGameController.Instance.CurrentTips - countOpenedTips;
+        int result = FortBoyardGameController.CurrentTips - countOpenedTips;
         for (int i = 0; i < tips3DIcons.Length; i++)
         {
             tips3DIcons[i].SetActive(false);
@@ -222,20 +233,20 @@ public class GateZoneController : MonoBehaviour
 
     public void GoToAlphabetZone()
     {
-        FortBoyardGameController.Instance.mainUconsUI.SetActive(false);
-        FortBoyardGameController.Instance.GameRooms = false;
+        FortBoyardGameController.mainUconsUI.SetActive(false);
+        FortBoyardGameController.GameRooms = false;
         UI_GateZone.SetActive(false);
         isOpenTipsMechanismEnabled = false;
-        StartCoroutine(FB_CamMovingController.Instance.GoToAlphabetZone()); // Переход к зоне с алфавитом
+        StartCoroutine(FB_CamMovingController.GoToAlphabetZone()); // Переход к зоне с алфавитом
         SelectOpenTipsMechanism._outLine.enabled = false;
     }
 
     public void OpenTip()
     {
         if (tipsText.text == "Подсказки скрыты") tipsText.text = string.Empty;
-        if (FortBoyardGameController.Instance.CurrentTips <= FortBoyardGameController.Instance.totalTips)
+        if (FortBoyardGameController.CurrentTips <= FortBoyardGameController.totalTips)
         {
-            if (counter < FortBoyardGameController.Instance.CurrentTips)
+            if (counter < FortBoyardGameController.CurrentTips)
             {
                 tipsText.text = tipsText.text + allTipsList[counter] + "\n";
                 counter++;
@@ -249,9 +260,9 @@ public class GateZoneController : MonoBehaviour
 
     public void OpenKey()
     {
-        if (FortBoyardGameController.Instance.CurrentKeys <= FortBoyardGameController.Instance.totalKeys)
+        if (FortBoyardGameController.CurrentKeys <= FortBoyardGameController.totalKeys)
         {
-            if (countOpenedKeys < FortBoyardGameController.Instance.CurrentKeys)
+            if (countOpenedKeys < FortBoyardGameController.CurrentKeys)
             {
                 countOpenedKeys++;
                 EnableDisable3DIconKeys();
@@ -298,10 +309,10 @@ public class GateZoneController : MonoBehaviour
 
     //public void CountingKeys()
     //{
-    //    if (FortBoyardGameController.Instance.CurrentKeys < needKeys)
+    //    if (FortBoyardGameController.CurrentKeys < needKeys)
     //    {
-    //        int how = needKeys - FortBoyardGameController.Instance.CurrentKeys;
-    //        AlertUI.Instance.ShowWarningModalWindow("Доступ запрещен. Вам не хватает ключей: (" + how + ")");
+    //        int how = needKeys - FortBoyardGameController.CurrentKeys;
+    //        AlertUI.ShowWarningModalWindow("Доступ запрещен. Вам не хватает ключей: (" + how + ")");
     //    }
     //    else
     //    {
@@ -312,7 +323,7 @@ public class GateZoneController : MonoBehaviour
     //IEnumerator MaterialSwitching()
     //{
     //    int i = 0;
-    //    while (i < FortBoyardGameController.Instance.CurrentKeys)
+    //    while (i < FortBoyardGameController.CurrentKeys)
     //    {
     //        keyHolders[i].GetComponent<MeshRenderer>().material = emissionMaterialForKeyHolders;
     //        keyHolders[i].transform.GetChild(0).gameObject.SetActive(true);

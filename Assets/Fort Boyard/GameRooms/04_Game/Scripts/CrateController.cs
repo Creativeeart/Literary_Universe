@@ -5,7 +5,6 @@ using TMPro;
 
 public class CrateController : MonoBehaviour
 {
-    public FortBoyardGameController _fortBoyardGameController;
     public AudioSource AudioSource;
     public Barrel_Trigger _barrelTrigger;
     public AudioClip crateMovingSound;

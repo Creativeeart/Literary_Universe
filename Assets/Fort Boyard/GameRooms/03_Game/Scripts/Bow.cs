@@ -38,13 +38,14 @@ public class Bow : MonoBehaviour
     public GameObject keyRotationCenter;
     public bool isWinner = false;
     public static Bow Instance { get; private set; }
-
+    FortBoyardGameController FortBoyardGameController;
     public void Awake()
     {
         Instance = this;
     }
     void Start()
     {
+        FortBoyardGameController = FortBoyardGameController.Instance;
         ArrowsCount = ArrowsPool.Length;
         CurrentArrow = ArrowsPool[ArrowIndex];
         RopeNearLocalPosition = RopeTransform.localPosition;
@@ -52,7 +53,7 @@ public class Bow : MonoBehaviour
 
     void Update()
     {
-        if (!FortBoyardGameController.Instance.IsRoomPause)
+        if (!FortBoyardGameController.IsRoomPause)
         {
             if (!isWinner)
             {

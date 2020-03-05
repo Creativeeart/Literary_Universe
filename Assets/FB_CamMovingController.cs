@@ -76,6 +76,11 @@ public class FB_CamMovingController : MonoBehaviour {
     private float X;
 
     public static FB_CamMovingController Instance { get; private set; }
+    FortBoyardGameController FortBoyardGameController;
+    GateZoneController GateZoneController;
+    AlphabetZoneController AlphabetZoneController;
+    TreasureZoneController TreasureZoneController;
+    TreasureCalculateZoneController TreasureCalculateZoneController;
 
     public void Awake()
     {
@@ -84,6 +89,11 @@ public class FB_CamMovingController : MonoBehaviour {
 
     void Start()
     {
+        FortBoyardGameController = FortBoyardGameController.Instance;
+        GateZoneController = GateZoneController.Instance;
+        AlphabetZoneController = AlphabetZoneController.Instance;
+        TreasureZoneController = TreasureZoneController.Instance;
+        TreasureCalculateZoneController = TreasureCalculateZoneController.Instance;
         MoveToStartPositionB();
     }
 
@@ -231,9 +241,9 @@ public class FB_CamMovingController : MonoBehaviour {
                 cameraToMovingFromScene.DOMove(pointToGateZoneB.transform.position, speedDurationMovingCamera)
                 .OnComplete(() =>
                 {
-                    FortBoyardGameController.Instance.DisableAllCheckZones();
-                    FortBoyardGameController.Instance.IsGateZone = true;
-                    GateZoneController.Instance.GateZoneEntered();
+                    FortBoyardGameController.DisableAllCheckZones();
+                    FortBoyardGameController.IsGateZone = true;
+                    GateZoneController.GateZoneEntered();
                 })
                 .Play();
                 cameraToMovingFromScene.DORotate(pointToGateZoneB.transform.eulerAngles, speedDurationMovingCamera).Play();
@@ -251,9 +261,9 @@ public class FB_CamMovingController : MonoBehaviour {
                 cameraToMovingFromScene.DOMove(pointToAlphabetZoneB.transform.position, speedDurationMovingCamera)
                 .OnComplete(() =>
                 {
-                    FortBoyardGameController.Instance.DisableAllCheckZones();
-                    FortBoyardGameController.Instance.IsAlphabetZone = true;
-                    AlphabetZoneController.Instance.AlphabetZoneEntered();
+                    FortBoyardGameController.DisableAllCheckZones();
+                    FortBoyardGameController.IsAlphabetZone = true;
+                    AlphabetZoneController.AlphabetZoneEntered();
                 })
                 .Play();
                 cameraToMovingFromScene.DORotate(pointToAlphabetZoneB.transform.eulerAngles, speedDurationMovingCamera).Play();
@@ -268,9 +278,9 @@ public class FB_CamMovingController : MonoBehaviour {
         cameraToMovingFromScene.DOMove(pointToTreasure_Zone.transform.position, speedDurationMovingCamera)
             .OnComplete(() =>
             {
-                FortBoyardGameController.Instance.DisableAllCheckZones();
-                FortBoyardGameController.Instance.IsTreasureZone = true;
-                TreasureZoneController.Instance.TreasureZoneEntered();
+                FortBoyardGameController.DisableAllCheckZones();
+                FortBoyardGameController.IsTreasureZone = true;
+                TreasureZoneController.TreasureZoneEntered();
             })
             .Play();
         cameraToMovingFromScene.DORotate(pointToTreasure_Zone.transform.eulerAngles, speedDurationMovingCamera).Play();
@@ -282,9 +292,9 @@ public class FB_CamMovingController : MonoBehaviour {
         cameraToMovingFromScene.DOMove(pointToTreasure_Calculate_Zone_A.transform.position, speedDurationMovingCamera)
             .OnComplete(() =>
             {
-                FortBoyardGameController.Instance.DisableAllCheckZones();
-                FortBoyardGameController.Instance.IsTreasureCalculateZone = true;
-                StartCoroutine(TreasureCalculateZoneController.Instance.CapacityAnimateNumber());
+                FortBoyardGameController.DisableAllCheckZones();
+                FortBoyardGameController.IsTreasureCalculateZone = true;
+                StartCoroutine(TreasureCalculateZoneController.CapacityAnimateNumber());
             })
             .Play();
         cameraToMovingFromScene.DORotate(pointToTreasure_Calculate_Zone_A.transform.eulerAngles, speedDurationMovingCamera).Play();

@@ -25,6 +25,17 @@ public class TreasureZoneController : MonoBehaviour {
     Vector3 center, size;
 
     public static TreasureZoneController Instance { get; private set; }
+    FortBoyardGameController FortBoyardGameController;
+    Chest Chest;
+    FB_CamMovingController FB_CamMovingController;
+
+    void Start()
+    {
+        FortBoyardGameController = FortBoyardGameController.Instance;
+        Chest = Chest.Instance;
+        FB_CamMovingController = FB_CamMovingController.Instance;
+    }
+
     private void Awake()
     {
         Instance = this;
@@ -33,7 +44,7 @@ public class TreasureZoneController : MonoBehaviour {
     public void TreasureZoneEntered()
     {
         
-        if (FortBoyardGameController.Instance.IsTreasureZone)
+        if (FortBoyardGameController.IsTreasureZone)
         {
             UI_TreasureZone.SetActive(true);
             
@@ -98,14 +109,14 @@ public class TreasureZoneController : MonoBehaviour {
     }
     IEnumerator WaitingEndCollectMoney()
     {
-        Coins = Chest.Instance.coinsBoyard;
+        Coins = Chest.coinsBoyard;
         coinCounterTMPro.text = Coins.ToString();
         yield return new WaitForSeconds(2);
-        if (Coins == Chest.Instance.coinsBoyard)
+        if (Coins == Chest.coinsBoyard)
         {
-            FortBoyardGameController.Instance.watchUI.SetActive(false);
+            FortBoyardGameController.watchUI.SetActive(false);
             UI_TreasureZone.SetActive(false);
-            StartCoroutine(FB_CamMovingController.Instance.GoToTreasureCalculateZone()); // Переход к зоне подсчета золота
+            StartCoroutine(FB_CamMovingController.GoToTreasureCalculateZone()); // Переход к зоне подсчета золота
         }
     }
 

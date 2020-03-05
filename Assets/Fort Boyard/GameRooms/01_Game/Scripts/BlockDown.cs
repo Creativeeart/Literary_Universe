@@ -1,27 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace cakeslice
+using cakeslice;
+public class BlockDown : MonoBehaviour
 {
-    public class BlockDown : MonoBehaviour
-    {        
-        private void OnCollisionEnter(Collision collision)
+    FortBoyardGameController FortBoyardGameController;
+    Game_01 Game_01;
+
+    void Start()
+    {
+        FortBoyardGameController = FortBoyardGameController.Instance;
+        Game_01 = Game_01.Instance;
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Touch Block Down");
+        Game_01.isReady = true;
+        Game_01.audioSource.Stop();
+        StartCoroutine(Game_01.RopeReturn(false));
+        if (Game_01.isReady && Game_01.isTouchKey)
         {
-            Debug.Log("Touch Block Down");
-            Game_01.Instance.isReady = true;
-            Game_01.Instance.audioSource.Stop();
-            StartCoroutine(Game_01.Instance.RopeReturn(false));
-            if (Game_01.Instance.isReady && Game_01.Instance.isTouchKey)
-            {
-                StartCoroutine(ShowCenterRotationKey());
-            }
-        }
-        IEnumerator ShowCenterRotationKey()
-        {
-            yield return new WaitForSeconds(1);
-            Game_01.Instance.keyRotationCenter.SetActive(true);
-            yield return new WaitForSeconds(2);
-            FortBoyardGameController.Instance.WinnerRoom("Keys");
+            StartCoroutine(ShowCenterRotationKey());
         }
     }
+    IEnumerator ShowCenterRotationKey()
+    {
+        yield return new WaitForSeconds(1);
+        Game_01.keyRotationCenter.SetActive(true);
+        yield return new WaitForSeconds(2);
+        FortBoyardGameController.WinnerRoom("Keys");
+    }
 }
+

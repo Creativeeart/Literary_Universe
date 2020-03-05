@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using TMPro;
 using UnityEngine.UI;
-using cakeslice;
+
 public class Chest : MonoBehaviour {
     public GameObject hammer;
     public GameObject hitParticle;
@@ -21,19 +21,31 @@ public class Chest : MonoBehaviour {
     public int countKeyOpened = 0;
     bool isReset = false;
     public static Chest Instance { get; private set; }
+    FortBoyardGameController FortBoyardGameController;
+    TimerGame TimerGame;
+    AlertUI AlertUI;
+    FB_CamMovingController FB_CamMovingController;
 
     public void Awake()
     {
         Instance = this;
     }
 
+    void Start()
+    {
+        FortBoyardGameController = FortBoyardGameController.Instance;
+        TimerGame = TimerGame.Instance;
+        AlertUI = AlertUI.Instance;
+        FB_CamMovingController = FB_CamMovingController.Instance;
+    }
+
     void Update()
     {
-        if (FortBoyardGameController.Instance.IsTreasureZone)
+        if (FortBoyardGameController.IsTreasureZone)
         {
             if (!isReset)
             {
-                float summ = coinsBoyard * (FortBoyardGameController.Instance.totalTime / 100); //Подсчет монет в сундуке в зависимости от времени
+                float summ = coinsBoyard * (FortBoyardGameController.totalTime / 100); //Подсчет монет в сундуке в зависимости от времени
                 coinsBoyard = (int)summ;
                 isReset = true;
             }
@@ -53,9 +65,9 @@ public class Chest : MonoBehaviour {
                 else
                 {
                     coinsBoyard = 0;
-                    TimerGame.Instance.RunTime = false;
-                    AlertUI.Instance.ShowAlert_GAMEOVER_WITHOUT_ROOM("Золото закончилось!К сожалению вы не справились с заданием.< br > \nВы можете вернуться в главное меню и попытаться еще раз!");
-                    FortBoyardGameController.Instance.IsTreasureZone = false;
+                    TimerGame.RunTime = false;
+                    AlertUI.ShowAlert_GAMEOVER_WITHOUT_ROOM("Золото закончилось!К сожалению вы не справились с заданием.< br > \nВы можете вернуться в главное меню и попытаться еще раз!");
+                    FortBoyardGameController.IsTreasureZone = false;
                 }
             }
             if (Input.GetMouseButtonDown(0))
@@ -78,7 +90,7 @@ public class Chest : MonoBehaviour {
                                 Destroy(insParticle, 1f);
                                 ins.transform.LookAt(hit.transform.position);
                                 //cameraShakeHitHammer.shakeDuration = 0.1f;
-                                FB_CamMovingController.Instance.CameraShake();
+                                FB_CamMovingController.CameraShake();
                                 hit.transform.GetComponent<CameraShakeHitHammer>().shakeDuration = 0.1f;
                             }
                         }
@@ -89,7 +101,7 @@ public class Chest : MonoBehaviour {
     }
     //void Update()
     //{
-    //    if (FortBoyardGameController.Instance.IsTreasureZone)
+    //    if (FortBoyardGameController.IsTreasureZone)
     //    {
     //        if (Input.GetMouseButtonDown(0))
     //        {
@@ -111,7 +123,7 @@ public class Chest : MonoBehaviour {
     //                            Destroy(insParticle, 1f);
     //                            ins.transform.LookAt(hit.transform.position);
     //                            //cameraShakeHitHammer.shakeDuration = 0.1f;
-    //                            FB_CamMovingController.Instance.CameraShake();
+    //                            FB_CamMovingController.CameraShake();
     //                            hit.transform.GetComponent<CameraShakeHitHammer>().shakeDuration = 0.1f;
     //                        }
     //                    }

@@ -3,76 +3,86 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace cakeslice
+public class SelectOpenTipsMechanism : MonoBehaviour
 {
-    public class SelectOpenTipsMechanism : MonoBehaviour
+    public Button nextZoneBTN;
+    public cakeslice.Outline _outLine;
+
+    public Image readyImage;
+    bool isClicked = true;
+
+    public static SelectOpenTipsMechanism Instance { get; private set; }
+    GateZoneController GateZoneController;
+    AlertUI AlertUI;
+    TimerGame TimerGame;
+
+    public void Awake()
     {
-        public Button nextZoneBTN;
-        public Outline _outLine;
+        Instance = this;
+    }
 
-        public Image readyImage;
-        bool isClicked = true;
+    void Start()
+    {
+        GateZoneController = GateZoneController.Instance;
+        AlertUI = AlertUI.Instance;
+        TimerGame = TimerGame.Instance;
+        _outLine = gameObject.GetComponent<cakeslice.Outline>();
+    }
 
-        void Start()
+    void OnMouseDown()
+    {
+        if (GateZoneController.greenLamp.activeSelf)
         {
-            _outLine = gameObject.GetComponent<Outline>();
-        }
-        
-        void OnMouseDown()
-        {
-            if (GateZoneController.Instance.greenLamp.activeSelf)
+            if (GateZoneController.countAddTips != 0)
             {
-                if (GateZoneController.Instance.countAddTips != 0)
+                if (isClicked)
                 {
-                    if (isClicked)
+                    if (GateZoneController.isOpenTipsMechanismEnabled)
                     {
-                        if (GateZoneController.Instance.isOpenTipsMechanismEnabled)
-                        {
-                            StartCoroutine(FiilImage());
-                            TimerGame.Instance.RunTime = true;
-                            GateZoneController.Instance.arrow3DTipsMechanism.SetActive(false);
-                        }
+                        StartCoroutine(FiilImage());
+                        TimerGame.RunTime = true;
+                        GateZoneController.arrow3DTipsMechanism.SetActive(false);
                     }
                 }
-                else AlertUI.Instance.ShowAlert_DEFAULT("Доступ запрещен. У вас нет подсказок. \nДополнительные подсказки вы можете взять на панели, в нижней части экрана");
             }
-            else AlertUI.Instance.ShowAlert_DEFAULT("Доступ запрещен. \nСначала вставьте ключи в панель управления.");
+            else AlertUI.ShowAlert_DEFAULT("Доступ запрещен. У вас нет подсказок. \nДополнительные подсказки вы можете взять на панели, в нижней части экрана");
         }
+        else AlertUI.ShowAlert_DEFAULT("Доступ запрещен. \nСначала вставьте ключи в панель управления.");
+    }
 
-        void OnMouseEnter()
+    void OnMouseEnter()
+    {
+        if (GateZoneController.isOpenTipsMechanismEnabled)
         {
-            if (GateZoneController.Instance.isOpenTipsMechanismEnabled)
+            _outLine.enabled = true;
+        }
+    }
+
+    void OnMouseExit()
+    {
+        if (GateZoneController.isOpenTipsMechanismEnabled)
+        {
+            _outLine.enabled = false;
+        }
+    }
+
+    IEnumerator FiilImage()
+    {
+        while (readyImage.fillAmount <= 1)
+        {
+            readyImage.fillAmount += Time.deltaTime * 0.5f;
+            _outLine.enabled = false;
+            isClicked = false;
+            if (readyImage.fillAmount >= 1)
             {
+                GateZoneController.OpenTip();
+                readyImage.fillAmount = 0;
                 _outLine.enabled = true;
+                isClicked = true;
+                nextZoneBTN.interactable = true;
+                break;
             }
-        }
-
-        void OnMouseExit()
-        {
-            if (GateZoneController.Instance.isOpenTipsMechanismEnabled)
-            {
-                _outLine.enabled = false;
-            }
-        }
-
-        IEnumerator FiilImage()
-        {
-            while (readyImage.fillAmount <= 1)
-            {
-                readyImage.fillAmount += Time.deltaTime * 0.5f;
-                _outLine.enabled = false;
-                isClicked = false;
-                if (readyImage.fillAmount >= 1)
-                {
-                    GateZoneController.Instance.OpenTip();
-                    readyImage.fillAmount = 0;
-                    _outLine.enabled = true;
-                    isClicked = true;
-                    nextZoneBTN.interactable = true;
-                    break;
-                }
-                yield return null;
-            }
+            yield return null;
         }
     }
 }

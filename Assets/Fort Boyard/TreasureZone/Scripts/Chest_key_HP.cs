@@ -12,11 +12,17 @@ public class Chest_key_HP : MonoBehaviour {
     float tempCount = 0;
     public bool isKeyOpen = false;
     public bool isFakeOpen = false;
+    Chest Chest;
+    TimerGame TimerGame;
+    TreasureZoneController TreasureZoneController;
     // Use this for initialization
 
     void Start()
     {
-        Chest.Instance.hpBar.gameObject.SetActive(false);
+        Chest = Chest.Instance;
+        TimerGame = TimerGame.Instance;
+        TreasureZoneController = TreasureZoneController.Instance;
+        Chest.hpBar.gameObject.SetActive(false);
         currentHealth = maxHealth;
         tempCount = (100 / (float)currentHealth) / 100;
     }
@@ -27,7 +33,7 @@ public class Chest_key_HP : MonoBehaviour {
         {
             currentHealth -= 1;
             hpBar.fillAmount -= tempCount;
-            Chest.Instance.hpBarStatus.text = "Прочность замка: " + currentHealth.ToString() + "/" + maxHealth.ToString(); 
+            Chest.hpBarStatus.text = "Прочность замка: " + currentHealth.ToString() + "/" + maxHealth.ToString(); 
         }
         if (!isKeyOpen)
         {
@@ -39,14 +45,14 @@ public class Chest_key_HP : MonoBehaviour {
                 basePartKey.enabled = true;
                 steelPartKey.enabled = true;
                 dynamicPartKey.enabled = true;
-                if (isKeyOpen) Chest.Instance.countKeyOpened++;
-                if (Chest.Instance.countKeyOpened == 5)
+                if (isKeyOpen) Chest.countKeyOpened++;
+                if (Chest.countKeyOpened == 5)
                 {
-                    Chest.Instance.roofChest.enabled = true;
-                    if (Chest.Instance.roofChest.enabled)
+                    Chest.roofChest.enabled = true;
+                    if (Chest.roofChest.enabled)
                     {
-                        TimerGame.Instance.RunTime = false;
-                        StartCoroutine(TreasureZoneController.Instance.Spawn());
+                        TimerGame.RunTime = false;
+                        StartCoroutine(TreasureZoneController.Spawn());
                     }
                 }
             }
@@ -60,11 +66,11 @@ public class Chest_key_HP : MonoBehaviour {
 	
     void OnMouseOver()
     {
-        Chest.Instance.hpBar.gameObject.SetActive(true);
-        Chest.Instance.hpBar.maxValue = maxHealth;
-        Chest.Instance.hpBar.value = currentHealth;
-        Chest.Instance.hpBar.minValue = 0;
-        Chest.Instance.hpBarStatus.text = "Прочность замка: " + currentHealth.ToString() + "/" + maxHealth.ToString();
+        Chest.hpBar.gameObject.SetActive(true);
+        Chest.hpBar.maxValue = maxHealth;
+        Chest.hpBar.value = currentHealth;
+        Chest.hpBar.minValue = 0;
+        Chest.hpBarStatus.text = "Прочность замка: " + currentHealth.ToString() + "/" + maxHealth.ToString();
         for (int i = 0; i < transform.childCount-1; i++)
         {
             transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().material.EnableKeyword("_EMISSION");
@@ -72,7 +78,7 @@ public class Chest_key_HP : MonoBehaviour {
     }
     void OnMouseExit()
     {
-        Chest.Instance.hpBar.gameObject.SetActive(false);
+        Chest.hpBar.gameObject.SetActive(false);
         for (int i = 0; i < transform.childCount-1; i++)
         {
             transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
