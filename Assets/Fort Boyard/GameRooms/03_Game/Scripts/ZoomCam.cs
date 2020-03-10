@@ -3,43 +3,56 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ZoomCam : MonoBehaviour {
-    public Transform target;
     public GameObject bowGameObject;
     public float speed = 1f;
     public int zoom = 20;
     public int normal = 60;
     public float smooth = 5f;
+
     [HideInInspector]
     public bool isZoomed = false;
-	// Use this for initialization
-	
-	// Update is called once per frame
-	void Update () {
+    public bool isPressedLeftKeyMouse = false;
+    Camera MainCamera;
+
+    void Start()
+    {
+        MainCamera = gameObject.GetComponent<Camera>();
+    }
+
+    void Update () {
 		if (Input.GetMouseButtonDown(1))
         {
             isZoomed = true;
+            Cursor.visible = false;
         }
         if (Input.GetMouseButtonUp(1))
         {
             isZoomed = false;
+            Cursor.visible = true;
+        }
+        if (Input.GetMouseButton(0))
+        {
+            isPressedLeftKeyMouse = true;
+            Cursor.visible = false;
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            isPressedLeftKeyMouse = false;
+            Cursor.visible = true;
         }
         if (isZoomed)
         {
-            target.localEulerAngles = new Vector3(0, 0, 0);
-            bowGameObject.transform.rotation = Quaternion.RotateTowards(bowGameObject.transform.rotation, target.transform.rotation, Time.deltaTime * speed);
+            bowGameObject.transform.rotation = Quaternion.RotateTowards(bowGameObject.transform.rotation, Quaternion.Euler(0,0,0), Time.deltaTime * speed);
             bowGameObject.transform.localEulerAngles = new Vector3(0, 0, bowGameObject.transform.localEulerAngles.z);
 
-            GetComponent<Camera>().fieldOfView = Mathf.Lerp(GetComponent<Camera>().fieldOfView, zoom, Time.deltaTime * smooth);
-            Cursor.visible = false;
+            MainCamera.fieldOfView = Mathf.Lerp(MainCamera.fieldOfView, zoom, Time.deltaTime * smooth);
         }
         else
         {
-            target.localEulerAngles = new Vector3(0, 0, -35f);
-            bowGameObject.transform.rotation = Quaternion.RotateTowards(bowGameObject.transform.rotation, target.transform.rotation, Time.deltaTime * speed);
+            bowGameObject.transform.rotation = Quaternion.RotateTowards(bowGameObject.transform.rotation, Quaternion.Euler(0, 0, -35f), Time.deltaTime * speed);
             bowGameObject.transform.localEulerAngles = new Vector3(0, 0, bowGameObject.transform.localEulerAngles.z);
 
-            GetComponent<Camera>().fieldOfView = Mathf.Lerp(GetComponent<Camera>().fieldOfView, normal, Time.deltaTime * smooth);
-            Cursor.visible = true;
+            MainCamera.fieldOfView = Mathf.Lerp(MainCamera.fieldOfView, normal, Time.deltaTime * smooth);
         }
 	}
 }

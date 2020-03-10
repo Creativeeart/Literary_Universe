@@ -2,43 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using cakeslice;
+
 public class Bow : MonoBehaviour
 {
-    public TextMeshProUGUI countArrow, countHitTargets;
-    int ArrowsCount = 0;
-    public GameObject hitPrefab;
-    public float depth = 10f;
     public Camera mainCam;
-    private Vector3 mousePos;
-    public Vector3 aim;
-    public float Tension;
+    public int MaxArrows = 10;
+    public float ReturnTime;
+    public float ArrowSpeed;
+
+    [HideInInspector]
+    public int ArrowsCount = 0;
+    [HideInInspector]
+    public float curentHitTargets = 0;
+    [HideInInspector]
+    public bool isWinner = false;
+
+    public TextMeshProUGUI countArrow, countHitTargets;
+    
+    public GameObject hitPrefab;
+    public GameObject Arrow;
+    public GameObject keyRotationCenter;
 
     public Transform RopeTransform;
-
-    public Vector3 RopeNearLocalPosition;
+    
     public Vector3 RopeFarLocalPosition;
-
     public AnimationCurve RopeReturnAnimation;
-
-    public float ReturnTime;
-
-    Arrow CurrentArrow;
-    public int ArrowIndex = 0;
-    public float ArrowSpeed;
 
     public AudioSource BowTensionAudioSource;
     public AudioSource BowWhistlingAudioSource;
     public AudioSource ArrowHit;
 
-    public Arrow[] ArrowsPool;
-
-    public float curentHitTargets = 0;
-
-    public GameObject keyRotationCenter;
-    public bool isWinner = false;
+    
+    float Tension;
+    bool isShoot = false;
+    GameObject CurrentArrow;
+    Vector3 RopeNearLocalPosition;
+    
     public static Bow Instance { get; private set; }
     FortBoyardGameController FortBoyardGameController;
+
     public void Awake()
     {
         Instance = this;
@@ -46,8 +48,7 @@ public class Bow : MonoBehaviour
     void Start()
     {
         FortBoyardGameController = FortBoyardGameController.Instance;
-        ArrowsCount = ArrowsPool.Length;
-        CurrentArrow = ArrowsPool[ArrowIndex];
+        ArrowsCount = MaxArrows;
         RopeNearLocalPosition = RopeTransform.localPosition;
     }
 
@@ -57,38 +58,26 @@ public class Bow : MonoBehaviour
         {
             if (!isWinner)
             {
-                mousePos = Input.mousePosition;
-                mousePos += mainCam.transform.forward * depth;
-                aim = mainCam.ScreenToWorldPoint(mousePos);
-
-                if (ArrowIndex < ArrowsPool.Length)
-                {
-                    if (Input.GetMouseButtonDown(0) && Input.GetMouseButton(1))
+                if (ArrowsCount > 0)
+                {                    
+                    if (Input.GetMouseButtonDown(0)) //Нажимаем один раз ЛЕВУЮ клавишу мыши
                     {
+                        isShoot = false;
                         BowTensionAudioSource.pitch = Random.Range(0.8f, 1.2f);
                         BowTensionAudioSource.Play();
+                        CurrentArrow = Instantiate(Arrow); //Взяли стрелу
                     }
-                    if (Input.GetMouseButton(0) && Input.GetMouseButton(1))
+
+                    if (Input.GetMouseButton(0)) //Удерживаем ЛЕВУЮ клавишу мыши
                     {
                         if (Tension < 1f) Tension += Time.deltaTime / 1.4f;
-                        RopeTransform.localPosition = Vector3.Lerp(RopeNearLocalPosition, RopeFarLocalPosition, Tension);
-                        CurrentArrow = ArrowsPool[ArrowIndex];
-                        CurrentArrow.SetToRope(RopeTransform);
+                        RopeTransform.localPosition = Vector3.Lerp(RopeNearLocalPosition, RopeFarLocalPosition, Tension); //Натянули стрелу
+                        CurrentArrow.GetComponent<Arrow>().SetToRope(RopeTransform); //Помещение стрелы в тетиву
                     }
-                    else if (Input.GetMouseButtonUp(0) && Input.GetMouseButtonUp(1))
-                    {
-                        if (Tension > 0.1f)
-                            Shoot();
-                    }
-                    //else
-                    //{
-                    //AbortShoot(); //Медленный возврат тетивы и стрелы на место
-                    //}
 
-                    if ((Input.GetMouseButton(1) && Input.GetMouseButtonUp(0)) || (Input.GetMouseButton(0) && Input.GetMouseButtonUp(1)))
+                    if (Input.GetMouseButtonUp(0)) //Отпустили ЛЕВУЮ клавишу мыши
                     {
-                        if (Tension > 0.1f)
-                            Shoot();
+                        Shoot();
                     }
                 }
             }
@@ -96,26 +85,33 @@ public class Bow : MonoBehaviour
     }
     void Shoot()
     {
-        ArrowsCount--;
-        countArrow.text = "Осталось стрел: " + ArrowsCount;
-        ArrowIndex++;
-        StartCoroutine(RopeReturn());
-        CurrentArrow.Shot(ArrowSpeed * Tension);
-        Tension = 0;
-        BowTensionAudioSource.Stop();
-        BowWhistlingAudioSource.pitch = Random.Range(0.8f, 1.2f);
-        BowWhistlingAudioSource.Play();
-        BowTensionAudioSource.Stop();
+        if (Tension > 0.1f)
+        {
+            isShoot = true;
+            ArrowsCount--;
+            countArrow.text = "Осталось стрел: " + ArrowsCount;
+            StartCoroutine(RopeReturn());
+            CurrentArrow.GetComponent<Arrow>().Shot(ArrowSpeed * Tension);
+            Tension = 0;
+            BowTensionAudioSource.Stop();
+            BowWhistlingAudioSource.pitch = Random.Range(0.8f, 1.2f);
+            BowWhistlingAudioSource.Play();
+            BowTensionAudioSource.Stop();
+        }
+        else
+        {
+            AbortShoot();
+        }
     }
 
     void AbortShoot()
     {
-        if (Tension > 0f)
+        if (!isShoot)
         {
-            Tension -= Time.deltaTime * 2;
-            if (Tension < 0) Tension = 0;
+            Tension = 0;
+            RopeTransform.localPosition = Vector3.Lerp(RopeNearLocalPosition, RopeFarLocalPosition, Tension);
+            Destroy(CurrentArrow);
         }
-        RopeTransform.localPosition = Vector3.Lerp(RopeNearLocalPosition, RopeFarLocalPosition, Tension);
     }
     public IEnumerator RopeReturn()
     {

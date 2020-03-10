@@ -42,6 +42,8 @@ GameObject:
   - component: {fileID: 114026880299199446}
   - component: {fileID: 114717076946670612}
   - component: {fileID: 136801312717996632}
+  - component: {fileID: 64275529122465762}
+  - component: {fileID: 65859062397510904}
   m_Layer: 0
   m_Name: BowArrow
   m_TagString: Arrow
@@ -56,8 +58,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1063777223390382}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.918, y: 0.9192, z: 5.503}
-  m_LocalScale: {x: 1.0000001, y: 1, z: 0.99999994}
+  m_LocalPosition: {x: -17.36, y: 7.9979806, z: -232.86446}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4650701898457600}
   m_Father: {fileID: 0}
@@ -130,6 +132,32 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 2
+--- !u!64 &64275529122465762
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1063777223390382}
+  m_Material: {fileID: 13400000, guid: 3aeb7dadc0c69d54d9e5777e9d5631f1, type: 2}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 1
+  m_InflateMesh: 0
+  m_SkinWidth: 1.00000005e-20
+  m_Mesh: {fileID: 4300000, guid: 51d9724ed8eeaa842afb238676414986, type: 3}
+--- !u!65 &65859062397510904
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1063777223390382}
+  m_Material: {fileID: 13400000, guid: 3aeb7dadc0c69d54d9e5777e9d5631f1, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 0.060036123, y: 0.052109275, z: 1.1598823}
+  m_Center: {x: -0.000016946346, y: 0.0069836434, z: 0.57745326}
 --- !u!96 &96124220935602990
 TrailRenderer:
   serializedVersion: 2
@@ -225,7 +253,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4b12670a2eb5094c9a2fe06c707b909, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rigidbody: {fileID: 54464141038386830}
   VelocityMult: 1
   AngularVelocityMult: 0.1
 --- !u!114 &114717076946670612
@@ -239,12 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9d27acab5f7c1468daa88d37a7d050, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  distanceRay: 1.5
-  sdvigLucha: {x: 0, y: 0, z: 1.25}
-  centerOfMass: {x: 0, y: 0, z: 0.7}
-  bow: {fileID: 0}
-  Rigidbody: {fileID: 54464141038386830}
+  centerOfMass: {x: 0, y: 0, z: 1.2}
   TrailRenderer: {fileID: 96124220935602990}
 --- !u!136 &136619554323467592
 CapsuleCollider:
@@ -253,21 +275,21 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1063777223390382}
   m_Material: {fileID: 13400000, guid: 3aeb7dadc0c69d54d9e5777e9d5631f1, type: 2}
-  m_IsTrigger: 1
-  m_Enabled: 1
+  m_IsTrigger: 0
+  m_Enabled: 0
   m_Radius: 0.01
-  m_Height: 1.24
+  m_Height: 1.159107
   m_Direction: 2
-  m_Center: {x: -0.000016951934, y: 0.000018229708, z: 0.6293043}
+  m_Center: {x: -0.000016951934, y: 0.000018229708, z: 0.58885777}
 --- !u!136 &136801312717996632
 CapsuleCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1063777223390382}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
+  m_Material: {fileID: 13400000, guid: 3aeb7dadc0c69d54d9e5777e9d5631f1, type: 2}
+  m_IsTrigger: 1
+  m_Enabled: 0
   m_Radius: 0.0075521623
   m_Height: 0.040677074
   m_Direction: 2

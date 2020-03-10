@@ -21,7 +21,7 @@ public class CrosshairBow : MonoBehaviour
 
     void OnGUI ()
 	{
-        if (_zoomCam.isZoomed)
+        if (_zoomCam.isZoomed || _zoomCam.isPressedLeftKeyMouse)
         {
             Vector3 mousePos = Input.mousePosition;
             Rect pos = new Rect(mousePos.x - crosshairTexture.width * 0.5f, Screen.height - mousePos.y - crosshairTexture.height * 0.5f,

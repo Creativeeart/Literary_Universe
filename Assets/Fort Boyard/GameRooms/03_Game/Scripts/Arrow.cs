@@ -4,41 +4,42 @@ using UnityEngine;
 using TMPro;
 public class Arrow : MonoBehaviour
 {
-    public float speed = 5f;
-    public float distanceRay = 10f;
-    public Vector3 sdvigLucha;
+    //public float distanceRay = 1.5f;
+    Vector3 forward, posForward;
     public Vector3 centerOfMass;
-    Rigidbody RigidBody;
     public TrailRenderer TrailRenderer;
+
+    Rigidbody RigidBody;
     Bow Bow;
     FortBoyardGameController FortBoyardGameController;
-    private void Update()
-    {
-        Vector3 down = transform.TransformDirection(Vector3.forward) * distanceRay;
-        Debug.DrawRay(transform.position, down, Color.yellow);
-        //RaycastHit hit;
-        //if (Physics.Raycast(transform.position, down, out hit, distanceRay))
-        //{
-        //    if ((hit.transform.name == "Target") && isShooting)
-        //    {
-        //        Rigidbody.isKinematic = true;
-        //        transform.parent = hit.transform;
-        //        hit.transform.parent.GetComponent<TargetController>().isActive = true;
-        //        hit.transform.parent.parent.GetComponent<Animator>().enabled = false;
-        //        transform.localPosition = hit.transform.localPosition - new Vector3(0,0,distanceRay-1f);
-        //        isShooting = false;
-        //        Debug.Log("RayCast: " + hit.transform.name);
-        //    }
 
-        //}
-    }
+    Transform Trans;
+    Vector3 vel, pos, plu;
+
+    //private void Update()
+    //{
+    //    forward = transform.TransformDirection(Vector3.forward) * distanceRay;
+    //    posForward = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+    //    Debug.DrawRay(posForward, forward, Color.yellow);
+    //}
+
     public void Start()
     {
+        Trans = transform;
+        plu = new Vector3(0, 0, -2);
         Bow = Bow.Instance;
         FortBoyardGameController = FortBoyardGameController.Instance;
         RigidBody = GetComponent<Rigidbody>();
+        RigidBody.angularDrag = 0.5f;
         RigidBody.centerOfMass = centerOfMass;
     }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = "#ffffffff".ToColor();
+        Gizmos.DrawSphere(transform.position + centerOfMass, 0.01f);
+    }
+
     public void SetToRope(Transform ropeTransform)
     {
         Time.timeScale = 1f;
@@ -46,10 +47,15 @@ public class Arrow : MonoBehaviour
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         //transform.LookAt(Bow.Instance.aim);
-        RigidBody.isKinematic = true;
-        RigidBody.useGravity = false;
+        if (RigidBody != null)
+        {
+            RigidBody.isKinematic = true;
+            RigidBody.useGravity = false;
+        }
         TrailRenderer.enabled = false;
     }
+
+
 
     public void Shot(float velocity)
     {
@@ -58,8 +64,21 @@ public class Arrow : MonoBehaviour
         RigidBody.isKinematic = false;
         RigidBody.useGravity = true;
         RigidBody.velocity = transform.forward * velocity;
+        //RigidBody.AddForce(transform.forward * velocity);//-типа выстрел:)
         TrailRenderer.Clear();
         TrailRenderer.enabled = true;
+    }
+
+
+
+    void FixedUpdate()
+    {
+        //pos = Trans.position + Trans.TransformDirection(plu);//-мировая позиия оперения
+        //vel = Trans.InverseTransformDirection(RigidBody.velocity);//-локальная скорость снаряда
+        //vel.z = 0;//-убираем скорось направленную вперед/назад(относительно стрелы)-это ведь не парашют:)
+        //vel = -vel / 1000;//-поворачиваем скорость на 180* (берем ее отрицатьное значение) и уменьшаем(чем больше делитель тем плавнее поворот)
+        //vel = Trans.TransformDirection(vel);//-скорость торможения в мировой системе координат
+        //RigidBody.AddForceAtPosition(vel, pos, ForceMode.VelocityChange);//-добавляем скорость торможения в позиции оперения
     }
 
     void OnTriggerEnter(Collider other)
@@ -71,53 +90,46 @@ public class Arrow : MonoBehaviour
             RigidBody.useGravity = false;
             Bow.ArrowHit.pitch = Random.Range(1f, 1.2f);
             Bow.ArrowHit.Play();
-            if (other.name != "Target")
+            if (other.tag == "Target") //Попадание
             {
-                Debug.Log("Miss");
+                other.transform.parent.GetComponent<TargetController>().isTargetHit = true;
+                other.transform.parent.parent.GetComponent<Animator>().enabled = false;
+                transform.parent = other.transform;
+                other.transform.GetComponent<Collider>().enabled = false;
+                Collider[] colliders;
+                colliders = gameObject.GetComponents<Collider>();
+                for (int i = 0; i < colliders.Length; i++)
+                {
+                    colliders[i].enabled = false;
+                }
+                Bow.curentHitTargets++;
+                Bow.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().text = "Попадание";
+                Bow.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().color = new Color32(255, 171, 0, 255);
+                Bow.countHitTargets.text = "Мишеней поражено: " + Bow.curentHitTargets + "/5";
+
+                GameObject ins = Instantiate(Bow.hitPrefab, new Vector3(other.transform.parent.transform.position.x, other.transform.parent.transform.position.y - 0.3f, other.transform.parent.transform.position.z), Quaternion.identity);
+                Destroy(ins, 1);
+            }
+            else //Промах
+            {
                 Bow.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().text = "Промах";
                 Bow.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().color = new Color32(255, 0, 0, 255);
-                var ins = Instantiate(Bow.Instance.hitPrefab, transform.position, Quaternion.identity);
+                GameObject ins = Instantiate(Bow.Instance.hitPrefab, transform.position, Quaternion.identity);
                 Destroy(ins, 1);
-                if (Bow.ArrowIndex == 10)
-                {
-                    Debug.Log("No arrows. You failed");
-                    FortBoyardGameController.LoseRoom("Стрелы закончились!\nК сожалению вы не справились с испытанием");
-                    Cursor.visible = true;
-                }
             }
-        }
-        if (other.name == "Target")
-        {
-            other.transform.parent.GetComponent<TargetController>().isTargetHit = true;
-            other.transform.parent.parent.GetComponent<Animator>().enabled = false;
-            transform.parent = other.transform;
-            Collider[] colliders;
-            colliders = gameObject.GetComponents<Collider>();
-            for (int i = 0; i < colliders.Length; i++)
+            if (Bow.curentHitTargets >= 5) //Все цели поражены
             {
-                colliders[i].enabled = false;
-            }
-            Bow.curentHitTargets++;
-            Debug.Log("Hit");
-            Bow.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().text = "Попадание";
-            Bow.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().color = new Color32(255, 171, 0, 255);
-            Bow.countHitTargets.text = "Мишеней поражено: " + Bow.curentHitTargets + "/5";
-            
-            var ins = Instantiate(Bow.hitPrefab, new Vector3(other.transform.parent.transform.position.x, other.transform.parent.transform.position.y - 0.3f, other.transform.parent.transform.position.z), Quaternion.identity);
-            Destroy(ins, 1);
-            if (Bow.curentHitTargets >= 5)
-            {
-                Debug.Log("Done! All targets hits.");
                 Bow.isWinner = true;
                 StartCoroutine(ShowCenterRotationKey());
                 Cursor.visible = true;
             }
-            if (Bow.ArrowIndex == 10 && Bow.curentHitTargets < 5)
+            if (Bow.ArrowsCount <= 0 && Bow.curentHitTargets < 5) //Закончились стрелы и мишени не поражены
             {
                 FortBoyardGameController.LoseRoom("Стрелы закончились!\nК сожалению вы не справились с испытанием");
                 Cursor.visible = true;
             }
         }
+        
     }
     IEnumerator ShowCenterRotationKey()
     {

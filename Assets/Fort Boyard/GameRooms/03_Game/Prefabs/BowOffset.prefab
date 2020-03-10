@@ -122,7 +122,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1247147035057696}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.44, y: 1.5, z: 0.83}
+  m_LocalPosition: {x: 0.43999863, y: 1.4999995, z: 0.8299999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4922756669584892}
@@ -149,7 +149,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1315313490500024}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.30070576, w: 0.953717}
   m_LocalPosition: {x: 0, y: 0, z: 0.68}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -157,7 +157,7 @@ Transform:
   - {fileID: 4244367540480534}
   m_Father: {fileID: 4850871484300370}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -35}
 --- !u!114 &114523269618081782
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
-  maximumLength: 1000
+  maximumLength: 100
 --- !u!114 &114981926608825662
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -182,16 +182,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbb1e1e8c7671eb4baec55ac74adcf39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fortBoyardGameController: {fileID: 0}
+  mainCam: {fileID: 0}
+  MaxArrows: 10
+  ReturnTime: 0.2
+  ArrowSpeed: 50
+  ArrowsCount: 0
+  curentHitTargets: 0
+  isWinner: 0
   countArrow: {fileID: 0}
   countHitTargets: {fileID: 0}
-  hitPrefab: {fileID: 0}
-  depth: 1000
-  mainCam: {fileID: 0}
-  aim: {x: 0, y: 0, z: 0}
-  Tension: 0
+  hitPrefab: {fileID: 1700258153687944, guid: ad16c21591791084d96c054461c8c738, type: 2}
+  Arrow: {fileID: 1063777223390382, guid: c06268cbaac5c5c4b9c8dc7d57d848e9, type: 2}
+  keyRotationCenter: {fileID: 0}
   RopeTransform: {fileID: 4658963812564558}
-  RopeNearLocalPosition: {x: 0, y: 0, z: 0}
   RopeFarLocalPosition: {x: 0, y: 0, z: -0.7}
   RopeReturnAnimation:
     serializedVersion: 2
@@ -235,26 +238,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  ReturnTime: 0.2
-  ArrowIndex: 0
-  ArrowSpeed: 50
   BowTensionAudioSource: {fileID: 0}
   BowWhistlingAudioSource: {fileID: 0}
   ArrowHit: {fileID: 0}
-  ArrowsPool:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  curentHitTargets: 0
-  keyRotationCenter: {fileID: 0}
-  isWinner: 0
 --- !u!137 &137971043952593558
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
