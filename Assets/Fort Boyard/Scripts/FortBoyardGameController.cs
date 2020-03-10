@@ -91,6 +91,7 @@ public class FortBoyardGameController : MonoBehaviour
         totalTips = GateZoneController.allTipsList.Count;
         TimerGame.seconds = totalTime;
         ReloadTimer();
+        IsRoomPause = true;
     }
     IEnumerator ShowMainMenuFloating()
     {
@@ -224,6 +225,8 @@ public class FortBoyardGameController : MonoBehaviour
         AlertUI.CloseModalWindow();
         IsRoomPause = false;
         FB_CamMovingController.cameraToMovingFromScene.GetComponent<Camera>().enabled = true;
+        Time.timeScale = 1;
+        Cursor.visible = true;
     }
 
     public void DisabledObjects() //ВО ВРЕМЯ ИСПЫТАНИЯ СКРЫТИЕ ТЯЖЕЛЫХ ОБЪЕКТОВ НА СЦЕНЕ (ВОДА, ФОРТ)
@@ -313,6 +316,7 @@ public class FortBoyardGameController : MonoBehaviour
     {
         game_rules_in_rooms[numberRule].SetActive(false);
         RunTimer();
+        IsRoomPause = false;
     }
 
 

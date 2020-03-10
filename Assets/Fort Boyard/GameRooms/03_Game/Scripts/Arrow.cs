@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 public class Arrow : MonoBehaviour
 {
+    bool IsArrowShoting = false;
     //public float distanceRay = 1.5f;
     Vector3 forward, posForward;
     public Vector3 centerOfMass;
@@ -46,7 +47,6 @@ public class Arrow : MonoBehaviour
         transform.parent = ropeTransform;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
-        //transform.LookAt(Bow.Instance.aim);
         if (RigidBody != null)
         {
             RigidBody.isKinematic = true;
@@ -55,8 +55,6 @@ public class Arrow : MonoBehaviour
         TrailRenderer.enabled = false;
     }
 
-
-
     public void Shot(float velocity)
     {
         Time.timeScale = 1f;
@@ -64,34 +62,21 @@ public class Arrow : MonoBehaviour
         RigidBody.isKinematic = false;
         RigidBody.useGravity = true;
         RigidBody.velocity = transform.forward * velocity;
-        //RigidBody.AddForce(transform.forward * velocity);//-типа выстрел:)
         TrailRenderer.Clear();
         TrailRenderer.enabled = true;
     }
 
-
-
-    void FixedUpdate()
+    void OnCollisionEnter(Collision other)
     {
-        //pos = Trans.position + Trans.TransformDirection(plu);//-мировая позиия оперения
-        //vel = Trans.InverseTransformDirection(RigidBody.velocity);//-локальная скорость снаряда
-        //vel.z = 0;//-убираем скорось направленную вперед/назад(относительно стрелы)-это ведь не парашют:)
-        //vel = -vel / 1000;//-поворачиваем скорость на 180* (берем ее отрицатьное значение) и уменьшаем(чем больше делитель тем плавнее поворот)
-        //vel = Trans.TransformDirection(vel);//-скорость торможения в мировой системе координат
-        //RigidBody.AddForceAtPosition(vel, pos, ForceMode.VelocityChange);//-добавляем скорость торможения в позиции оперения
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.tag != "Arrow")
+        if (!IsArrowShoting)
         {
-            RigidBody.velocity = Vector3.zero;
-            RigidBody.isKinematic = true;
-            RigidBody.useGravity = false;
-            Bow.ArrowHit.pitch = Random.Range(1f, 1.2f);
-            Bow.ArrowHit.Play();
-            if (other.tag == "Target") //Попадание
+            if (other.gameObject.tag == "Target") //Попадание
             {
+                Bow.ArrowHit.pitch = Random.Range(1f, 1.2f);
+                Bow.ArrowHit.Play();
+                RigidBody.velocity = Vector3.zero;
+                RigidBody.isKinematic = true;
+                RigidBody.useGravity = false;
                 other.transform.parent.GetComponent<TargetController>().isTargetHit = true;
                 other.transform.parent.parent.GetComponent<Animator>().enabled = false;
                 transform.parent = other.transform;
@@ -112,10 +97,12 @@ public class Arrow : MonoBehaviour
             }
             else //Промах
             {
+                RigidBody.velocity = transform.forward / 10;
                 Bow.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().text = "Промах";
                 Bow.hitPrefab.GetComponentInChildren<TextMeshProUGUI>().color = new Color32(255, 0, 0, 255);
                 GameObject ins = Instantiate(Bow.Instance.hitPrefab, transform.position, Quaternion.identity);
                 Destroy(ins, 1);
+                Destroy(gameObject, 5);
             }
             if (Bow.curentHitTargets >= 5) //Все цели поражены
             {
@@ -125,12 +112,19 @@ public class Arrow : MonoBehaviour
             }
             if (Bow.ArrowsCount <= 0 && Bow.curentHitTargets < 5) //Закончились стрелы и мишени не поражены
             {
-                FortBoyardGameController.LoseRoom("Стрелы закончились!\nК сожалению вы не справились с испытанием");
+                StartCoroutine(LoseGame(2));
                 Cursor.visible = true;
             }
+            IsArrowShoting = true;
         }
-        
     }
+
+    IEnumerator LoseGame(float time)
+    {
+        yield return new WaitForSeconds(time);
+        FortBoyardGameController.LoseRoom("Стрелы закончились!\nК сожалению вы не справились с испытанием");
+    }
+
     IEnumerator ShowCenterRotationKey()
     {
         yield return new WaitForSeconds(1);

@@ -185,7 +185,7 @@ MonoBehaviour:
   mainCam: {fileID: 0}
   MaxArrows: 10
   ReturnTime: 0.2
-  ArrowSpeed: 50
+  ArrowSpeed: 60
   ArrowsCount: 0
   curentHitTargets: 0
   isWinner: 0

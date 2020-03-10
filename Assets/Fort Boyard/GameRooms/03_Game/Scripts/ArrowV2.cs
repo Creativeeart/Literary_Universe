@@ -1,44 +1,45 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+public class ArrowV2: MonoBehaviour
+{
+    public Vector3 centerOfMass;
+    public TrailRenderer TrailRenderer;
 
-public class ArrowV2 : MonoBehaviour {
-    public float Speed = 2000.0f;
-    public Transform Tip;
-    Rigidbody RigidBody = null;
-    bool IsStopped = true;
-    Vector3 LastPosition = Vector3.zero;
-	// Use this for initialization
-	void Awake () {
+    Rigidbody RigidBody;
+
+    public void Start()
+    {
         RigidBody = GetComponent<Rigidbody>();
-	}
+        RigidBody.angularDrag = 0.5f;
+        RigidBody.centerOfMass = centerOfMass;
+    }
 
-    void FixedUpdate()
+    void OnDrawGizmos()
     {
-        if (IsStopped) return;
+        Gizmos.color = "#ffffffff".ToColor();
+        Gizmos.DrawSphere(transform.position + centerOfMass, 0.01f);
+    }
 
-        RigidBody.MoveRotation(Quaternion.LookRotation(RigidBody.velocity, transform.up));
-
-        if (Physics.Linecast(LastPosition, Tip.position))
+    public void SetToRope(Transform ropeTransform)
+    {
+        transform.parent = ropeTransform;
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+        if (RigidBody != null)
         {
-            Stop();
+            RigidBody.isKinematic = true;
+            RigidBody.useGravity = false;
         }
-
-        LastPosition = Tip.position;
+        TrailRenderer.enabled = false;
     }
 
-    void Stop()
+    public void Shot(float velocity)
     {
-        IsStopped = true;
-        RigidBody.isKinematic = true;
-        RigidBody.useGravity = false;
-    }
-
-    public void Fire(float PullValue)
-    {
-        IsStopped = false;
+        transform.parent = null;
         RigidBody.isKinematic = false;
         RigidBody.useGravity = true;
-        RigidBody.AddForce(transform.forward * (PullValue * Speed));
+        RigidBody.velocity = transform.forward * velocity;
+        TrailRenderer.Clear();
+        TrailRenderer.enabled = true;
     }
 }
+

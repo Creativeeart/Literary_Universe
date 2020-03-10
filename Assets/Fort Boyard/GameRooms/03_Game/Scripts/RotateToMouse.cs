@@ -9,21 +9,34 @@ public class RotateToMouse : MonoBehaviour {
     Ray rayMouse;
     Vector3 pos, direction;
     Quaternion rotation;
-	
-	void Update () {
-		if (cam != null)
+    Bow Bow;
+    FortBoyardGameController FortBoyardGameController;
+    private void Start()
+    {
+        Bow = Bow.Instance;
+        FortBoyardGameController = FortBoyardGameController.Instance;
+    }
+    void Update()
+    {
+        if (!FortBoyardGameController.IsRoomPause)
         {
-            RaycastHit hit;
-            var mousePos = Input.mousePosition;
-            rayMouse = cam.ScreenPointToRay(mousePos);
-            if (Physics.Raycast(rayMouse.origin, rayMouse.direction, out hit, maximumLength))
+            if (!Bow.isWinner)
             {
-                RotateMouseDirection(gameObject, hit.point);
-            }
-            else
-            {
-                var pos = rayMouse.GetPoint(maximumLength);
-                RotateMouseDirection(gameObject, pos);
+                if (cam != null)
+                {
+                    RaycastHit hit;
+                    var mousePos = Input.mousePosition;
+                    rayMouse = cam.ScreenPointToRay(mousePos);
+                    if (Physics.Raycast(rayMouse.origin, rayMouse.direction, out hit, maximumLength))
+                    {
+                        RotateMouseDirection(gameObject, hit.point);
+                    }
+                    else
+                    {
+                        var pos = rayMouse.GetPoint(maximumLength);
+                        RotateMouseDirection(gameObject, pos);
+                    }
+                }
             }
         }
 	}
