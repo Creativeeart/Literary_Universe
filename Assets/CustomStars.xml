@@ -1,38 +1,246 @@
 <Archives>
+  <User fio="Гаязов Даниил">
+    <Age>14</Age>
+    <Activity>Ученик 8 класса</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Ромашкин Евгений">
+    <Age>19</Age>
+    <Activity>Студент</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Татаров Филимон">
+    <Age>13</Age>
+    <Activity>Ученик</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Ракушкин Влад">
+    <Age>13</Age>
+    <Activity>Ученик</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Костомаров Марсель">
+    <Age>18</Age>
+    <Activity>Студент</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Горцева Анастасия">
+    <Age>12</Age>
+    <Activity>Ученица</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Багрова Инна">
+    <Age>17</Age>
+    <Activity>Студентка</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Рогожина Ксения">
+    <Age>21</Age>
+    <Activity>Менеджер</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Багрова Инна">
+    <Age>21</Age>
+    <Activity>Студентка</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Алфеева Ирина">
+    <Age>23</Age>
+    <Activity>Учительница начальных классов</Activity>
+    <Favorite_book>Властелин колец</Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Татаров Филимон">
+    <Age>19</Age>
+    <Activity>Ученик</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Ракушкин Влад">
+    <Age>16</Age>
+    <Activity>Ученик</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Костомаров Марсель">
+    <Age>19</Age>
+    <Activity>Студент</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Горцева Анастасия">
+    <Age>16</Age>
+    <Activity>Ученица</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Попов Дмитрий">
+    <Age>15</Age>
+    <Activity>Ученик</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Машенцева Наталья">
+    <Age>16</Age>
+    <Activity>Студентка</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Андриенко Василий">
+    <Age>15</Age>
+    <Activity>
+    </Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Рогожина Ксения">
+    <Age>20</Age>
+    <Activity>Менеджер</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Буркова Марина">
+    <Age>19</Age>
+    <Activity>Программист</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Алфеева Ирина">
+    <Age>28</Age>
+    <Activity>Учительница начальных классов</Activity>
+    <Favorite_book>Властелин колец</Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Буркова Марина">
+    <Age>34</Age>
+    <Activity>Программист</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Желтышева Вероника">
+    <Age>33</Age>
+    <Activity>Библиотекарь</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Андриенко Василий">
+    <Age>12</Age>
+    <Activity>
+    </Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Ерохин Герасим">
+    <Age>15</Age>
+    <Activity>Ученик</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
   <User fio="Шакиров Ринат Миндиханович">
     <Age>25</Age>
     <Activity>Программист</Activity>
     <Favorite_book>Гарри Поттер</Favorite_book>
     <About>Какой текст о себе</About>
   </User>
-  <User fio="Шакиров Руслан Миндиханович">
-    <Age>28</Age>
-    <Activity>Механик</Activity>
-    <Favorite_book>Властелин Колец</Favorite_book>
-    <About>Автомех</About>
-  </User>
-  <User fio="Шакиров Ришат Миндиханович">
-    <Age>21</Age>
-    <Activity>Строитель</Activity>
-    <Favorite_book>Форест</Favorite_book>
-    <About>Строитель-техник</About>
-  </User>
-  <User fio="Пупкин Иван Иванович">
-    <Age>43</Age>
-    <Activity>
-    </Activity>
+  <User fio="Гаязов Даниил">
+    <Age>18</Age>
+    <Activity>Ученик 8 класса</Activity>
     <Favorite_book>
     </Favorite_book>
     <About>
     </About>
   </User>
-  <User fio="Василий Пупкин ">
-    <Age>56</Age>
-    <Activity>
-    </Activity>
+  <User fio="Машенцева Наталья">
+    <Age>19</Age>
+    <Activity>Студентка</Activity>
     <Favorite_book>
     </Favorite_book>
     <About>
     </About>
+  </User>
+  <User fio="Желтышева Вероника">
+    <Age>32</Age>
+    <Activity>Библиотекарь</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Ерохин Герасим">
+    <Age>11</Age>
+    <Activity>Ученик</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Попов Дмитрий">
+    <Age>16</Age>
+    <Activity>Ученик</Activity>
+    <Favorite_book>
+    </Favorite_book>
+    <About>
+    </About>
+  </User>
+  <User fio="Шакиров Ринат Миндиханович">
+    <Age>26</Age>
+    <Activity>Программист</Activity>
+    <Favorite_book>Гарри Поттер</Favorite_book>
+    <About>Какой текст о себе</About>
   </User>
 </Archives>

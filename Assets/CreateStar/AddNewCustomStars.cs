@@ -38,6 +38,7 @@ namespace cakeslice
         public Vector3 space;
         public int summ;
         public float time = 5f;
+        public float timeCreationStars = 0.3f;
         public bool timeRun = true;
         float tempTime = 0;
         public int localCurrentStarsCount = 0;
@@ -153,6 +154,11 @@ namespace cakeslice
             {
                 Destroy(customStars[i]);
             }
+            StartCoroutine(StarsFormationInTime(timeCreationStars));
+            
+        }
+        IEnumerator StarsFormationInTime(float time)
+        {
             summ = 0;
             for (int i = 0; i < gridX; i++)
             {
@@ -168,13 +174,15 @@ namespace cakeslice
                         ins.GetComponent<CheckContactStars>().favorite_book = CustomStars[summ].favorite_book;
                         ins.GetComponent<CheckContactStars>().about = CustomStars[summ].about;
                         summ++;
-
+                        yield return new WaitForSeconds(time);
                         if (summ >= CustomStars.Length) break;
                     }
                     if (summ >= CustomStars.Length) break;
                 }
                 if (summ >= CustomStars.Length) break;
+                
             }
+            
         }
         void LoadXML() //ЗАГРУЗКА ИЗ XML ФАЙЛА В UNITY 
         {

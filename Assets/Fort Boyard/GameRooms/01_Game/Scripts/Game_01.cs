@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class Game_01 : MonoBehaviour
 {
     public GameObject DownBlock;
@@ -94,7 +95,7 @@ public class Game_01 : MonoBehaviour
                 SliderStamina.value = CurrentStamina;
                 if (CurrentStamina > 0)
                 {
-                    Rezina.material.color = Color.Lerp(Color.red, Color.black, CurrentStamina / MaxStamina);
+                    Rezina.material.color = Color.Lerp(Color.red, "262626FF".ToColor(), CurrentStamina / MaxStamina);
                 }
                 if (CurrentStamina <= 0)
                 {
@@ -137,7 +138,7 @@ public class Game_01 : MonoBehaviour
         Ship_Parent.transform.localEulerAngles = StartRot_Ship_Parent;
         StartCoroutine(RopeReturn(true));
         Tension = 0;
-        Rezina.material.color = Color.black;
+        Rezina.material.color = "262626FF".ToColor();
         Ship.GetComponent<Rigidbody2D>().simulated = true;
         Ship.GetComponent<Rigidbody2D>().AddTorque(launchForce, ForceMode2D.Impulse);
         //Ship.GetComponent<Rigidbody>().AddTorque(Vector3.right * launchForce, ForceMode.Impulse);
