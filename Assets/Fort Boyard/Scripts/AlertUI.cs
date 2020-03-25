@@ -105,11 +105,14 @@ public class AlertUI : MonoBehaviour
 
         Alert_EXIT_ROOM_SKIP_GAME.SetActive(true);
         Alert_EXIT_ROOM_SKIP_GAME_TextUI.text = Message;
+        FortBoyardGameController.IsRoomPause = true;
+        Time.timeScale = 0;
     }
     public void CloseAlert_EXIT_ROOM_SKIP_GAME()
     {
         CloseModalWindow();
         FortBoyardGameController.IsRoomPause = false;
+        Time.timeScale = 1;
     }
 
     public void ShowAlert_PAUSE()

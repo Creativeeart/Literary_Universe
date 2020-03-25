@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class Game_06_Controller : MonoBehaviour
 {
+    public Button OpenCasesButton;
     public Animator playerCase;
     public Animator computerCase;
     public GameObject ArrowOne, ArrowTwo;
@@ -119,21 +120,28 @@ public class Game_06_Controller : MonoBehaviour
                 userTime += Time.deltaTime;
                 timeUser_TMPro.text = userTime.ToString("0.00");
             }
+
+            if (computerTime > rand)
+            {
+                handleComputer.enabled = true;
+                suspensionComputer.enabled = true;
+                isStopComputerTime = true;
+                computerLockIconCase.sprite = openedLock;
+                //_audioSource.PlayOneShot(metalGong);
+            }
+            if ((computerTime > rand) && isStopUserTime)
+            {
+                isStartGame = false;
+                _audioSource.Stop();
+                StartCoroutine(OpenCases());
+                OpenCasesButton.interactable = true;
+            }
         }
-        if (computerTime > rand)
-        {
-            handleComputer.enabled = true;
-            suspensionComputer.enabled = true;
-            isStopComputerTime = true;
-            computerLockIconCase.sprite = openedLock;
-            //_audioSource.PlayOneShot(metalGong);
-        }
-        if ((computerTime > rand) && isStopUserTime)
-        {
-            isStartGame = false;
-            _audioSource.Stop();
-            StartCoroutine(OpenCases());
-        }
+    }
+    public void OpenCase()
+    {
+        StartCoroutine(OpenCases());
+        OpenCasesButton.interactable = false;
     }
     IEnumerator OpenCases()
     {
@@ -185,29 +193,32 @@ public class Game_06_Controller : MonoBehaviour
                 _audioSource.PlayOneShot(gameOverSound);
                 bulbComputer.GetComponent<MeshRenderer>().material = greenMaterial;
                 bulbUser.GetComponent<MeshRenderer>().material = redMaterial;
-                StartCoroutine(ActiveLoseWindow());
+                GameOver();
+                //StartCoroutine(ActiveLoseWindow());
             }
             else if (computer > user)
             {
                 Debug.Log("User Winner!");
                 bulbComputer.GetComponent<MeshRenderer>().material = redMaterial;
                 bulbUser.GetComponent<MeshRenderer>().material = greenMaterial;
-                StartCoroutine(ActiveWinWindow());
+                GameWinner();
+                //StartCoroutine(ActiveWinWindow());
             }
             else
             {
                 Debug.Log("Draw!");
                 bulbComputer.GetComponent<MeshRenderer>().material = redMaterial;
-                bulbUser.GetComponent<MeshRenderer>().material = redMaterial;
-                StartCoroutine(ActiveDrawWindow());
+                bulbUser.GetComponent<MeshRenderer>().material = greenMaterial;
+                GameWinner();
+                //StartCoroutine(ActiveDrawWindow());
             }
         }
     }
     IEnumerator WinnerAnimations()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1.5f);
         safeGlassAnimator.enabled = true;
-        yield return new WaitForSeconds(2.2f);
+        yield return new WaitForSeconds(1.0f);
         keyAnimator.SetBool("GameWinner", true);
         yield return new WaitForSeconds(2f);
         FortBoyardGameController.WinnerRoom("Tips");
@@ -218,26 +229,35 @@ public class Game_06_Controller : MonoBehaviour
         StartCoroutine(RestartGameCoroutine(true));
     }
 
+    
     public void GameOver()
     {
         Debug.Log("Покинуть комнату");
         loseGameWindow.SetActive(false);
-        StartCoroutine(RestartGameCoroutine(false));
+        camAnim.SetBool("StartPos", true);
+        //StartCoroutine(RestartGameCoroutine(false));
+        StartCoroutine(Wait());
+    }
+
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(2f);
         FortBoyardGameController.LoseRoom("Мастер победил!\nК сожалению вы не справились с испытанием");
     }
 
     public void GameWinner()
     {
         winGameWindow.SetActive(false);
-        StartCoroutine(RestartGameCoroutine(false));
+        camAnim.SetBool("StartPos", true);
+        //StartCoroutine(RestartGameCoroutine(false));
         StartCoroutine(WinnerAnimations());
     }
     IEnumerator RestartGameCoroutine(bool isRestart)
     {
-        blackScreenCanvas.SetActive(true);
-        blackScreen.enabled = true;
-        yield return new WaitForSeconds(1);
-        blackScreen.SetBool("BlackScreenOUT", true);
+        //blackScreenCanvas.SetActive(true);
+        //blackScreen.enabled = true;
+        //yield return new WaitForSeconds(1);
+        //blackScreen.SetBool("BlackScreenOUT", true);
 
         camAnim.SetBool("StartPos", true);
 
@@ -245,19 +265,19 @@ public class Game_06_Controller : MonoBehaviour
         blackScreen.SetBool("BlackScreenOUT", false);
         blackScreenCanvas.SetActive(false);
     }
-    IEnumerator ActiveDrawWindow()
-    {
-        yield return new WaitForSeconds(2);
-        drawGameWindow.SetActive(true);
-    }
-    IEnumerator ActiveWinWindow()
-    {
-        yield return new WaitForSeconds(2);
-        winGameWindow.SetActive(true);
-    }
-    IEnumerator ActiveLoseWindow()
-    {
-        yield return new WaitForSeconds(2);
-        loseGameWindow.SetActive(true);
-    }
+    //IEnumerator ActiveDrawWindow()
+    //{
+    //    yield return new WaitForSeconds(2);
+    //    drawGameWindow.SetActive(true);
+    //}
+    //IEnumerator ActiveWinWindow()
+    //{
+    //    yield return new WaitForSeconds(2);
+    //    winGameWindow.SetActive(true);
+    //}
+    //IEnumerator ActiveLoseWindow()
+    //{
+    //    yield return new WaitForSeconds(2);
+    //    loseGameWindow.SetActive(true);
+    //}
 }

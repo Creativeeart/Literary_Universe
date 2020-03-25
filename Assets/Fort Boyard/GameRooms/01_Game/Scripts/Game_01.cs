@@ -71,47 +71,50 @@ public class Game_01 : MonoBehaviour
         {
             //Ship.GetComponent<Rigidbody>().AddTorque(Vector3.left * 200, ForceMode.Impulse);
         }
-        if (isReady)
+        if (!FortBoyardGameController.Instance.IsRoomPause)
         {
-            if (Input.GetMouseButtonDown(1))
+            if (isReady)
             {
-                CurrentStamina = MaxStamina;
-                IsStaminaLose = false;
-            }
-            if (Input.GetMouseButton(1) && !IsStaminaLose)
-            {
-                DownBlock.SetActive(false);
-                StopperDown.SetActive(false);
-                Ship.GetComponent<Rigidbody2D>().simulated = false;
-                if (Tension < 1f)
+                if (Input.GetMouseButtonDown(1))
                 {
-                    Tension += Time.deltaTime;
-                }
-                //Ship.transform.SetParent(RezinaRope_Parent);
-                //Ship_Parent.transform.localEulerAngles = new Vector3(Ship_Parent.transform.localEulerAngles.x, Ship_Parent.transform.localEulerAngles.y, -Tension * 3.5f);
-                Ship_Parent.transform.localPosition = new Vector3(Ship_Parent.transform.localPosition.x, Ship_Parent.transform.localPosition.y, Tension * 2f);
-                RezinaTransform.localPosition = Vector3.Lerp(RezinaNearLocalPosition, RezinaFarLocalPosition, Tension);
-                CurrentStamina -= Time.deltaTime;
-                SliderStamina.value = CurrentStamina;
-                if (CurrentStamina > 0)
-                {
-                    Rezina.material.color = Color.Lerp(Color.red, "262626FF".ToColor(), CurrentStamina / MaxStamina);
-                }
-                if (CurrentStamina <= 0)
-                {
-                    IsStaminaLose = true;
                     CurrentStamina = MaxStamina;
+                    IsStaminaLose = false;
+                }
+                if (Input.GetMouseButton(1) && !IsStaminaLose)
+                {
+                    DownBlock.SetActive(false);
+                    StopperDown.SetActive(false);
+                    Ship.GetComponent<Rigidbody2D>().simulated = false;
+                    if (Tension < 1f)
+                    {
+                        Tension += Time.deltaTime;
+                    }
+                    //Ship.transform.SetParent(RezinaRope_Parent);
+                    //Ship_Parent.transform.localEulerAngles = new Vector3(Ship_Parent.transform.localEulerAngles.x, Ship_Parent.transform.localEulerAngles.y, -Tension * 3.5f);
+                    Ship_Parent.transform.localPosition = new Vector3(Ship_Parent.transform.localPosition.x, Ship_Parent.transform.localPosition.y, Tension * 2f);
+                    RezinaTransform.localPosition = Vector3.Lerp(RezinaNearLocalPosition, RezinaFarLocalPosition, Tension);
+                    CurrentStamina -= Time.deltaTime;
+                    SliderStamina.value = CurrentStamina;
+                    if (CurrentStamina > 0)
+                    {
+                        Rezina.material.color = Color.Lerp(Color.red, "262626FF".ToColor(), CurrentStamina / MaxStamina);
+                    }
+                    if (CurrentStamina <= 0)
+                    {
+                        IsStaminaLose = true;
+                        CurrentStamina = MaxStamina;
+                        if (Tension > 0.1f)
+                        {
+                            StartShip();
+                        }
+                    }
+                }
+                else if (Input.GetMouseButtonUp(1))
+                {
                     if (Tension > 0.1f)
                     {
                         StartShip();
                     }
-                }
-            }
-            else if (Input.GetMouseButtonUp(1))
-            {
-                if (Tension > 0.1f)
-                {
-                    StartShip();
                 }
             }
         }

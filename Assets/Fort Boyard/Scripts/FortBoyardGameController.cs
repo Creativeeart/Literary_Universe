@@ -22,7 +22,7 @@ public class FortBoyardGameController : MonoBehaviour
     public GameObject inputGetKeyDownToContinue;
     public GameObject canvasTreasureZone;
     public GameObject fpsGameObject;
-    public GameObject mainMenu;
+    
     public GameObject gameRulers;
     public GameObject mainUconsUI;
     public GameObject watchUI;
@@ -32,6 +32,14 @@ public class FortBoyardGameController : MonoBehaviour
 
     public GameObject TextInfoToNextZone_Parent;
     public GameObject TextInfoToNextZone_Text;
+
+    [Header("UI Main Menu")]
+    public GameObject mainMenu;
+    public GameObject ResumeGameButton;
+    public GameObject NewGameButton;
+    public GameObject RecordTableButton;
+    public GameObject MainMenuButton;
+    public GameObject ExitGame;
 
     [Header("Objects in scene")]
     public GameObject fortBoyardGameObject;
@@ -54,14 +62,18 @@ public class FortBoyardGameController : MonoBehaviour
     public Animator AnimatorDoor { get; set; }
     public bool IsRoomPause { get; set; }
 
-    public bool IsGateZone { get; set; }
-    public bool IsAlphabetZone { get; set; }
-    public bool IsTreasureZone { get; set; }
-    public bool IsTreasureCalculateZone { get; set; }
+    public bool IsMainMenu { get; set; } //Главное меню (Над фортом)
+    public bool IsZoneBriefingAndSelectedDoors { get; set; } //Описание игры и сцена где выбираются задания(двери)
+    public bool IsGameRooms { get; set; } //Внутри комнат
+    public bool IsGateZone { get; set; } //Возле ворот
+    public bool IsAlphabetZone { get; set; } //Алфавит
+    public bool IsTreasureZone { get; set; } //Сокровищница
+    public bool IsTreasureCalculateZone { get; set; } //Зона подсчета золота
 
-    public bool GameRooms { get; set; }
     public int CurrentNumberRoom { get; set; }
     public GameObject CurrentDoorOpen { get; set; }
+
+    bool IsPause = false;
 
     //МЕНЕДЖЕРЫ
     AlertUI AlertUI;
@@ -92,34 +104,55 @@ public class FortBoyardGameController : MonoBehaviour
         TimerGame.seconds = totalTime;
         ReloadTimer();
         IsRoomPause = true;
+        IsMainMenu = true;
+        mainMenu.SetActive(false);
+        //mainMenu.GetComponent<CanvasGroup>().alpha = 0;
     }
-    IEnumerator ShowMainMenuFloating()
-    {
-        if (Input.GetKey(KeyCode.Space))
-        {
-            float i = 0;
-            while (mainMenu.GetComponent<CanvasGroup>().alpha < 1)
-            {
-                i = i + 0.05f;
-                inputGetKeyDownToContinue.SetActive(false);
-                mainMenu.GetComponent<CanvasGroup>().alpha = i;
-                mainMenu.GetComponent<CanvasGroup>().interactable = true;
-                yield return null;//new WaitForSeconds(0.1f);
-            }
-        }
-    }
+    //IEnumerator ShowMainMenuFloating()
+    //{
+    //    float i = 0;
+    //    while (mainMenu.GetComponent<CanvasGroup>().alpha < 1)
+    //    {
+    //        i = i + 0.05f;
+    //        inputGetKeyDownToContinue.SetActive(false);
+    //        mainMenu.GetComponent<CanvasGroup>().alpha = i;
+    //        yield return null;
+    //    }
+    //    mainMenu.GetComponent<CanvasGroup>().interactable = true;
+    //}
+    //IEnumerator CloseMainMenuFloating()
+    //{
+    //    float i = 1;
+    //    while (mainMenu.GetComponent<CanvasGroup>().alpha != 0f)
+    //    {
+    //        i = i - 0.05f;
+    //        mainMenu.GetComponent<CanvasGroup>().alpha = i;
+    //        yield return null;
+    //    }
+    //    mainMenu.GetComponent<CanvasGroup>().interactable = false;
+    //    mainMenu.SetActive(false);
+    //}
     void Update()
     {
-        StartCoroutine(ShowMainMenuFloating());
-        EndTimes();
-        if (Input.GetKeyDown(KeyCode.BackQuote))
+        if (IsMainMenu)
         {
-            fpsGameObject.SetActive(!fpsGameObject.activeSelf);
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                ResumeGameButton.SetActive(false);
+                MainMenuButton.SetActive(false);
+                mainMenu.SetActive(true);
+                inputGetKeyDownToContinue.SetActive(false);
+                //StartCoroutine(ShowMainMenuFloating());
+            }
         }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (IsZoneBriefingAndSelectedDoors || IsGameRooms || IsGateZone || IsAlphabetZone || IsTreasureZone || IsTreasureCalculateZone)
         {
-            AlertUI.ShowAlert_PAUSE();
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                IsPause = !IsPause;
+                if (IsPause) PauseGame();
+                else ResumeGame();
+            }
         }
         if (!IsGateZone)
         {
@@ -136,7 +169,6 @@ public class FortBoyardGameController : MonoBehaviour
                 TipsImage[i].color = "#FFFFFFFF".ToColor();
             }
         }
-
         if (IsTreasureZone)
         {
             if (TimerGame.seconds <= 10.0f)
@@ -146,6 +178,38 @@ public class FortBoyardGameController : MonoBehaviour
             }
             canvasTreasureZone.SetActive(true);
         }
+        
+        if (Input.GetKeyDown(KeyCode.BackQuote))
+        {
+            fpsGameObject.SetActive(!fpsGameObject.activeSelf); //FPS SHOW
+        }
+        EndTimes();
+    }
+    public void PauseGame()
+    {
+        ResumeGameButton.SetActive(true);
+        MainMenuButton.SetActive(true);
+        NewGameButton.SetActive(false);
+        mainMenu.SetActive(true);
+        //StartCoroutine(ShowMainMenuFloating());
+        IsRoomPause = true;
+        IsPause = true;
+        Time.timeScale = 0;
+    }
+
+    public void ResumeGame()
+    {
+        mainMenu.SetActive(false);
+        //StartCoroutine(CloseMainMenuFloating());
+        IsRoomPause = false;
+        IsPause = false;
+        Time.timeScale = 1;
+    }
+
+    public void MainMenu()
+    {
+        mainMenu.SetActive(false);
+        AlertUI.ReloadGame();
     }
 
     void EndTimes()
@@ -159,7 +223,7 @@ public class FortBoyardGameController : MonoBehaviour
                 AlertUI.ShowAlert_GAMEOVER_WITHOUT_ROOM(MessageTextForAlertUI);
                 IsTreasureZone = false;
             }
-            if (GameRooms)
+            if (IsGameRooms)
             {
                 LoseRoom("<color=#FF1313FF>Время вышло!</color>\nК сожалению вы не справились с испытанием");
             }
@@ -178,6 +242,9 @@ public class FortBoyardGameController : MonoBehaviour
 
     public void DisableAllCheckZones()
     {
+        IsMainMenu = false;
+        IsZoneBriefingAndSelectedDoors = false;
+        IsGameRooms = false;
         IsGateZone = false;
         IsAlphabetZone = false;
         IsTreasureZone = false;
@@ -197,7 +264,6 @@ public class FortBoyardGameController : MonoBehaviour
             MessageForAlertUI = "Выйти из комнаты?\n<size=50>При этом вы не получите <i><color=#FF8400FF>подсказку</i></color>.</size>";
         }
         AlertUI.ShowAlert_EXIT_ROOM_SKIP_GAME(MessageForAlertUI);
-        IsRoomPause = true;
     }
 
     public void Close_Game_Room() //СКРЫВАЕМ КОМНАТУ ПОСЛЕ ЗАВЕРШЕНИЯ ИСПЫТАНИЯ (ПРОИГРЫШ ИЛИ ВЫИГРЫШ)
@@ -227,6 +293,8 @@ public class FortBoyardGameController : MonoBehaviour
         FB_CamMovingController.cameraToMovingFromScene.GetComponent<Camera>().enabled = true;
         Time.timeScale = 1;
         Cursor.visible = true;
+        DisableAllCheckZones();
+        IsZoneBriefingAndSelectedDoors = true;
     }
 
     public void DisabledObjects() //ВО ВРЕМЯ ИСПЫТАНИЯ СКРЫТИЕ ТЯЖЕЛЫХ ОБЪЕКТОВ НА СЦЕНЕ (ВОДА, ФОРТ)
@@ -294,8 +362,10 @@ public class FortBoyardGameController : MonoBehaviour
     public void StartGame() //НАЧАТЬ ИГРУ ПОСЛЕ ВЫБОРА ПОЛЬЗОВАТЕЛЯ
     {
         mainMenu.SetActive(false);
+        DisableAllCheckZones();
         FB_CamMovingController.CameraMovingToPoint(FB_CamMovingController.pointToBriefing);
         StartCoroutine(ShowRules());
+        IsZoneBriefingAndSelectedDoors = true;
     }
 
     IEnumerator ShowRules() //ПОКАЗАТЬ ПРАВИЛА ИГРЫ - ОБЩАЯ
@@ -312,7 +382,14 @@ public class FortBoyardGameController : MonoBehaviour
         watchUI.SetActive(true);
     }
 
-    public void Close_Game_Rule(int numberRule) //ЗАКРЫТЬ ПРАВИЛА У ИСПЫТАНИЙ
+    public void Show_Game_Rule(int numberRule) //ПОКАЗАТЬ ПРАВИЛА У ИСПЫТАНИЙ В КОМНАТАХ
+    {
+        game_rules_in_rooms[numberRule].SetActive(true);
+        PauseTimer();
+        IsRoomPause = true;
+    }
+
+    public void Close_Game_Rule(int numberRule) //ЗАКРЫТЬ ПРАВИЛА У ИСПЫТАНИЙ В КОМНАТАХ
     {
         game_rules_in_rooms[numberRule].SetActive(false);
         RunTimer();
@@ -342,12 +419,20 @@ public class FortBoyardGameController : MonoBehaviour
     public void RunTimer()
     {
         TimerGame.RunTime = true;
-        TimerGame.seconds = totalTime;
+        if (!TimerGame.RunTime)
+        {
+            TimerGame.seconds = totalTime;
+        }
     }
     public void StopTimer()
     {
         TimerGame.RunTime = false;
         TimerGame.seconds = totalTime;
+    }
+
+    public void PauseTimer()
+    {
+        TimerGame.RunTime = false;
     }
     public void ReloadTimer()
     {

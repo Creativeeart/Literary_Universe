@@ -234,7 +234,7 @@ public class GateZoneController : MonoBehaviour
     public void GoToAlphabetZone()
     {
         FortBoyardGameController.mainUconsUI.SetActive(false);
-        FortBoyardGameController.GameRooms = false;
+        FortBoyardGameController.IsGameRooms = false;
         UI_GateZone.SetActive(false);
         isOpenTipsMechanismEnabled = false;
         StartCoroutine(FB_CamMovingController.GoToAlphabetZone()); // Переход к зоне с алфавитом

@@ -292,40 +292,44 @@ public class Game_05_Controller : MonoBehaviour
             case 0:
                 Debug.Log("Победил игрок");
                 _audioSource.PlayOneShot(gameOverSound);
-                StartCoroutine(ActiveWinWindow());
+                //StartCoroutine(ActiveWinWindow());
+                GameWinner();
                 break;
             case 1:
                 _audioSource.PlayOneShot(gameOverSound);
                 Debug.Log("Победил компьютер");
-                StartCoroutine(ActiveLoseWindow());
+                //StartCoroutine(ActiveLoseWindow());
+                GameOver();
                 break;
             case 2:
                 _audioSource.PlayOneShot(gameOverSound);
                 Debug.Log("Ничья - оба неправильно"); //Начать заново
-                StartCoroutine(ActiveDrawWindow());
+                //StartCoroutine(ActiveDrawWindow());
+                GameWinner();
                 break;
             case 3:
                 _audioSource.PlayOneShot(lampPickSound);
                 Debug.Log("Ничья - польностью оба правильно"); //Начать заново
-                StartCoroutine(ActiveDrawWindow());
+                //StartCoroutine(ActiveDrawWindow());
+                GameWinner();
                 break;
         }
     }
-    IEnumerator ActiveDrawWindow() //Открыть окно ничьи
-    {
-        yield return new WaitForSeconds(2);
-        drawGameWindow.SetActive(true);
-    }
-    IEnumerator ActiveWinWindow()
-    {
-        yield return new WaitForSeconds(2);
-        winGameWindow.SetActive(true);
-    }
-    IEnumerator ActiveLoseWindow()
-    {
-        yield return new WaitForSeconds(2);
-        loseGameWindow.SetActive(true);
-    }
+    //IEnumerator ActiveDrawWindow() //Открыть окно ничьи
+    //{
+    //    yield return new WaitForSeconds(2);
+    //    drawGameWindow.SetActive(true);
+    //}
+    //IEnumerator ActiveWinWindow()
+    //{
+    //    yield return new WaitForSeconds(2);
+    //    winGameWindow.SetActive(true);
+    //}
+    //IEnumerator ActiveLoseWindow()
+    //{
+    //    yield return new WaitForSeconds(2);
+    //    loseGameWindow.SetActive(true);
+    //}
     public void RestartGame()
     {
         drawGameWindow.SetActive(false);
@@ -336,21 +340,28 @@ public class Game_05_Controller : MonoBehaviour
     {
         Debug.Log("Покинуть комнату");
         loseGameWindow.SetActive(false);
-        StartCoroutine(RestartGameCoroutine(false));
+        camAnim.SetBool("StartPos", true);
+        //StartCoroutine(RestartGameCoroutine(false));
+        StartCoroutine(Wait());
+    }
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(2f);
         FortBoyardGameController.LoseRoom("Мастер победил!\nК сожалению вы не справились с испытанием");
     }
 
     public void GameWinner()
     {
         winGameWindow.SetActive(false);
-        StartCoroutine(RestartGameCoroutine(false));
+        camAnim.SetBool("StartPos", true);
+        //StartCoroutine(RestartGameCoroutine(false));
         StartCoroutine(WinnerAnimations());
     }
     IEnumerator WinnerAnimations()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1.5f);
         safeGlassAnimator.enabled = true;
-        yield return new WaitForSeconds(2.2f);
+        yield return new WaitForSeconds(1.0f);
         keyAnimator.SetBool("GameWinner", true);
         yield return new WaitForSeconds(2f);
         FortBoyardGameController.WinnerRoom("Tips");
@@ -358,10 +369,10 @@ public class Game_05_Controller : MonoBehaviour
     IEnumerator RestartGameCoroutine(bool isRestart)
     {
         //Camera.main.orthographic = false;
-        blackScreenCanvas.SetActive(true);
-        blackScreen.enabled = true;
-        yield return new WaitForSeconds(1);
-        blackScreen.SetBool("BlackScreenOUT", true);
+        //blackScreenCanvas.SetActive(true);
+        //blackScreen.enabled = true;
+        //yield return new WaitForSeconds(1);
+        //blackScreen.SetBool("BlackScreenOUT", true);
 
         camAnim.SetBool("StartPos", true);
         rememberTime = rememberTimeTemp;

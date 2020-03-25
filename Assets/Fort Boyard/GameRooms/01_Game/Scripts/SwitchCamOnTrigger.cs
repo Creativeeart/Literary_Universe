@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using cakeslice;
 public class SwitchCamOnTrigger : MonoBehaviour
 {
     Game_01 Game_01;
@@ -36,7 +35,10 @@ public class SwitchCamOnTrigger : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 1;
+            if (!FortBoyardGameController.Instance.IsRoomPause)
+            {
+                Time.timeScale = 1;
+            }
         }
     }
 }

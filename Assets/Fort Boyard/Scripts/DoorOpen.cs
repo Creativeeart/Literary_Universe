@@ -33,7 +33,8 @@ public class DoorOpen : MonoBehaviour
                 gameObject.transform.parent.gameObject.GetComponent<Animator>().enabled = true;
                 StartCoroutine(DoorAnimationOpened());
                 _audioSource.PlayOneShot(FortBoyardGameController.openedDoor);
-                FortBoyardGameController.GameRooms = true;
+                FortBoyardGameController.DisableAllCheckZones();
+                FortBoyardGameController.IsGameRooms = true;
                 FortBoyardGameController.AnimatorDoor = gameObject.transform.parent.gameObject.GetComponent<Animator>(); //Передача переменной doorAnimator в скрипт FortBoyardGameController
                 FortBoyardGameController.CurrentDoorOpen = gameObject.transform.parent.gameObject;
                 isLocked = true;
