@@ -12,19 +12,18 @@ public class SwitchCamOnTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (Game_01.camFollowShip.activeSelf == true)
-        {
-            Game_01.slowTime = true;
-            Game_01.camViewKey.SetActive(true);
-            Game_01.camFollowShip.SetActive(false);
-        }
-        else
-        {
-            Game_01.slowTime = false;
-            Game_01.camViewKey.SetActive(false);
-            Game_01.camFollowShip.SetActive(true);
-        }
+        Game_01.slowTime = true;
+        Game_01.camViewKey.SetActive(true);
+        Game_01.camFollowShip.SetActive(false);
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Game_01.slowTime = false;
+        Game_01.camViewKey.SetActive(false);
+        Game_01.camFollowShip.SetActive(true);
+    }
+
     void Update()
     {
         Game_01.camViewKey.transform.LookAt(Game_01.ObjectForCam2View.transform);

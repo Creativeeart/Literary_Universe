@@ -83,7 +83,7 @@ public class RandomSpawn : MonoBehaviour {
 		objectsForSpawn_good = objectsForSpawn_good.OrderBy(x => rand_good.Next()).ToArray();
 		for (int i = 0; i < spawnPoints_good.Length; i++){
 			spawnPoints_good [i].transform.localPosition = spawnPointsPosition_good[i];
-			var obj_good  = GameObject.Instantiate (objectsForSpawn_good [i], spawnPoints_good[i].transform.position, objectsForSpawn_good[i].transform.localRotation);
+			var obj_good  = Instantiate (objectsForSpawn_good [i], spawnPoints_good[i].transform.position, objectsForSpawn_good[i].transform.localRotation);
 			obj_good.transform.parent = folder_good [i];
 			obj_good.transform.localRotation = new Quaternion (0,obj_good.transform.rotation.y,obj_good.transform.rotation.z,obj_good.transform.rotation.w);
 		}
@@ -103,8 +103,6 @@ public class RandomSpawn : MonoBehaviour {
 	void OnTriggerEnter(Collider other){
 		Debug.Log (other.name);
 	}
-
-
 
 	public void DeleteSpawnObjects(){
 		for (int i = 0; i < cloneObjects.Length; i++) {

@@ -3329,7 +3329,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.02
+      scalar: 0.04
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -3832,7 +3832,7 @@ ParticleSystem:
           tangentMode: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
-        m_RotationOrder: 4
+        m_RotationOrder: 0
       minCurve:
         serializedVersion: 2
         m_Curve:
@@ -4084,7 +4084,7 @@ ParticleSystem:
         key0: {r: 1, g: 1, b: 1, a: 0}
         key1: {r: 0.9843137, g: 1, b: 0, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 1}
-        key3: {r: 0, g: 0, b: 0, a: 0}
+        key3: {r: 0, g: 0, b: 0, a: 1}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
