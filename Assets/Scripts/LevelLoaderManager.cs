@@ -31,7 +31,13 @@ namespace cakeslice
         public void LoadLevelBreadCrumbs()
         {
             currentSceneName = SceneManager.GetActiveScene().name;
-            if (currentSceneName == "Bylechev_Scene")
+            if ((currentSceneName == "Bylechev_Scene") 
+                || (currentSceneName == "Jule_Verne_Scene")
+                || (currentSceneName == "Vostokov_Scene")
+                || (currentSceneName == "Scene_Create_Star")
+                || (currentSceneName == "Verkin_Scene")
+                || (currentSceneName == "PasternakJvalevskij_Scene")
+                )
             {
                 LoadLevel("Main_Scene");
             }
@@ -39,26 +45,36 @@ namespace cakeslice
             {
                 LoadLevel("Jule_Verne_Planet");
             }
-            if (currentSceneName == "Jule_Verne_Planet")
+            if ((currentSceneName == "Jule_Verne_Planet") 
+                || (currentSceneName == "Jule_Verne_Prophecy")
+                )
             {
                 LoadLevel("Jule_Verne_Scene");
             }
-            if (currentSceneName == "Jule_Verne_Prophecy")
-            {
-                LoadLevel("Jule_Verne_Scene");
-            }
-            if (currentSceneName == "Jule_Verne_Scene")
-            {
-                LoadLevel("Main_Scene");
-            }
-            if (currentSceneName == "Vostokov_Scene")
-            {
-                LoadLevel("Main_Scene");
-            }
-            if (currentSceneName == "Scene_Create_Star")
-            {
-                LoadLevel("Main_Scene");
-            }
+            //if (currentSceneName == "Jule_Verne_Prophecy")
+            //{
+            //    LoadLevel("Jule_Verne_Scene");
+            //}
+            //if (currentSceneName == "Jule_Verne_Scene")
+            //{
+            //    LoadLevel("Main_Scene");
+            //}
+            //if (currentSceneName == "Vostokov_Scene")
+            //{
+            //    LoadLevel("Main_Scene");
+            //}
+            //if (currentSceneName == "Scene_Create_Star")
+            //{
+            //    LoadLevel("Main_Scene");
+            //}
+            //if (currentSceneName == "Verkin_Scene")
+            //{
+            //    LoadLevel("Main_Scene");
+            //}
+            //if (currentSceneName == "PasternakJvalevskij_Scene")
+            //{
+            //    LoadLevel("Main_Scene");
+            //}
         }
 
         public void LoadLevel(string sceneName)

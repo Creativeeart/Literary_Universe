@@ -37,6 +37,9 @@ EditorBuildSettings:
     guid: 9468bc338c6aaff49a0ce948f576bad2
   - enabled: 1
     path: Assets/Scenes/Verkin_Scene.unity
+    guid: 4d72b90ab59fcfa4d847dfdd1b75e0e7
+  - enabled: 1
+    path: Assets/Scenes/PasternakJvalevskij_Scene.unity
     guid: 00000000000000000000000000000000
   - enabled: 0
     path: Assets/Not Used Resourses/TestScene_1.unity

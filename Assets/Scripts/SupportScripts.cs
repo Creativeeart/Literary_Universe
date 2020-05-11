@@ -248,6 +248,14 @@ public class SupportScripts : MonoBehaviour
         {
             IsMainScene(false, "Созвездие читателей");
         }
+        if (currentSceneName == "Verkin_Scene")
+        {
+            IsMainScene(false, "Эдуард Веркин");
+        }
+        if (currentSceneName == "PasternakJvalevskij_Scene")
+        {
+            IsMainScene(false, "А. Жвалевский, Е. Пастернак");
+        }
 
     }
     //END BREADCRUMBS
